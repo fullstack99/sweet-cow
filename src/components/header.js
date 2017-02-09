@@ -1,33 +1,45 @@
 // import libraries for making a Component
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, Image } from 'react-native';
+import HeaderContainer from './HeaderContainer';
 
 // make a Component
 const Header = (props) => {
-    const { textStyle, viewStyle } = styles;
+    const { textStyle, textContainerStyle, thumbnailStyle, thumbnailContainerStyle } = styles;
 
     return (
-        <View style={viewStyle}>
-            <Text style={textStyle}>{props.headerText}</Text>
-        </View>
+        <HeaderContainer>
+            <View style={thumbnailContainerStyle}>
+                <Image style={thumbnailStyle} source={require('../img/logo@2x.png')} />
+            </View>
+
+            <View style={textContainerStyle}>
+                <Text style={textStyle}>{props.headerText}</Text>
+            </View>
+        </HeaderContainer>
     );
 };
 
 const styles = {
-    viewStyle: {
-        backgroundColor: '#F8F8F8',
+    textStyle: {
+        fontSize: 20,
+        fontWeight: '700',
+        paddingTop: 20
+    },
+    textContainerStyle: {
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    thumbnailStyle: {
+        height: 58,
+        width: 59,
+    },
+    thumbnailContainerStyle: {
         justifyContent: 'center',
         alignItems: 'center',
-        height: 60,
-        paddingTop: 15,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        elevation: 2,
-        position: 'relative'
-    },
-    textStyle: {
-        fontSize: 20
+        marginHorizontal: 10,
+        paddingTop: 5
     }
 };
 

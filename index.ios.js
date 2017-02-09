@@ -8,11 +8,20 @@ import LocationList from './src/components/LocationList';
 
 // Create a component
 const App = () => (
-    <View>
-        <Header headerText={'Sweet Cow'} />
+
+    <View style={styles.viewStyle}>
+        <Header headerText={'SWEET COW'} />
         <LocationList />
     </View>
 );
+
+const styles = {
+    viewStyle: {
+        backgroundColor: '#1B145C',
+        flex: 1,
+        alignSelf: 'stretch'
+    }
+};
 
 // Render to device
 AppRegistry.registerComponent('sweetcow', () => App);

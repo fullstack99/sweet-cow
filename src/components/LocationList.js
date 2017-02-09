@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { Text, ScrollView } from 'react-native';
 import axios from 'axios';
 import LocationDetail from './LocationDetail';
 
@@ -23,11 +23,29 @@ class LocationList extends Component {
         console.log(this.state);
 
         return (
-            <View>
+            <ScrollView style={styles.viewStyle}>
+                <Text style={styles.headingStyle}>STORE LOCATIONS</Text>
                 {this.renderAlbums()}
-            </View>
+            </ScrollView>
         );
     }
 }
+
+const styles = {
+    viewStyle: {
+        backgroundColor: '#fff',
+        borderRadius: 2,
+        marginTop: 20,
+        marginHorizontal: 5
+    },
+    headingStyle: {
+        textAlign: 'center',
+        paddingVertical: 10,
+        paddingBottom: 5,
+        color: '#1d1060',
+        fontSize: 24,
+        fontWeight: '700'
+    }
+};
 
 export default LocationList;
