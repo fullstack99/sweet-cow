@@ -4,18 +4,18 @@ import axios from 'axios';
 import LocationDetail from './LocationDetail';
 
 class LocationList extends Component {
-    state = { albums: [] };
+    state = { shops: [] };
 
     componentWillMount() {
         console.log('componentWillMount is working!');
-        axios.get('https://rallycoding.herokuapp.com/api/music_albums')
-            .then(response => this.setState({ albums: response.data }));
+        axios.get('https://sweet-cow-store-locations.herokuapp.com/api/locations')
+            .then(response => this.setState({ shops: response.data }));
         console.log('Asynchronous GET promise in progress...');
     }
 
     renderAlbums() {
-        return this.state.albums.map(album =>
-            <LocationDetail key={album.title} album={album} />
+        return this.state.shops.map(shop =>
+            <LocationDetail key={shop.id} shop={shop} />
         );
     }
 

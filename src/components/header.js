@@ -24,7 +24,7 @@ const styles = {
     textStyle: {
         fontSize: 20,
         fontWeight: '700',
-        paddingTop: 20
+        paddingTop: 45
     },
     textContainerStyle: {
         flexDirection: 'column',
@@ -39,7 +39,7 @@ const styles = {
         justifyContent: 'center',
         alignItems: 'center',
         marginHorizontal: 10,
-        paddingTop: 5
+        paddingTop: 30
     }
 };
 
