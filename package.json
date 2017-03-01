@@ -1,23 +1,30 @@
 {
-  "name": "sweetcow",
+  "name": "SweetCow",
   "version": "0.0.1",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
+    "test": "jest",
+    "sync-rnpc": "rm -rf ./node_modules/react-native-pathjs-charts; sane '/usr/bin/rsync -v -a --exclude .git --exclude example --exclude node_modules ../ ./node_modules/react-native-pathjs-charts/' .. --glob='{**/*.json,**/*.js}'"
   },
   "dependencies": {
-    "axios": "^0.15.3",
+    "firebase": "^3.6.10",
+    "native-base": "^2.0.10",
     "react": "15.4.2",
-    "react-native": "0.40.0",
-    "react-native-maps": "^0.12.4"
+    "react-native": "0.41.2",
+    "react-native-maps": "^0.12.4",
+    "react-native-navigation-redux-helpers": "^0.5.0",
+    "react-redux": "^5.0.3",
+    "redux": "^3.6.0",
+    "redux-persist": "^4.4.2",
+    "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
-    "babel-jest": "18.0.0",
+    "babel-jest": "19.0.0",
     "babel-preset-react-native": "1.9.1",
-    "eslint-config-rallycoding": "^3.2.0",
-    "jest": "18.1.0",
-    "react-test-renderer": "15.4.2"
+    "jest": "19.0.2",
+    "react-test-renderer": "15.4.2",
+    "remote-redux-devtools": "^0.5.7"
   },
   "jest": {
     "preset": "react-native"
