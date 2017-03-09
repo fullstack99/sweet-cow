@@ -34,11 +34,13 @@ export default class TextField extends Component{
       <View style={[styles.textField, {width: this.props.width}]}>
       <Image source={this.props.iconImage} style={{marginLeft: 15, alignSelf: 'center', width: 15,height:15, marginTop: 2, resizeMode: 'contain'}}/>
 
-      <Text style={{alignSelf: 'center', marginLeft: 10, fontSize: 20, color: '#1f1360'}}>{this.props.labelName}</Text>
+      <Text style={{fontFamily:'Typeka Mix',alignSelf: 'center', marginLeft: 10, fontSize: 20, color: '#1f1360'}}>{this.props.labelName}</Text>
       <TextInput placeholder={this.props.placeholder}
         style={{flex: 1, marginLeft: 5, color: '#1f1360', fontSize: 20}}
         onChangeText={this.props.onChangeText}
         secureTextEntry={this.props.isSecureEntry}
+        underlineColorAndroid = 'rgba(0,0,0,0)'
+        autoCorrect={false}
       />
       </View>
 

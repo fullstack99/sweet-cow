@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">SweetCow</string>
+    <string name="app_name">Sweet Cow</string>
+    <string name="facebook_app_id">725538227608354</string>
 </resources>

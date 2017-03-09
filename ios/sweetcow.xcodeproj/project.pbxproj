@@ -31,6 +31,7 @@
 		568AA7AC7E034459B7C33C85 /* Rubik-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1A83B29719D744619E7F8DF4 /* Rubik-Italic.ttf */; };
 		5D17E438A2724B308425552B /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F8A8C99051B04FB6B96FA140 /* Octicons.ttf */; };
 		6A119F82D09E4141BEB1DF08 /* Rubik-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 10FFBE6D2C1C4F99940B2441 /* Rubik-Medium.ttf */; };
+		73CFD5973FBF43E3B1D74E7D /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 6D4C80B2507041E9B7029A1E /* OFL.txt */; };
 		76C67B051C6A49E7802970B4 /* Arial Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4018A6CB59514C7D8960C806 /* Arial Black.ttf */; };
 		7EE91426269C4DABAC72C71A /* Times New Roman.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B02B02492D8F4C03995781C0 /* Times New Roman.ttf */; };
 		8449CF84E4D44BD283D461C0 /* Rubik-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5E5E8D9604074FA8B9CC293F /* Rubik-BlackItalic.ttf */; };
@@ -85,8 +86,14 @@
 		C16A65601E647B6400BA873C /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16A655F1E647B6400BA873C /* AudioToolbox.framework */; };
 		C16A65621E647B6C00BA873C /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16A65611E647B6C00BA873C /* MobileCoreServices.framework */; };
 		C16A65641E647B7200BA873C /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16A65631E647B7200BA873C /* SystemConfiguration.framework */; };
+		C187563D1E680621000DA077 /* libRCTFBSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C18756371E6805B7000DA077 /* libRCTFBSDK.a */; };
+		C18756421E68078E000DA077 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C187563E1E68078E000DA077 /* Bolts.framework */; };
+		C18756431E68078E000DA077 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C187563F1E68078E000DA077 /* FBSDKCoreKit.framework */; };
+		C18756441E68078E000DA077 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C18756401E68078E000DA077 /* FBSDKLoginKit.framework */; };
+		C18756451E68078E000DA077 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C18756411E68078E000DA077 /* FBSDKShareKit.framework */; };
 		C4D5F10369E742368BD36834 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8591C6F091714D6DB2C6AF53 /* Rubik-Regular.ttf */; };
 		C536BD86AC374BF7A38C5B32 /* Georgia.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7B4D3C15F7AD4BF19DA3D724 /* Georgia.ttf */; };
+		C5CBB98C1E718127004E30DC /* libRNSpinkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C5CBB9881E717EF7004E30DC /* libRNSpinkit.a */; };
 		CA45870B6BD34F0BAA7BABF8 /* Arial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 674E8775B65349AB9AF16A04 /* Arial.ttf */; };
 		D4D28E8B51C24E128059DCE7 /* Courier New.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 96925AA4A0664944AA1DF361 /* Courier New.ttf */; };
 		F0533B832FFB46F28355AECA /* Comic Sans MS.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 813275BBED26445EB387D9EB /* Comic Sans MS.ttf */; };
@@ -109,6 +116,20 @@
 			remoteGlobalIDString = 2D02E47A1E0B4A5D006451C7;
 			remoteInfo = "SweetCow-tvOS";
 		};
+		C18756361E6805B7000DA077 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 313611AE4E1243AFAC696BCC /* RCTFBSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9350E0F11CE3B0920041D815;
+			remoteInfo = RCTFBSDK;
+		};
+		C5CBB9871E717EF7004E30DC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3EC27AB2B57E410180AF7C12 /* RNSpinkit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D42CB3511B2538DE00FD0AE2;
+			remoteInfo = RNSpinkit;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -130,7 +151,9 @@
 		2D02E47B1E0B4A5D006451C7 /* SweetCow-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SweetCow-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* SweetCow-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SweetCow-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FF056772429455BB4517C31 /* SanFranciscoThin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SanFranciscoThin.ttf; path = "../node_modules/native-base/Fonts/SanFranciscoThin.ttf"; sourceTree = "<group>"; };
+		313611AE4E1243AFAC696BCC /* RCTFBSDK.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTFBSDK.xcodeproj; path = "../node_modules/react-native-fbsdk/ios/RCTFBSDK.xcodeproj"; sourceTree = "<group>"; };
 		3369D4D5BE94485EB4AB4ADD /* Rubik-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Light.ttf"; path = "../node_modules/native-base/Fonts/Rubik-Light.ttf"; sourceTree = "<group>"; };
+		3EC27AB2B57E410180AF7C12 /* RNSpinkit.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNSpinkit.xcodeproj; path = "../node_modules/react-native-spinkit/ios/RNSpinkit.xcodeproj"; sourceTree = "<group>"; };
 		4018A6CB59514C7D8960C806 /* Arial Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Arial Black.ttf"; path = "../node_modules/native-base/Fonts/Arial Black.ttf"; sourceTree = "<group>"; };
 		417054443FDE49568E7458BF /* SanFrancisco.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SanFrancisco.ttf; path = "../node_modules/native-base/Fonts/SanFrancisco.ttf"; sourceTree = "<group>"; };
 		472A503C2E764E80B27CD341 /* Rubik-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Black.ttf"; path = "../node_modules/native-base/Fonts/Rubik-Black.ttf"; sourceTree = "<group>"; };
@@ -142,6 +165,7 @@
 		63C3DE03AB9A4A72BF312AFB /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/native-base/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		674E8775B65349AB9AF16A04 /* Arial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Arial.ttf; path = "../node_modules/native-base/Fonts/Arial.ttf"; sourceTree = "<group>"; };
 		69EF89DC2CD14429A3087169 /* Skia.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Skia.ttf; path = "../node_modules/native-base/Fonts/Skia.ttf"; sourceTree = "<group>"; };
+		6D4C80B2507041E9B7029A1E /* OFL.txt */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = OFL.txt; path = "../node_modules/native-base/Fonts/OFL.txt"; sourceTree = "<group>"; };
 		7B4D3C15F7AD4BF19DA3D724 /* Georgia.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Georgia.ttf; path = "../node_modules/native-base/Fonts/Georgia.ttf"; sourceTree = "<group>"; };
 		813275BBED26445EB387D9EB /* Comic Sans MS.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Comic Sans MS.ttf"; path = "../node_modules/native-base/Fonts/Comic Sans MS.ttf"; sourceTree = "<group>"; };
 		8591C6F091714D6DB2C6AF53 /* Rubik-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Regular.ttf"; path = "../node_modules/native-base/Fonts/Rubik-Regular.ttf"; sourceTree = "<group>"; };
@@ -233,6 +257,10 @@
 		C16A655F1E647B6400BA873C /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		C16A65611E647B6C00BA873C /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		C16A65631E647B7200BA873C /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		C187563E1E68078E000DA077 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = Frameworks/Bolts.framework; sourceTree = "<group>"; };
+		C187563F1E68078E000DA077 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = Frameworks/FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		C18756401E68078E000DA077 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = Frameworks/FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		C18756411E68078E000DA077 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKShareKit.framework; path = Frameworks/FBSDKShareKit.framework; sourceTree = "<group>"; };
 		D3E35CA6C817460797552938 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/native-base/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		E7BC1423A4CF45039CEAA1A8 /* rubicon-icon-font.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "rubicon-icon-font.ttf"; path = "../node_modules/native-base/Fonts/rubicon-icon-font.ttf"; sourceTree = "<group>"; };
 		EA364EA3CC2E4EE3ADDBFF82 /* SF-UI-Text-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-UI-Text-Regular.otf"; path = "../node_modules/native-base/Fonts/SF-UI-Text-Regular.otf"; sourceTree = "<group>"; };
@@ -257,6 +285,12 @@
 				C16A65601E647B6400BA873C /* AudioToolbox.framework in Frameworks */,
 				C16A65531E647AC800BA873C /* MapKit.framework in Frameworks */,
 				9B4F68DF58D424E5DFDE16DA /* libPods-SweetCow.a in Frameworks */,
+				C18756431E68078E000DA077 /* FBSDKCoreKit.framework in Frameworks */,
+				C5CBB98C1E718127004E30DC /* libRNSpinkit.a in Frameworks */,
+				C187563D1E680621000DA077 /* libRCTFBSDK.a in Frameworks */,
+				C18756421E68078E000DA077 /* Bolts.framework in Frameworks */,
+				C18756451E68078E000DA077 /* FBSDKShareKit.framework in Frameworks */,
+				C18756441E68078E000DA077 /* FBSDKLoginKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,6 +314,10 @@
 		105FA9872D1A3B5CA197F77E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C187563E1E68078E000DA077 /* Bolts.framework */,
+				C187563F1E68078E000DA077 /* FBSDKCoreKit.framework */,
+				C18756401E68078E000DA077 /* FBSDKLoginKit.framework */,
+				C18756411E68078E000DA077 /* FBSDKShareKit.framework */,
 				C16A65631E647B7200BA873C /* SystemConfiguration.framework */,
 				C16A65611E647B6C00BA873C /* MobileCoreServices.framework */,
 				C16A655F1E647B6400BA873C /* AudioToolbox.framework */,
@@ -345,6 +383,7 @@
 				69EF89DC2CD14429A3087169 /* Skia.ttf */,
 				B02B02492D8F4C03995781C0 /* Times New Roman.ttf */,
 				4E141B8CF8C24057896B1573 /* Zocial.ttf */,
+				6D4C80B2507041E9B7029A1E /* OFL.txt */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -352,6 +391,8 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				313611AE4E1243AFAC696BCC /* RCTFBSDK.xcodeproj */,
+				3EC27AB2B57E410180AF7C12 /* RNSpinkit.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -485,6 +526,22 @@
 			path = Callout;
 			sourceTree = "<group>";
 		};
+		C18756331E6805B7000DA077 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C18756371E6805B7000DA077 /* libRCTFBSDK.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C5CBB9831E717EF7004E30DC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C5CBB9881E717EF7004E30DC /* libRNSpinkit.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -578,10 +635,11 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						ProvisioningStyle = Automatic;
+						DevelopmentTeam = C7RR839V43;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.Maps.iOS = {
-								enabled = 1;
+								enabled = 0;
 							};
 						};
 					};
@@ -607,6 +665,16 @@
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = C18756331E6805B7000DA077 /* Products */;
+					ProjectRef = 313611AE4E1243AFAC696BCC /* RCTFBSDK.xcodeproj */;
+				},
+				{
+					ProductGroup = C5CBB9831E717EF7004E30DC /* Products */;
+					ProjectRef = 3EC27AB2B57E410180AF7C12 /* RNSpinkit.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* SweetCow */,
@@ -616,6 +684,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		C18756371E6805B7000DA077 /* libRCTFBSDK.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTFBSDK.a;
+			remoteRef = C18756361E6805B7000DA077 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C5CBB9881E717EF7004E30DC /* libRNSpinkit.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNSpinkit.a;
+			remoteRef = C5CBB9871E717EF7004E30DC /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		00E356EC1AD99517003FC87E /* Resources */ = {
@@ -670,6 +755,7 @@
 				2433075EDACA4086A11D0F31 /* Skia.ttf in Resources */,
 				7EE91426269C4DABAC72C71A /* Times New Roman.ttf in Resources */,
 				B768A96F651540B089D67F53 /* Zocial.ttf in Resources */,
+				73CFD5973FBF43E3B1D74E7D /* OFL.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -866,6 +952,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = ZN92CZNCK2;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Frameworks/";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -875,6 +962,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -892,11 +982,15 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = ZN92CZNCK2;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Frameworks/";
 				INFOPLIST_FILE = SweetCowTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -916,16 +1010,21 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = C7RR839V43;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/build/Debug-iphoneos",
+					"$(PROJECT_DIR)/Frameworks/**",
+					"$(PROJECT_DIR)",
+					"$(SRCROOT)/Pods/**",
+					"\"$(SRCROOT)/\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"\"${PODS_ROOT}/Headers/Public/React\"/**",
+					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
+					"$(SRCROOT)/../node_modules/react-native-maps/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-spinkit/ios/**",
 				);
 				INFOPLIST_FILE = SweetCow/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -937,6 +1036,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sweetcow.sweetcow;
 				PRODUCT_NAME = SweetCow;
+				PROVISIONING_PROFILE = "eb50dea0-4f8a-4728-9ba6-8dca5940ace8";
+				PROVISIONING_PROFILE_SPECIFIER = Sweet_Cow_Dev_Profile;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -946,18 +1047,23 @@
 			baseConfigurationReference = A44C255B99340B32CAB320BD /* Pods-SweetCow.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = C7RR839V43;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/build/Debug-iphoneos",
+					"$(PROJECT_DIR)/Frameworks/**",
+					"$(PROJECT_DIR)",
+					"$(SRCROOT)/Pods/**",
+					"\"$(SRCROOT)/\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"\"${PODS_ROOT}/Headers/Public/React\"/**",
+					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
+					"$(SRCROOT)/../node_modules/react-native-maps/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-spinkit/ios/**",
 				);
 				INFOPLIST_FILE = SweetCow/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -969,6 +1075,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sweetcow.sweetcow;
 				PRODUCT_NAME = SweetCow;
+				PROVISIONING_PROFILE = "f6992be9-4ed4-45f7-8e1e-49a57b45ea3e";
+				PROVISIONING_PROFILE_SPECIFIER = SweetCow_Dist_Prov_Profile;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -984,11 +1092,15 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Frameworks/";
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "SweetCow-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1014,11 +1126,15 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Frameworks/";
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "SweetCow-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1043,11 +1159,15 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Frameworks/";
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "SweetCow-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.SweetCow-tvOSTests";
@@ -1068,11 +1188,15 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Frameworks/";
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "SweetCow-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.SweetCow-tvOSTests";
@@ -1103,6 +1227,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Frameworks/";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1145,6 +1270,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Frameworks/";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;

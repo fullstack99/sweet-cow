@@ -44,14 +44,14 @@ class AppNavigator extends Component {
     super(props)
 
     firebase.initializeApp({
-  //     apiKey: "AIzaSyC8D1CA3tzwOocmUnhkusTM_fDBFslc07A",
-  //     authDomain: "sweet-cow-df10d.firebaseapp.com",
-  //     databaseURL: "https://sweet-cow-df10d.firebaseio.com",
-  //     storageBucket: "sweet-cow-df10d.appspot.com"
-  apiKey: "AIzaSyDYCgxzOJfLEQG3HWxivN3V8bqURRf4apc",
-   authDomain: "sweet-cow-f5290.firebaseapp.com",
-   databaseURL: "https://sweet-cow-f5290.firebaseio.com",
-   storageBucket: "sweet-cow-f5290.appspot.com",
+      apiKey: "AIzaSyC8D1CA3tzwOocmUnhkusTM_fDBFslc07A",
+      authDomain: "sweet-cow-df10d.firebaseapp.com",
+      databaseURL: "https://sweet-cow-df10d.firebaseio.com",
+      storageBucket: "sweet-cow-df10d.appspot.com"
+  // apiKey: "AIzaSyDYCgxzOJfLEQG3HWxivN3V8bqURRf4apc",
+  //  authDomain: "sweet-cow-f5290.firebaseapp.com",
+  //  databaseURL: "https://sweet-cow-f5290.firebaseio.com",
+  //  storageBucket: "sweet-cow-f5290.appspot.com",
 
     });
 
