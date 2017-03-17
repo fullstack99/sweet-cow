@@ -244,9 +244,9 @@ class SignUp extends Component {
           </View>
 
           <View style={{justifyContent:'center', flexDirection:'row',marginTop: 12*deviceHeightDiff, backgroundColor:'rgba(0,0,0,0)'}}>
-          <Text style={{marginTop:-6, fontFamily:'Typeka Mix', color: "rgba(27,13,99,1)", alignSelf:'center'}}>. . . </Text>
-          <Text style={{fontFamily:'Typeka Mix', color: "rgba(27,13,99,1)", alignSelf:'center'}}>OR CONNECT WITH</Text>
-          <Text style={{marginTop:-6, fontFamily:'Typeka Mix', color: "rgba(27,13,99,1)", alignSelf:'center'}}> . . .</Text>
+          <Text style={{marginTop:-6, fontFamily:'ProximaNova-Regular', color: "rgba(27,13,99,1)", alignSelf:'center'}}>. . . </Text>
+          <Text style={{fontFamily:'ProximaNova-Regular', color: "rgba(27,13,99,1)", alignSelf:'center'}}>OR CONNECT WITH</Text>
+          <Text style={{marginTop:-6, fontFamily:'ProximaNova-Regular', color: "rgba(27,13,99,1)", alignSelf:'center'}}> . . .</Text>
           </View>
           <View style={{marginTop: 12*deviceHeightDiff}}>
           <CustomButton width={deviceWidth * 0.85} text="FACEBOOK" backgroundColor="#422575" onPress={()=>this.loginWithFacebook()}/>

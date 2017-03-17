@@ -17,10 +17,27 @@ export default class ShopLocationCell extends Component{
   }
 
 
+homeLocationButton(){
+    return(
+    <View style={{marginBottom:2, marginTop: 2,  backgroundColor: 'rgba(92,133,192,1)', height: deviceHeight*0.076, marginLeft:2, marginRight:2, flexDirection:'row', justifyContent:'center'}}>
+    <Image source={home_icon} style={{ marginLeft: 5, marginRight: 5, width: deviceWidth/15, height: deviceHeight/15, resizeMode: 'contain'}}/>
+    <Text style={{ marginTop:deviceHeight*0.03 , fontSize: 15, fontFamily: 'ProximaNova-Regular', color: 'white'}}> Home Location </Text>
+    </View>)
+  }
+
+makeHomeLocationButton(){
+  return(<TouchableOpacity onPress={()=>this.props.setHomeLocation(this.props.shop.coordinatesObj.shop.id)}>
+  <View style={{marginBottom:2, marginTop: 2,  backgroundColor: 'rgba(92,133,192,1)', height: deviceHeight*0.076, marginLeft:2, marginRight:2, flexDirection:'row', justifyContent:'center'}}>
+  <Image source={home_icon} style={{ marginLeft: 5, marginRight: 5, width: deviceWidth/15, height: deviceHeight/15, resizeMode: 'contain'}}/>
+  <Text style={{ marginTop:deviceHeight*0.03 , fontSize: 15, fontFamily: 'ProximaNova-Regular', color: 'white'}}> Make this my home location </Text>
+  </View>
+  </TouchableOpacity>)
+}
 
   render(){
     let shop = this.props.shop.coordinatesObj.shop
     let distance = this.props.shop.distance
+    let locationId = this.props.locationId
     if(distance === null){
       distance = ''
     }else{
@@ -35,33 +52,35 @@ export default class ShopLocationCell extends Component{
     if(deviceHeightDiff > 1){
       deviceHeightDiff += 0.25
     }
-    let fulladdress =  shop.address + '+' + shop.location
+    let fulladdress = shop.address + '+' + shop.location + ',+' + shop.state + '+' + shop.zip_code
+
+    let homeLocationButton = null
+
+    if(locationId === shop.id){
+      homeLocationButton = this.homeLocationButton()
+    }else{
+      homeLocationButton = this.makeHomeLocationButton()
+    }
+
 
     return(
       <View>
-      <View style={{marginBottom: 10}}>
+      <TouchableOpacity style={{marginBottom: 10}} onPress={()=>this.props.openShopDetail(this.props.shop)}>
           <View style={{alignSelf:'center', borderWidth:borderwidth/2, borderColor:'rgba(63, 57, 19, 1)', width: deviceWidth * 0.9}}>
             <View style={{flexDirection:'column', justifyContent: 'center'}}>
-            <Text style={{marginLeft:10, alignSelf:'flex-start', marginTop: 10*deviceHeightDiff, fontSize: 18, color: 'rgba(37, 0, 97, 1)', fontFamily:"Trade Gothic LT Std"}}> {shop.location.toUpperCase()} </Text>
+            <Text style={{marginLeft:10, alignSelf:'flex-start', marginTop: 10*deviceHeightDiff, fontSize: 18, color: 'rgba(37, 0, 97, 1)', fontFamily:"Trade Gothic LT Std"}}>{shop.location.toUpperCase()} </Text>
 
               <View style={{marginTop: -deviceHeightDiff*2, flexDirection:'row'}}>
-              <Text style={{flex: 1, marginLeft:10,  alignSelf:'center', fontSize: 16,  fontFamily: 'Typeka Mix', color: 'rgba(37, 0, 97, 1)'}}> {shop.address} </Text>
+              <Text style={{flex: 1, marginLeft:10,  alignSelf:'center', fontSize: 16,  fontFamily: 'ProximaNova-Regular', color: 'rgba(37, 0, 97, 1)'}}>{shop.address} </Text>
                 <TouchableOpacity style={{flexDirection:'row', alignSelf:'flex-end', marginRight:10}} onPress={()=>this.props.onPress(fulladdress)}>
                 <Image source={miles_icon} style={{alignSelf:'center', marginLeft: 20, marginRight: 10, width: deviceWidth/20, height: deviceHeight/20, resizeMode: 'contain'}}/>
                 <Text style={{alignSelf:'center', fontSize: 16, textDecorationLine:'underline',  fontFamily: 'ProximaNova-Regular', color: 'rgba(37, 0, 97, 1)'}}>{distance}</Text>
                 </TouchableOpacity>
               </View>
             </View>
-            <TouchableOpacity>
-            <View style={{marginBottom:2, marginTop: 2*deviceHeightDiff,  backgroundColor: 'rgba(92,133,192,1)', height: deviceHeight*0.076, marginLeft:2, marginRight:2}}>
-            <View style={{flexDirection:'row', justifyContent:'center'}}>
-            <Image source={home_icon} style={{ marginLeft: 5, marginRight: 5, width: deviceWidth/15, height: deviceHeight/15, resizeMode: 'contain'}}/>
-            <Text style={{ marginTop:deviceHeight*0.03 , fontSize: 12, fontFamily: 'ProximaNova-Regular', color: 'white'}}> Make this my home location </Text>
-            </View>
-            </View>
-            </TouchableOpacity>
+            {homeLocationButton}
           </View>
-      </View>
+      </TouchableOpacity>
       </View>
     );
   }

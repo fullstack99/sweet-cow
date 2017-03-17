@@ -93,7 +93,6 @@
 		C18756451E68078E000DA077 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C18756411E68078E000DA077 /* FBSDKShareKit.framework */; };
 		C4D5F10369E742368BD36834 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8591C6F091714D6DB2C6AF53 /* Rubik-Regular.ttf */; };
 		C536BD86AC374BF7A38C5B32 /* Georgia.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7B4D3C15F7AD4BF19DA3D724 /* Georgia.ttf */; };
-		C5CBB98C1E718127004E30DC /* libRNSpinkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C5CBB9881E717EF7004E30DC /* libRNSpinkit.a */; };
 		CA45870B6BD34F0BAA7BABF8 /* Arial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 674E8775B65349AB9AF16A04 /* Arial.ttf */; };
 		D4D28E8B51C24E128059DCE7 /* Courier New.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 96925AA4A0664944AA1DF361 /* Courier New.ttf */; };
 		F0533B832FFB46F28355AECA /* Comic Sans MS.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 813275BBED26445EB387D9EB /* Comic Sans MS.ttf */; };
@@ -123,13 +122,6 @@
 			remoteGlobalIDString = 9350E0F11CE3B0920041D815;
 			remoteInfo = RCTFBSDK;
 		};
-		C5CBB9871E717EF7004E30DC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3EC27AB2B57E410180AF7C12 /* RNSpinkit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D42CB3511B2538DE00FD0AE2;
-			remoteInfo = RNSpinkit;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -153,7 +145,6 @@
 		2FF056772429455BB4517C31 /* SanFranciscoThin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SanFranciscoThin.ttf; path = "../node_modules/native-base/Fonts/SanFranciscoThin.ttf"; sourceTree = "<group>"; };
 		313611AE4E1243AFAC696BCC /* RCTFBSDK.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTFBSDK.xcodeproj; path = "../node_modules/react-native-fbsdk/ios/RCTFBSDK.xcodeproj"; sourceTree = "<group>"; };
 		3369D4D5BE94485EB4AB4ADD /* Rubik-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Light.ttf"; path = "../node_modules/native-base/Fonts/Rubik-Light.ttf"; sourceTree = "<group>"; };
-		3EC27AB2B57E410180AF7C12 /* RNSpinkit.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNSpinkit.xcodeproj; path = "../node_modules/react-native-spinkit/ios/RNSpinkit.xcodeproj"; sourceTree = "<group>"; };
 		4018A6CB59514C7D8960C806 /* Arial Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Arial Black.ttf"; path = "../node_modules/native-base/Fonts/Arial Black.ttf"; sourceTree = "<group>"; };
 		417054443FDE49568E7458BF /* SanFrancisco.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SanFrancisco.ttf; path = "../node_modules/native-base/Fonts/SanFrancisco.ttf"; sourceTree = "<group>"; };
 		472A503C2E764E80B27CD341 /* Rubik-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Black.ttf"; path = "../node_modules/native-base/Fonts/Rubik-Black.ttf"; sourceTree = "<group>"; };
@@ -286,7 +277,6 @@
 				C16A65531E647AC800BA873C /* MapKit.framework in Frameworks */,
 				9B4F68DF58D424E5DFDE16DA /* libPods-SweetCow.a in Frameworks */,
 				C18756431E68078E000DA077 /* FBSDKCoreKit.framework in Frameworks */,
-				C5CBB98C1E718127004E30DC /* libRNSpinkit.a in Frameworks */,
 				C187563D1E680621000DA077 /* libRCTFBSDK.a in Frameworks */,
 				C18756421E68078E000DA077 /* Bolts.framework in Frameworks */,
 				C18756451E68078E000DA077 /* FBSDKShareKit.framework in Frameworks */,
@@ -392,7 +382,6 @@
 			isa = PBXGroup;
 			children = (
 				313611AE4E1243AFAC696BCC /* RCTFBSDK.xcodeproj */,
-				3EC27AB2B57E410180AF7C12 /* RNSpinkit.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -534,14 +523,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		C5CBB9831E717EF7004E30DC /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				C5CBB9881E717EF7004E30DC /* libRNSpinkit.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -636,8 +617,11 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = C7RR839V43;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
+							com.apple.GameCenter = {
+								enabled = 0;
+							};
 							com.apple.Maps.iOS = {
 								enabled = 0;
 							};
@@ -670,10 +654,6 @@
 					ProductGroup = C18756331E6805B7000DA077 /* Products */;
 					ProjectRef = 313611AE4E1243AFAC696BCC /* RCTFBSDK.xcodeproj */;
 				},
-				{
-					ProductGroup = C5CBB9831E717EF7004E30DC /* Products */;
-					ProjectRef = 3EC27AB2B57E410180AF7C12 /* RNSpinkit.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -691,13 +671,6 @@
 			fileType = archive.ar;
 			path = libRCTFBSDK.a;
 			remoteRef = C18756361E6805B7000DA077 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		C5CBB9881E717EF7004E30DC /* libRNSpinkit.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNSpinkit.a;
-			remoteRef = C5CBB9871E717EF7004E30DC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -965,7 +938,6 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -991,7 +963,6 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1007,6 +978,7 @@
 			baseConfigurationReference = 4FA519A79DEA072AF9D1C642 /* Pods-SweetCow.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer: LUIS METZGER (DSW6DCSKW6)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
@@ -1024,7 +996,6 @@
 					"\"${PODS_ROOT}/Headers/Public/React\"/**",
 					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
 					"$(SRCROOT)/../node_modules/react-native-maps/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-spinkit/ios/**",
 				);
 				INFOPLIST_FILE = SweetCow/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1036,8 +1007,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sweetcow.sweetcow;
 				PRODUCT_NAME = SweetCow;
-				PROVISIONING_PROFILE = "eb50dea0-4f8a-4728-9ba6-8dca5940ace8";
-				PROVISIONING_PROFILE_SPECIFIER = Sweet_Cow_Dev_Profile;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1047,7 +1018,8 @@
 			baseConfigurationReference = A44C255B99340B32CAB320BD /* Pods-SweetCow.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: LUIS METZGER (C7RR839V43)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = C7RR839V43;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1063,7 +1035,6 @@
 					"\"${PODS_ROOT}/Headers/Public/React\"/**",
 					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
 					"$(SRCROOT)/../node_modules/react-native-maps/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-spinkit/ios/**",
 				);
 				INFOPLIST_FILE = SweetCow/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1075,8 +1046,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sweetcow.sweetcow;
 				PRODUCT_NAME = SweetCow;
-				PROVISIONING_PROFILE = "f6992be9-4ed4-45f7-8e1e-49a57b45ea3e";
-				PROVISIONING_PROFILE_SPECIFIER = SweetCow_Dist_Prov_Profile;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -1098,7 +1069,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1135,7 +1105,6 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1168,7 +1137,6 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.SweetCow-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1194,7 +1162,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",

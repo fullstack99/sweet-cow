@@ -19,6 +19,19 @@ class Database {
 
     }
 
+    static setHomeLocation(userId, details) {
+
+  // Write the new post's data simultaneously in the posts list and the user's post list.
+  var updates = {};
+  updates['/user/' + userId + '/details/locationId'] = details;
+
+
+        let userDataPath = "/user/" + userId + "/details";
+
+        return firebase.database().ref().update(updates)
+
+    }
+
     /**
      * Listen for changes to a users mobile number
      * @param userId
@@ -29,16 +42,19 @@ class Database {
         let userDataPath = "/user/" + userId + "/details";
 
 
-        firebase.database().ref(userDataPath).on('value', (snapshot) => {
+        this.userdataListener = firebase.database().ref(userDataPath).once('value', (snapshot) => {
 
             var data = {};
 
             if (snapshot.val()) {
-              data = {email:snapshot.val().email, name: snapshot.val().name}
+
+              data = {uid:userId, email:snapshot.val().email, name: snapshot.val().name, locationId:snapshot.val().locationId}
             }
 
             callback(data)
         });
+
+        return this.userdataListener
     }
 
 }

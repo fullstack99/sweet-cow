@@ -14,9 +14,7 @@ import Map from 'react-native-maps';
 import ShopLocationCell from "./shopLocationCell";
 import Loading from '../base/loading/'
 // import Pulse from 'react-native-pulse';
-import Spinner from 'react-native-spinkit';
 
-import Pulse from '../base/pulse'
 import CustomPulse from './pulse'
 
 const deviceWidth = Dimensions.get('window').width;
@@ -24,6 +22,8 @@ const deviceHeight = Dimensions.get('window').height;
 
 const {
   replaceAt,
+  popRoute,
+  pushRoute,
 } = actions;
 
 const background = require('../../../images/background_login.png');
@@ -33,9 +33,8 @@ const search_icon = require('../../../images/search-icon.png');
 const favorite_icon = require('../../../images/favorite-icon.png');
 const user_icon = require('../../../images/user-icon.png');
 const sweetCow_Marker = require('../../../images/SweetCow-marker.png');
-
-
 const currentLocation_Marker = require('../../../images/map-marker1.png');
+
 const marker_identifier = 'M'
 
 const styles = StyleSheet.create({
@@ -62,9 +61,27 @@ class MapView extends Component {
   static propTypes = {
     setUser: React.PropTypes.func,
     replaceAt: React.PropTypes.func,
+    popRoute: React.PropTypes.func,
+    pushRoute: React.PropTypes.func,
     navigation: React.PropTypes.shape({
       key: React.PropTypes.string,
     }),
+  }
+
+  popRoute() {
+    this.props.popRoute(this.props.navigation.key);
+  }
+
+  pushRoute(route){
+    this.props.pushRoute({ key: route}, this.props.navigation.key);
+  }
+
+  openShopDetails(shopDetails){
+    this.props.pushRoute({ key: 'shopDetail', data:shopDetails, lastPosition:this.state.lastPosition}, this.props.navigation.key);
+  }
+
+  openMyProfile (){
+    this.props.pushRoute({ key: 'myProfile', shopsData:this.state.shops}, this.props.navigation.key);
   }
 
   constructor(props) {
@@ -82,6 +99,7 @@ class MapView extends Component {
     shops: [],
     shopsCoordinates: [],
     distanceArray: [],
+    homeLocationId:0,
     region: {
       latitude: 339.977755,
       longitude: -105.134582,
@@ -90,7 +108,6 @@ class MapView extends Component {
     }
   };
 }
-
 
 
 watchID: ?number = null;
@@ -117,9 +134,11 @@ fetchCurrentLocation(){
 
       var lastPosition = position;
       this.setState({lastPosition});
+      console.warn('fetchCurrentLocation')
       this.getLocationList()
     },
     (error) => {
+      console.warn('fetchCurrentLocation error')
       this.getLocationList()
       alert(JSON.stringify(error))
 
@@ -160,6 +179,7 @@ async getCurrentLocationIfPermission(){
       } else {
         console.log("Location permission denied")
         // alert(JSON.stringify('Location Permission Denied'))
+        console.warn('Location permission denied')
         this.fetchCurrentLocation()
         // this.getLocationList()
       }
@@ -174,6 +194,7 @@ async getCurrentLocationIfPermission(){
 
 }
 
+
 focusMap(markers, animated) {
   console.log(`Markers received to populate map: ${markers}`);
   this.map.fitToSuppliedMarkers(markers, animated);
@@ -187,71 +208,41 @@ focus1() {
 
 
 componentWillMount(){
-
-  // setTimeout(
-  //   () => {
-  //     let element = {'identifier':marker_identifier ,'latitude': this.state.lastPosition.coords.latitude, 'longitude': this.state.lastPosition.coords.longitude, 'title': "Current Position", 'image': null, 'shop':null}
-  //     let currentArray = this.state.shopsCoordinates
-  //     currentArray.push(element)
-  //     this.setState({shopsCoordinates: currentArray})
-  //     this.returnShopCoordinates()
-  //
-  //   },
-  //   time_out_get_Coordinates
-  // );
+  console.warn('will mout')
+  // this.getLocationList()
 }
 
 componentWillUnmount() {
   navigator.geolocation.clearWatch(this.watchID);
 }
 
-
 replaceRoute(route) {
   this.props.replaceAt('mapView', { key: route }, this.props.navigation.key);
 }
 
-logoutButtonPressed(){
-  this.setState({isLoading: true})
-  this.logout()
-}
+// logoutButtonPressed(){
+//   this.setState({isLoading: true})
+//   this.logout()
+// }
 
 
-openExternalMAps(location){
-  var destination = location
-  destination = destination.replace(/\s/g, "+");
-  let url = 'comgooglemaps://?saddr='+this.state.lastPosition.coords.latitude+','+this.state.lastPosition.coords.longitude+'&daddr='+destination+'&directionsmode=drive'
-  // if(Platform.OS !== 'android'){
-  //   url = 'http://maps.apple.com/?saddr=sll='+this.state.lastPosition.coords.latitude+','+this.state.lastPosition.coords.longitude+'&daddr='+destination+'&dirflg=r'
-  // }
-
-  Linking.canOpenURL(url).then(supported => {
-    if (!supported) {
-      url = 'http://maps.apple.com/?saddr=sll='+this.state.lastPosition.coords.latitude+','+this.state.lastPosition.coords.longitude+'&daddr='+destination+'&dirflg=r'
-      return Linking.openURL(url);
-    } else {
-      return Linking.openURL(url);
-    }
-  }).catch(err => console.error('An error occurred', err));
-}
-
-async logout() {
-
-  try {
-    await firebase.auth().signOut();
-    this.setState({isLoading: false})
-    this.replaceRoute("home")
-
-  } catch (error) {
-    console.log(error);
-  }
-}
+// async logout() {
+//   try {
+//     await firebase.auth().signOut();
+//     this.setState({isLoading: false})
+//     this.replaceRoute("home")
+//
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
 
 getLocationList(){
+  console.warn('location list')
   this.setState({isLoading: true})
   fetch('https://sweet-cow-store-locations.herokuapp.com/api/locations')
   .then((response) => response.json())
   .then((responseJson) => {
-
     console.log(responseJson)
     this.setState({isLoading: true, shops: responseJson})
 
@@ -270,15 +261,16 @@ getLocationList(){
 
 getDistanceBetweenPoints(){
 
+  this.setState({distanceArray: []})
   if(this.state.shopsCoordinates[0]!== undefined){
     var i = 0
-    var urlDistance = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins='+this.state.shopsCoordinates[0].latitude+','+this.state.shopsCoordinates[0].longitude+'&destinations='
+    var urlDistance = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins='+this.state.lastPosition.coords.latitude+','+this.state.lastPosition.coords.longitude+'&destinations='
 
     this.state.shopsCoordinates.map((shopCoordinates)=>{
       if(i < this.state.shopsCoordinates.length - 1){
-        urlDistance = urlDistance+this.state.shopsCoordinates[0].latitude+','+this.state.shopsCoordinates[0].longitude+'|'
+        urlDistance = urlDistance+shopCoordinates.latitude+','+shopCoordinates.longitude+'|'
       }else{
-        urlDistance = urlDistance+this.state.shopsCoordinates[1].latitude+','+this.state.shopsCoordinates[1].longitude
+        urlDistance = urlDistance+shopCoordinates.latitude+','+shopCoordinates.longitude
       }
       i++
     })
@@ -291,84 +283,138 @@ getDistanceBetweenPoints(){
       console.log(responseJson);
 
       var index = 0
+      let currentArray = []
       responseJson.rows[0].elements.map((element) => {
 
         if(element.status === 'OK'){
           let distance = element.distance.text
           let shopElement = {'coordinatesObj':this.state.shopsCoordinates[index], 'distance': distance}
-          let currentArray = this.state.distanceArray
           currentArray.push(shopElement)
-          this.setState({isLoading: false, distanceArray: currentArray})
+          // this.setState({isLoading: false, distanceArray: currentArray})
           index++
         } else{
 
           let shopElement = {'coordinatesObj':this.state.shopsCoordinates[index], 'distance': null}
-          let currentArray = this.state.distanceArray
           currentArray.push(shopElement)
-          this.setState({isLoading: false, distanceArray: currentArray})
+          // this.setState({isLoading: false, distanceArray: currentArray})
           index++
         }
-
       })
+
+      currentArray.sort((obj1, obj2) => {
+        if (obj1.distance > obj2.distance) return 1;
+        if (obj1.distance < obj2.distance) return -1;
+        return 0;
+      })
+      this.setState({isLoading: false, distanceArray: currentArray})
     })
     .catch((error) => {
       console.error(error);
     });
 
   }
-
 }
 
+
+// getShopURL(){
+//   var i = 0
+//   let url = 'https://maps.googleapis.com/maps/api/geocode/json?address='
+//   this.state.shops.map((shop) => {
+//     let address =  shop.address + '+' + shop.location
+//     var fulladdress = address
+//     fulladdress = fulladdress.replace(/\s/g, "+");
+//
+//     if(i < this.state.shops.length - 1){
+//       url = url+fulladdress+"|"
+//     }else{
+//       url = url+fulladdress
+//     }
+//     i++
+//   })
+//   url = url+'&key=AIzaSyCUdBK1qZKBI6IDzTl9eT0HW-QEN-YgHqE'
+//   return url
+// }
 
 returnShopCoordinates(){
 
-  var i = 0
-  let url = 'https://maps.googleapis.com/maps/api/geocode/json?address='
-  this.state.shops.map((shop) => {
-    let address =  shop.address + '+' + shop.location
-    var fulladdress = address
-    fulladdress = fulladdress.replace(/\s/g, "+");
-
-    if(i < this.state.shopsCoordinates.length - 1){
-      url = url+fulladdress+"|"
-    }else{
-      url = url+fulladdress
-    }
-    i++
-  })
-  url = url+'&key=AIzaSyCUdBK1qZKBI6IDzTl9eT0HW-QEN-YgHqE'
-
-
+  var index = 0
   this.setState({isLoading: true})
+    this.state.shops.map((shop) => {
+      let url = 'https://maps.googleapis.com/maps/api/geocode/json?address='
+      let address =  shop.address + '+' + shop.location
+      var fulladdress = address
+      fulladdress = fulladdress.replace(/\s/g, "+");
+      url = url+fulladdress+'&key=AIzaSyCUdBK1qZKBI6IDzTl9eT0HW-QEN-YgHqE'
+      fetch(url)
+      .then((response) => response.json())
+      .then((responseJson) => {
 
-  fetch(url)
-  .then((response) => response.json())
-  .then((responseJson) => {
+        console.log(responseJson);
 
-    console.log(responseJson);
+        if(responseJson.results[0] !== undefined && responseJson.status !== 'ZERO_RESULTS'){
+            let currentArray = this.state.shopsCoordinates
+            let element = {'identifier':marker_identifier, 'latitude': responseJson.results[0].geometry.location.lat, 'longitude': responseJson.results[0].geometry.location.lng, 'title': 'Sweet Cow', image:sweetCow_Marker, 'shop':shop}
+            currentArray.push(element)
+            this.setState({shopsCoordinates: currentArray})
+            index++
+            // console.warn(index);
 
-    if(responseJson.results[0] !== undefined && responseJson.status !== 'ZERO_RESULTS'){
-      var index = 0
-      responseJson.results.map((result)=>{
-        let currentArray = this.state.shopsCoordinates
-        let element = {'identifier':marker_identifier, 'latitude': result.geometry.location.lat, 'longitude': result.geometry.location.lng, 'title': 'Sweet Cow', image:sweetCow_Marker, 'shop':this.state.shops[index]}
-        currentArray.push(element)
-        this.setState({shopsCoordinates: currentArray})
-        index++
-      })
-      this.focus1();
-      this.getDistanceBetweenPoints()
+          if(index === this.state.shops.length){
+            // console.warn(index);
+            this.focus1();
+            this.getDistanceBetweenPoints()
+          }
+        }
+    }).catch((error) => {
+      console.error(error);
+    });
 
-    }
-  })
 
-  .catch((error) => {
-    console.error(error);
-  });
+  // fetch(url)
+  // .then((response) => response.json())
+  // .then((responseJson) => {
+  //
+  //   console.log(responseJson);
+  //
+  //   if(responseJson.results[0] !== undefined && responseJson.status !== 'ZERO_RESULTS'){
+  //     var index = 0
+  //     responseJson.results.map((result)=>{
+  //       let currentArray = this.state.shopsCoordinates
+  //       let element = {'identifier':marker_identifier, 'latitude': result.geometry.location.lat, 'longitude': result.geometry.location.lng, 'title': 'Sweet Cow', image:sweetCow_Marker, 'shop':this.state.shops[index]}
+  //       currentArray.push(element)
+  //       this.setState({shopsCoordinates: currentArray})
+  //       index++
+  //     })
+  //     this.focus1();
+  //     this.getDistanceBetweenPoints()
+  //   }else{
+  //     this.focus1();
+  //     this.setState({isLoading: false})
+  //   }
+  // })
+
+})
 }
 
-centerMapaAtMyLocation(){
+
+openExternalMaps(location){
+  var destination = location
+  destination = destination.replace(/\s/g, "+");
+  let url = 'comgooglemaps://?saddr='+this.state.lastPosition.coords.latitude+','+this.state.lastPosition.coords.longitude+'&daddr='+destination+'&directionsmode=drive'
+
+  Linking.canOpenURL(url).then(supported => {
+    if (!supported) {
+      url = 'http://maps.apple.com/?saddr=sll='+this.state.lastPosition.coords.latitude+','+this.state.lastPosition.coords.longitude+'&daddr='+destination+'&dirflg=r'
+      return Linking.openURL(url);
+    } else {
+      return Linking.openURL(url);
+    }
+  }).catch(err => console.error('An error occurred', err));
+}
+
+centerMapAtMyLocation(){
   this.focus1()
+  this.getDistanceBetweenPoints()
 }
 
 _onRegionChange = (region) => {
@@ -377,39 +423,19 @@ _onRegionChange = (region) => {
   });
 };
 
-
-
 getAnimatedMarkers(marker){
-
-
-  // <Spinner pointerEvents="none" isVisible={true}  size= {100}  color='#5c85c0' type='Bounce' style={{ marginTop: -50}}>
-  //
-  // </Spinner>
-
-  // <Pulse color='rgba(92,133,192,1)' numPulses={1} diameter={100} top={-50} speed={20} duration={1000}>
-  //
-  // </Pulse>
-  //
-  // <View style={{height:20 , width: 20, backgroundColor:'rgba(92,133,192,1)', borderRadius:10, position: "absolute", marginLeft:40, marginTop:-10 }}>
-  // </View>
-
   return(
-
     <Map.Marker
-    coordinate={{latitude: marker.latitude,longitude: marker.longitude,}}
+    coordinate={{latitude: this.state.lastPosition.coords.latitude,longitude: this.state.lastPosition.coords.longitude,}}
     identifier={marker.identifier}
-    title={marker.title}
-    image={currentLocation_Marker}
-     pointerEvents="none"
+    title={marker.title} pointerEvents="none"
     >
-
+    <CustomPulse pointerEvents="none"/>
     </Map.Marker>
   )
 }
 
 getMarkers(marker){
-
-
   return(
 
     <Map.Marker
@@ -421,7 +447,32 @@ getMarkers(marker){
   )
 }
 
+
+setHomeLocation(locationId){
+  try{
+    FirDatabase.setHomeLocation(this.props.user.uid, locationId)
+    this.setState({homeLocationId: locationId})
+
+    let user = this.props.user
+    user.locationId = locationId
+    this.setUser(user)
+  }
+  catch(error){
+
+    this.setState({isLoading: false})
+    Alert.alert(
+      'Error',
+      `${error.toString()}`,
+    )
+  }
+}
+
+setUser(user) {
+  this.props.setUser(user);
+}
+
 render() {
+
   let borderwidth = 6
   let deviceHeightDiff = deviceHeight/568.0
   if(deviceHeightDiff > 1){
@@ -429,9 +480,21 @@ render() {
   }
 
   var locList = []
+
+
+
   this.state.distanceArray.map((shop) => {
-    if(shop.coordinatesObj.shop !== null)
-    locList.push(<ShopLocationCell shop={shop} onPress={(location)=>this.openExternalMAps(location)}/>)
+    if(shop.coordinatesObj.shop !== null){
+      if(shop.coordinatesObj.shop.id === this.props.user.locationId)
+      locList.push(<ShopLocationCell shop={shop} locationId={this.props.user.locationId} onPress={(location)=>this.openExternalMaps(location)} openShopDetail={(shopDetails)=>this.openShopDetails(shopDetails)}  setHomeLocation={(locationId)=>this.setHomeLocation(locationId)}/> )
+    }
+  })
+
+  this.state.distanceArray.map((shop) => {
+    if(shop.coordinatesObj.shop !== null){
+      if(shop.coordinatesObj.shop.id !== this.props.user.locationId)
+      locList.push(<ShopLocationCell shop={shop} locationId={this.props.user.locationId} onPress={(location)=>this.openExternalMaps(location)} openShopDetail={(shopDetails)=>this.openShopDetails(shopDetails)}  setHomeLocation={(locationId)=>this.setHomeLocation(locationId)}/> )
+    }
   })
 
   var markers = []
@@ -444,15 +507,14 @@ render() {
 
   })
 
-
   return (
     <Container style={{marginLeft:3}}>
 
     <View style={{ }}>
-    <View style={{width: deviceWidth, height: deviceHeight * 0.16, flexDirection:'row'}}>
+    <View style={{width: deviceWidth, height: deviceHeight * 0.13, flexDirection:'row'}}>
     <Image source={logoCow} style={{marginLeft: 10, width: deviceWidth/2.2, height: deviceHeight/6.2, alignSelf:'flex-start', marginTop: 0, resizeMode: 'contain'}}/>
 
-    <TouchableOpacity onPress={()=>this.centerMapaAtMyLocation()}>
+    <TouchableOpacity onPress={()=>this.centerMapAtMyLocation()}>
     <View>
     <Image source={map_icon} style={{marginLeft: 25, marginTop: 25, width: deviceWidth/12, height: deviceHeight/12, resizeMode: 'contain'}}/>
     </View>
@@ -470,7 +532,7 @@ render() {
     </View>
     </TouchableOpacity>
 
-    <TouchableOpacity onPress={()=>this.logoutButtonPressed()}>
+    <TouchableOpacity onPress={()=>this.openMyProfile()}>
     <View>
     <Image source={user_icon} style={{marginLeft: 8, marginTop: 25, width: deviceWidth/12, height: deviceHeight/12, resizeMode: 'contain'}}/>
     </View>
@@ -479,7 +541,7 @@ render() {
 
     <View style={{width: deviceWidth, height: borderwidth,  backgroundColor:'rgba(37, 0, 97, 1)' }}>
     </View>
-    <View style={{width: deviceWidth, height: deviceHeight*0.4}}>
+    <View style={{width: deviceWidth, height: deviceHeight*0.42}}>
     <Text style={{alignSelf:'center', marginTop: 50}}> Map view here </Text>
     <Map
     provider={this.props.provider}
@@ -493,8 +555,9 @@ render() {
     </View>
     </View>
 
-    <View style={{marginTop:-borderwidth, borderWidth:borderwidth, borderColor:'rgba(37, 0, 97, 1)', width: deviceWidth, height: ((deviceHeight * 0.44))}}>
-
+    <View style={{marginTop:-borderwidth, width: deviceWidth, height: ((deviceHeight * 0.45))}}>
+    <View style={{width: deviceWidth, height: borderwidth,  backgroundColor:'rgba(37, 0, 97, 1)' }}>
+    </View>
     <View>
 
     <Text style={{alignSelf:'center', marginTop: 10, fontSize: 25, color: 'rgba(37, 0, 97, 1)', fontFamily:"Trade Gothic LT Std"}}> SHOPS AROUND ME </Text>
@@ -506,7 +569,7 @@ render() {
 
     <ScrollView
     automaticallyAdjustContentInsets={false}
-    vertical={true}
+    vertical={true} style={{marginBottom: 20}}
     >
     {locList}
     </ScrollView>
@@ -527,11 +590,15 @@ function bindActions(dispatch) {
   return {
     replaceAt: (routeKey, route, key) => dispatch(replaceAt(routeKey, route, key)),
     setUser: name => dispatch(setUser(name)),
+    popRoute: (key) => dispatch(popRoute(key)),
+    pushRoute: (route, key) => dispatch(pushRoute(route, key)),
+
   };
 }
 
 const mapStateToProps = state => ({
   navigation: state.cardNavigation,
+  user: state.user.name
 });
 
 export default connect(mapStateToProps, bindActions)(MapView);

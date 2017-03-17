@@ -15,31 +15,37 @@ export default class TextField extends Component{
     placeholder: React.PropTypes.string,
     labelName: React.PropTypes.string,
     isSecureEntry: React.PropTypes.bool,
+    isEditable: React.PropTypes.bool,
   }
 
 
   // Specifies the default values for props:
   static defaultProps = {
-    iconImage: email_icon,
+    iconImage: null,
     width: deviceWidth * 0.9,
     placeholder: "",
     labelName: "Name:",
-    isSecureEntry: false
+    isSecureEntry: false,
+    isEditable: true
   };
 
   render(){
-
+let imageDimension = 15
+if(this.props.iconImage === null){
+  imageDimension = 0
+}
     return(
 
       <View style={[styles.textField, {width: this.props.width}]}>
-      <Image source={this.props.iconImage} style={{marginLeft: 15, alignSelf: 'center', width: 15,height:15, marginTop: 2, resizeMode: 'contain'}}/>
+      <Image source={this.props.iconImage} style={{marginLeft: 15, alignSelf: 'center', width: imageDimension,height:imageDimension, marginTop: 2, resizeMode: 'contain'}}/>
 
-      <Text style={{fontFamily:'Typeka Mix',alignSelf: 'center', marginLeft: 10, fontSize: 20, color: '#1f1360'}}>{this.props.labelName}</Text>
-      <TextInput placeholder={this.props.placeholder}
+
+      <TextInput placeholder={this.props.labelName} placeholderTextColor='#1f1360'
         style={{flex: 1, marginLeft: 5, color: '#1f1360', fontSize: 20}}
         onChangeText={this.props.onChangeText}
         secureTextEntry={this.props.isSecureEntry}
-        underlineColorAndroid = 'rgba(0,0,0,0)'
+        editable={this.props.isEditable}
+        underlineColorAndroid='rgba(0,0,0,0)'
         autoCorrect={false}
       />
       </View>

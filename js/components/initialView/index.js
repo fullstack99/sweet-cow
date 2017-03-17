@@ -16,7 +16,6 @@ const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
 
-//
 const {
   replaceAt,
   pushRoute
@@ -84,22 +83,20 @@ class InitialView extends Component {
         //   isLoading: true
         // })
         //
-        //   FirDatabase.listenUserData(user.uid, (userDataVal) => {
-        //       this.setState({
-        //         isLoading: false
-        //       })
-        //       if(userDataVal.email == undefined || userDataVal.email == ""){
-        //         Alert.alert(
-        //           'Error',
-        //           '',
-        //         )
-        //       }
-        //       else{
-        //         this.setUser(userDataVal)
-        //         this.replaceRoute(initialView)
-        //       }
-        // });
-        this.replaceRoute(initialView)
+          this.listenUserData = FirDatabase.listenUserData(user.uid, (userDataVal) => {
+
+              this.setState({
+                isLoading: false
+              })
+              if(userDataVal.email == undefined){
+
+              }
+              else{
+
+                this.setUser(userDataVal)
+                this.replaceRoute(initialView)
+              }
+        });
       }
       else{
         this.replaceRoute(initialView)
@@ -111,15 +108,13 @@ class InitialView extends Component {
 
   componentWillUnmount() {
     this.fireBaseListener = undefined
+    this.listenUserData = undefined
     clearInterval(this.timer)
-    // this.updateTimer()
   }
 
   componentDidMount () {
     this.spin()
     this.startPercentageIncrease()
-    // this.fadingCircleRadius()
-    // this.fadingCircle()
   }
 
   spin () {
@@ -135,24 +130,10 @@ class InitialView extends Component {
   }
 
 
-
-
-// fadingCircle(){
-//
-//   if(alpha <= 0){
-//     alpha = 1
-//   }
-//   this.setState({alpha: alpha})
-//   setTimeout(() => {
-//     this.fadingCircle()
-//   }, 10);
-//
-// }
-
 startPercentageIncrease(){
   this.timer = setInterval(() => {
     this.increasePecentage()
-  }, 100);
+  }, 200);
 }
 
 increasePecentage(){
@@ -168,7 +149,7 @@ increasePecentage(){
   replaceRoute(route) {
     setTimeout(() => {
       this.props.replaceAt('default', { key: route }, this.props.navigation.key);
-    }, 2000);
+    }, 500);
 
   }
 
@@ -189,7 +170,7 @@ increasePecentage(){
       inputRange: [0, 1],
       outputRange: ['0deg', '360deg']
     })
-    // if (this.state.userLoaded) {
+
     return(
       <Container>
       <Content bounces={false}>
@@ -214,11 +195,6 @@ increasePecentage(){
         </Content>
         </Container>
       );
-      //
-      // }
-      // else{
-      //   return null
-      // }
 
     }
   }

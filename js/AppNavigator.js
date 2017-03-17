@@ -11,8 +11,10 @@ import { closeDrawer } from './actions/drawer';
 import Dummy from './components/base/dummy';
 import Login from './components/login/';
 import SignUp from './components/signup/';
+import ShopDetails from './components/ShopDetails/';
 import HomeScreen from './components/homeScreen/';
 import MapView from './components/mapView/';
+import MyProfile from './components/MyProfile/';
 import InitialView from './components/initialView/';
 import { statusBarColor } from './themes/base-theme';
 import * as firebase from "firebase";
@@ -111,7 +113,10 @@ class AppNavigator extends Component {
           return <MapView />
       case "home":
         return <HomeScreen />
-
+      case "shopDetail":
+        return <ShopDetails data={props.scene.route.data} lastPosition={props.scene.route.lastPosition}/>
+      case "myProfile":
+        return <MyProfile shopsData={props.scene.route.shopsData}/>
       default:
           return <InitialView />
 

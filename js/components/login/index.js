@@ -82,6 +82,10 @@ class Login extends Component {
     };
   }
 
+  componentWillUnmount() {
+    this.listenUserData = undefined
+  }
+
   setUser(user) {
     this.props.setUser(user);
   }
@@ -154,9 +158,9 @@ async resetPassword(){
 
         try{
           // Listen for UserData Changes
-            FirDatabase.listenUserData(userData.uid, (userDataVal) => {
-                console.warn(userDataVal.email)
-                console.warn(userDataVal.name)
+            this.listenUserData = FirDatabase.listenUserData(userData.uid, (userDataVal) => {
+                // console.warn(userDataVal.email)
+                // console.warn(userDataVal.name)
                 if(userDataVal.email == undefined || userDataVal.email == ""){
                   Alert.alert(
                     'Error',
@@ -239,8 +243,9 @@ await LoginManager.logInWithReadPermissions(['public_profile']).then((result) =>
                         try{
                           FirDatabase.setUserData(userData.uid, emailId, name)
                           setTimeout(() => {
-                              this.replaceRoute("mapView")
-                              this.setState({isLoading: false})
+                              // this.replaceRoute("mapView")
+                              // this.setState({isLoading: false})
+                              this.getLoginData(userData.uid)
                           }, 150);
 
                         }
@@ -275,6 +280,37 @@ await LoginManager.logInWithReadPermissions(['public_profile']).then((result) =>
     alert('' + error.toString());
   }
 );
+  }
+
+  getLoginData(uid){
+    try{
+      // Listen for UserData Changes
+        this.listenUserData = FirDatabase.listenUserData(uid, (userDataVal) => {
+            // console.warn(userDataVal.email)
+            // console.warn(userDataVal.name)
+            if(userDataVal.email == undefined){
+              Alert.alert(
+                'Error',
+                '',
+              )
+            }
+            else{
+              this.setUser(userDataVal)
+              this.setState({isLoading: false})
+              this.replaceRoute("mapView")
+            }
+        });
+
+    }
+    catch(error){
+      console.warn(`setError: ${error.toString()}`);
+      this.setState({isLoading: false})
+      Alert.alert(
+        'Error',
+        `${error.toString()}`,
+      )
+
+    }
   }
 
   initUser(token) {
@@ -328,9 +364,9 @@ await LoginManager.logInWithReadPermissions(['public_profile']).then((result) =>
           </View>
 
           <View style={{justifyContent:'center', flexDirection:'row',marginTop: 12*deviceHeightDiff, backgroundColor:'rgba(0,0,0,0)'}}>
-          <Text style={{marginTop:-6, fontFamily:'Typeka Mix', color: "rgba(27,13,99,1)", alignSelf:'center'}}>. . . </Text>
-          <Text style={{fontFamily:'Typeka Mix', color: "rgba(27,13,99,1)", alignSelf:'center'}}>OR LOGIN WITH</Text>
-          <Text style={{marginTop:-6, fontFamily:'Typeka Mix', color: "rgba(27,13,99,1)", alignSelf:'center'}}> . . .</Text>
+          <Text style={{marginTop:-6, fontFamily:'ProximaNova-Regular', color: "rgba(27,13,99,1)", alignSelf:'center'}}>. . . </Text>
+          <Text style={{fontFamily:'ProximaNova-Regular', color: "rgba(27,13,99,1)", alignSelf:'center'}}>OR LOGIN WITH</Text>
+          <Text style={{marginTop:-6, fontFamily:'ProximaNova-Regular', color: "rgba(27,13,99,1)", alignSelf:'center'}}> . . .</Text>
           </View>
           <View style={{marginTop: 12*deviceHeightDiff}}>
           <CustomButton width={deviceWidth * 0.85} text="FACEBOOK" backgroundColor="#422575" onPress={()=>this.loginWithFacebook()}/>
