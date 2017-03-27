@@ -12,6 +12,7 @@ import { setUser } from '../../actions/user';
 import * as firebase from "firebase";
 import FirDatabase from "../../database/";
 import Loading from '../base/loading/'
+import { LoginManager, AccessToken } from 'react-native-fbsdk';
 
 
 const deviceWidth = Dimensions.get('window').width;
@@ -137,6 +138,87 @@ class SignUp extends Component {
   }
 
 
+    async loginWithFacebook(){
+      // Attempt a login using the Facebook login dialog,
+  // asking for default permissions.
+  this.setState({isLoading: true})
+
+  await LoginManager.logInWithReadPermissions(['public_profile']).then((result) => {
+      if (result.isCancelled) {
+        this.setState({isLoading: false})
+        alert('Login was cancelled');
+
+      } else {
+
+          // console.warn(result.toString());
+          // console.log(result)
+          AccessToken.getCurrentAccessToken().then(
+                    (data) => {
+                      // alert(data.accessToken.toString())
+                      const { accessToken } = data
+                      fetch('https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' + accessToken)
+                      .then((response) => response.json())
+                      .then((json) => {
+                        // Some user object has been set up somewhere, build that user here
+
+                        var name = ""
+                        var emailId = ""
+                        if(json.name){
+                          name = json.name
+                        }
+                        if(json.email){
+                          email = json.email
+                        }
+
+                        const auth = firebase.auth();
+                        const provider = firebase.auth.FacebookAuthProvider;
+
+                        const credential = provider.credential(data.accessToken);
+                        auth.signInWithCredential(credential).then((userData) => {
+                          console.warn(`test ${data}`)
+
+                          try{
+                            FirDatabase.setUserData(userData.uid, emailId, name)
+                            setTimeout(() => {
+                                this.replaceRoute("mapView")
+                                this.setState({isLoading: false})
+                            }, 150);
+
+                          }
+                          catch(error){
+
+                            this.setState({isLoading: false})
+                            Alert.alert(
+                              'Error',
+                              `${error.toString()}`,
+                            )
+                            //
+                          }
+
+                        })
+
+                      })
+                      .catch((error) => {
+                        console.warn(`error ${error.toString()}`)
+                        this.setState({isLoading: false})
+                        Alert.alert(
+                          'Error',
+                          `${error.toString()}`,
+                        )
+                        // reject('ERROR GETTING DATA FROM FACEBOOK')
+                      })
+                    }
+                  )
+      }
+    },
+    (error) => {
+      this.setState({isLoading: false})
+      alert('Login failed with error: ' + error);
+    }
+  );
+    }
+
+
   render() {
     let deviceHeightDiff = deviceHeight/568.0
     if(deviceHeightDiff > 1){
@@ -160,15 +242,18 @@ class SignUp extends Component {
           <View style={{marginTop: 12*deviceHeightDiff}}>
           <CustomButton width={deviceWidth * 0.85} text="SIGN UP" backgroundColor="#5B82B8" onPress={()=>this.signupButtonPress()}/>
           </View>
-          <View style={{marginTop: 12*deviceHeightDiff, backgroundColor:'rgba(0,0,0,0)'}}>
-          <Text style={{color: "#422575", alignSelf:'center'}}> OR CONNECT WITH </Text>
+
+          <View style={{justifyContent:'center', flexDirection:'row',marginTop: 12*deviceHeightDiff, backgroundColor:'rgba(0,0,0,0)'}}>
+          <Text style={{marginTop:-6, fontFamily:'ProximaNova-Regular', color: "rgba(27,13,99,1)", alignSelf:'center'}}>. . . </Text>
+          <Text style={{fontFamily:'ProximaNova-Regular', color: "rgba(27,13,99,1)", alignSelf:'center'}}>OR CONNECT WITH</Text>
+          <Text style={{marginTop:-6, fontFamily:'ProximaNova-Regular', color: "rgba(27,13,99,1)", alignSelf:'center'}}> . . .</Text>
           </View>
           <View style={{marginTop: 12*deviceHeightDiff}}>
-          <CustomButton width={deviceWidth * 0.85} text="FACEBOOK" backgroundColor="#422575" onPress={()=>this.signupButtonPress()}/>
+          <CustomButton width={deviceWidth * 0.85} text="FACEBOOK" backgroundColor="#422575" onPress={()=>this.loginWithFacebook()}/>
           </View>
           <View style={{marginTop: 10*deviceHeightDiff, flex: 1, flexDirection: 'row',backgroundColor:'rgba(0,0,0,0)', justifyContent:'center'}}>
           <Text> Already have an account? </Text>
-          <HyperlinkButton width={deviceWidth * 0.25} text="Login" textColor="#422575" fontSize={15} onPress={()=>this.replaceRoute("login")}/>
+          <HyperlinkButton width={deviceWidth * 0.25} text="Login" textColor="rgba(27,13,99,1)" fontSize={15} onPress={()=>this.replaceRoute("login")}/>
           </View>
         </Image>
 

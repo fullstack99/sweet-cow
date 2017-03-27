@@ -11,9 +11,13 @@ import { closeDrawer } from './actions/drawer';
 import Dummy from './components/base/dummy';
 import Login from './components/login/';
 import SignUp from './components/signup/';
+import ShopDetails from './components/ShopDetails/';
 import HomeScreen from './components/homeScreen/';
 import MapView from './components/mapView/';
+import MyProfile from './components/MyProfile/';
 import InitialView from './components/initialView/';
+import FlavorInfo from './components/FlavorInfo/';
+import MyFavorite from './components/MyFavorite/';
 import { statusBarColor } from './themes/base-theme';
 import * as firebase from "firebase";
 
@@ -44,14 +48,14 @@ class AppNavigator extends Component {
     super(props)
 
     firebase.initializeApp({
-  //     apiKey: "AIzaSyC8D1CA3tzwOocmUnhkusTM_fDBFslc07A",
-  //     authDomain: "sweet-cow-df10d.firebaseapp.com",
-  //     databaseURL: "https://sweet-cow-df10d.firebaseio.com",
-  //     storageBucket: "sweet-cow-df10d.appspot.com"
-  apiKey: "AIzaSyDYCgxzOJfLEQG3HWxivN3V8bqURRf4apc",
-   authDomain: "sweet-cow-f5290.firebaseapp.com",
-   databaseURL: "https://sweet-cow-f5290.firebaseio.com",
-   storageBucket: "sweet-cow-f5290.appspot.com",
+      apiKey: "AIzaSyC8D1CA3tzwOocmUnhkusTM_fDBFslc07A",
+      authDomain: "sweet-cow-df10d.firebaseapp.com",
+      databaseURL: "https://sweet-cow-df10d.firebaseio.com",
+      storageBucket: "sweet-cow-df10d.appspot.com"
+  // apiKey: "AIzaSyDYCgxzOJfLEQG3HWxivN3V8bqURRf4apc",
+  //  authDomain: "sweet-cow-f5290.firebaseapp.com",
+  //  databaseURL: "https://sweet-cow-f5290.firebaseio.com",
+  //  storageBucket: "sweet-cow-f5290.appspot.com",
 
     });
 
@@ -99,9 +103,8 @@ class AppNavigator extends Component {
 
   _renderScene(props) { // eslint-disable-line class-methods-use-this
 
-
     // console.warn(props.scene.route.key)
-
+// return <MyFavorite/>
     switch (props.scene.route.key) {
       case "login":
           return <Login/>
@@ -111,14 +114,18 @@ class AppNavigator extends Component {
           return <MapView />
       case "home":
         return <HomeScreen />
-
+      case "shopDetail":
+        return <ShopDetails data={props.scene.route.data}/>
+      case "myProfile":
+        return <MyProfile/>
+      case "flavorInfo":
+          return <FlavorInfo/>
+      case "myFavorite":
+          return <MyFavorite/>
       default:
           return <InitialView />
 
     }
-
-
-
   }
 
   render() {

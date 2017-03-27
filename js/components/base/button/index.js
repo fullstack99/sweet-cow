@@ -28,7 +28,7 @@ export default class Button extends Component{
     return(
       <TouchableOpacity onPress={this.props.onPress}>
       <View style={[styles.button, {width: this.props.width, backgroundColor: this.props.backgroundColor}]}>
-      <Text style={{alignSelf: 'center', marginLeft: 10, fontSize: 25, color: this.props.textColor}}>{this.props.text}</Text>
+      <Text style={{fontFamily:'ProximaNova-Regular', alignSelf: 'center', marginLeft: 10, fontSize: 25, color: this.props.textColor}}>{this.props.text}</Text>
       </View>
       </TouchableOpacity>
 
