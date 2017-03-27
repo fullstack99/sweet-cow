@@ -127,8 +127,8 @@ class SearchScreen extends Component {
         if(shop.coordinatesObj.shop !== null){
             if(shop.coordinatesObj.shop != undefined){
                 shop.coordinatesObj.shop.flavors.map((flavor)=>{
-                  if(flavor.toUpperCase().includes(this.state.searchText.toUpperCase())){
-                    let element = {flavorName:flavor, shop:shop.coordinatesObj.shop, distance:shop.distance}
+                  if(flavor.flavor.toUpperCase().includes(this.state.searchText.toUpperCase())){
+                    let element = {flavorName:flavor.flavor, shop:shop.coordinatesObj.shop, distance:shop.distance}
                     searchResultArray.push(element)
                   }
                 })
@@ -154,7 +154,7 @@ class SearchScreen extends Component {
         autoCorrect={false}
       />
       <TouchableOpacity style={{ alignSelf:'center'}} onPress={this.props.crossAction}>
-        <Image source={cross_Icon} style={{ alignSelf:'center', width: deviceWidth/12, height: deviceHeight/12, resizeMode: 'contain'}}/>
+        <Image source={cross_Icon} style={{ alignSelf:'center', width: deviceWidth/15, height: deviceWidth/15, resizeMode: 'contain'}}/>
       </TouchableOpacity>
     </View>
 

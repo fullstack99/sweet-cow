@@ -8,6 +8,8 @@ import FirDatabase from "../../database/";
 import { setUser } from '../../actions/user';
 import SearchResults from "../SearchScreen/SearchResults"
 import FlavourInfoView from './FlavourDetail'
+import { toTitleCase } from '../../utils/';
+import HyperlinkButton from '../base/hyperlinkButton/'
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
@@ -106,49 +108,78 @@ class ShopDetails extends Component {
     }).catch(err => console.error('An error occurred', err));
   }
 
-  getFlavourCell(flavor, flavorColor){
+  getFlavourCell(flavorData){
+
+    let flavorColor = '#'+((flavorData.color.split('x'))[1])
+
     let shop = this.props.data.coordinatesObj.shop
-    let element = {flavorName:flavor, shopId:shop.id}
+    let element = {flavorName:flavorData.flavor, shopId:shop.id}
 
 
 
     let onPress = ()=>this.setFavorites(element)
     let favoriteImage = favorite_icon_brown
-    let isFavorite = this.checkFavorite(flavor, shop.id)
+    let isFavorite = this.checkFavorite(flavorData.flavor, shop.id)
       if(isFavorite === true){
       onPress = null
       favoriteImage = favorite_icon_red
       }
-    let flavorElement = {flavorName:flavor, flavorColor: flavorColor, isFavorite:isFavorite, shopId:shop.id}
+    let flavorElement = {flavorData:flavorData, isFavorite:isFavorite, shopId:shop.id}
+
 
     return(
-      <View style={{backgroundColor:'white', marginLeft:10, marginRight:10,marginBottom:10, height:50, flexDirection:'row', justifyContent:"space-between"}}>
-<TouchableOpacity style={{alignSelf:'center', marginLeft: 10, marginRight: 5, width: 25, height: 25}} onPress={onPress}>
+      <View style={{backgroundColor:'white', marginLeft:10, marginBottom:10, height:50, flexDirection:'row', justifyContent:"space-between"}}>
+<TouchableOpacity style={{alignSelf:'center', marginLeft: 10, marginRight: 5, width: deviceWidth/15, height: deviceWidth/15}} onPress={onPress}>
       <Image source={favoriteImage} style={{resizeMode: 'contain'}}/>
 </TouchableOpacity>
-      <Text style={{width:deviceWidth*0.6, color:flavorColor, alignSelf:'center', textAlign:'center', fontSize: 18,  fontFamily:"Typeka Mix"}}>{flavor}</Text>
-<TouchableOpacity style={{alignSelf:'center', marginLeft: 5, marginRight: 20, width: 25, height: 25}} onPress={()=>this.openFlavorInfo(flavorElement)}>
+      <Text style={{marginLeft:10, width:deviceWidth*0.6, color:flavorColor, alignSelf:'center', textAlign:'center', fontSize: 17,  fontFamily:"Typeka Mix"}}> {toTitleCase(flavorData.flavor)}</Text>
+<TouchableOpacity style={{alignSelf:'center', marginLeft: 10, marginBottom: 5, marginRight: 20, width: deviceWidth/15, height: deviceWidth/15}} onPress={()=>this.openFlavorInfo(flavorElement)}>
       <Image source={next_page_icon_brown} style={{ resizeMode: 'contain'}}/>
 </TouchableOpacity>
       </View>
     )
   }
 
+  resetHomeLocationButtonPressed(){
+    var locationId = -1
+    try{
+      FirDatabase.setHomeLocation(this.props.user.uid, locationId)
+      this.setState({homeLocationId: locationId})
+      let user = this.props.user
+      user.locationId = locationId
+      this.setUser(user)
+
+    }
+    catch(error){
+
+      this.setState({isLoading: false})
+      Alert.alert(
+        'Error',
+        `${error.toString()}`,
+      )
+    }
+  }
+
   homeLocationButton(){
       return(
-      <View style={{marginBottom:2, marginTop: 2,  backgroundColor: 'rgba(92,133,192,1)', height: deviceHeight*0.076, marginLeft:10, marginRight:10, flexDirection:'row', justifyContent:'center'}}>
+  <View style={{marginBottom:2, marginTop: 2,  backgroundColor: 'rgba(92,133,192,1)', height: deviceHeight*0.076, marginLeft:10, marginRight:10, flexDirection:'row', justifyContent:'center'}}>
       <Image source={home_icon} style={{alignSelf:'center', marginLeft: 5, marginRight: 5, width: deviceWidth/15, height: deviceHeight/15, resizeMode: 'contain'}}/>
       <Text style={{ alignSelf:'center', fontSize: 15, fontFamily: 'ProximaNova-Regular', color: 'white'}}> Home Location </Text>
-      </View>)
+      <View style={{alignSelf:'center', marginLeft:10}}>
+      <HyperlinkButton width={deviceWidth * 0.15} text="Remove" textColor="white" fontSize={15} onPress={()=>this.resetHomeLocationButtonPressed()}/>
+      </View>
+    </View>)
     }
 
   makeHomeLocationButton(locationId){
-    return(<TouchableOpacity onPress={()=>this.setHomeLocation(locationId)}>
+    return(
+    <TouchableOpacity onPress={()=>this.setHomeLocation(locationId)}>
     <View style={{marginBottom:2, marginTop: 2,  backgroundColor: 'rgba(92,133,192,1)', height: deviceHeight*0.076, marginLeft:10, marginRight:10, flexDirection:'row', justifyContent:'center'}}>
     <Image source={home_icon} style={{alignSelf:'center', marginLeft: 5, marginRight: 5, width: deviceWidth/15, height: deviceHeight/15, resizeMode: 'contain'}}/>
     <Text style={{ alignSelf:'center', fontSize: 15, fontFamily: 'ProximaNova-Regular', color: 'white'}}> Make this my home location </Text>
     </View>
-    </TouchableOpacity>)
+    </TouchableOpacity>
+  )
   }
 
   setHomeLocation(locationId){
@@ -242,20 +273,20 @@ class ShopDetails extends Component {
       homeLocationButton = this.makeHomeLocationButton(shop.id)
     }
 
-    let fulladdress =   shop.address + '+' + shop.location + '+' + shop.state + '+' + shop.zip_code
+    let fulladdress =   shop.address + '+' + shop.state + '+' + shop.zip_code
 
      let flavorArray = shop.flavors
 
     // let flavorArray = ['Super Delicious Vanilla', 'Butter Pecan', 'Oatmeal Cookie', 'Chocolate Chip Cookie Dough', 'Chocolate Peanut Butter', 'Dutch Chocolate']
     let flavorsColors = ['rgba(89, 135, 198, 1)', 'rgba(238, 37, 53, 1)', 'rgba(243, 123, 34, 1)', 'rgba(85, 7, 91, 1)', 'rgba(89, 135, 198, 1)', 'rgba(62, 56, 20, 1)']
 
-      var weekdayData = shop.hours[0].split(':');
-      var weekDays = weekdayData[0]
-      var weekDaysTime = weekdayData[1]
+      var weekdayData = 'MON - THU'//shop.hours[0].split(':');
+      var weekDays = 'MON - THU'//weekdayData[0]
+      var weekDaysTime = '10am - 9pm'//weekdayData[1]
 
-      var weekendData = shop.hours[1].split(':');
-      var weekEnds = weekendData[0]
-      var weekEndsTime = weekendData[1]
+      var weekendData = 'FRI - SUN'//shop.hours[1].split(':');
+      var weekEnds = 'FRI - SUN'//weekendData[0]
+      var weekEndsTime = '10am - 10pm'//weekendData[1]
 
     let formattedAddress =  shop.address + ' - ' + shop.location + ', ' + shop.state + ' ' + shop.zip_code
     let todayFlavorText = "TODAY'S FLAVORS"
@@ -263,11 +294,8 @@ class ShopDetails extends Component {
     let phone = 'tel:'+shop.phone
 
     var flavorCell = []
-    var index = 0
-
     flavorArray.map((flavor)=>{
-    flavorCell.push(this.getFlavourCell(flavor, flavorsColors[index%flavorsColors.length]))
-    index++
+    flavorCell.push(this.getFlavourCell(flavor))
     })
     return (
       <Container>
@@ -312,8 +340,8 @@ class ShopDetails extends Component {
 
 
       <View style={{flexDirection:'column', justifyContent: 'center'}}>
-      <Text style={{alignSelf:'center', marginTop: 20, fontSize: 25, color: 'rgba(29, 16, 96, 1)', fontFamily:"Trade Gothic LT Std"}}> {shop.location.toUpperCase()} </Text>
-      <Text style={{textAlign:'center',width:deviceWidth*0.85, alignSelf:'center', fontSize: 16,  fontFamily: 'ProximaNova-Regular', color: 'rgba(63, 57, 19, 1)'}}>{formattedAddress.toUpperCase()}</Text>
+      <Text style={{alignSelf:'center', marginTop: 20, fontSize: 25, color: 'rgba(29, 16, 96, 1)', fontFamily:"Trade Gothic LT Std"}}> {toTitleCase(shop.location)} </Text>
+      <Text style={{textAlign:'center',width:deviceWidth*0.85, alignSelf:'center', fontSize: 16,  fontFamily: 'ProximaNova-Regular', color: 'rgba(63, 57, 19, 1)'}}>{toTitleCase(formattedAddress)}</Text>
       </View>
 
       {homeLocationButton}
@@ -341,7 +369,7 @@ class ShopDetails extends Component {
 
     <View style={{ marginLeft:borderwidth, marginRight:borderwidth, marginTop: 20, alignSelf:'center', flex:1, width:deviceWidth - (2 * borderwidth)}}>
     <Image source={background} style={{flex: 1, width: deviceWidth-(2*borderwidth),height: (60 * numberOfFlavors) + 50, resizeMode: 'stretch'}}>
-    <Text style={{alignSelf:'center', marginTop: 20, fontSize: 25, fontFamily:"Trade Gothic LT Std"}}>{todayFlavorText}</Text>
+    <Text style={{alignSelf:'center', marginTop: 20, fontSize: 25, fontFamily:"Trade Gothic LT Std", color: 'rgba(29, 16, 96, 1)'}}>{todayFlavorText}</Text>
     {flavorCell}
     </Image>
 </View>

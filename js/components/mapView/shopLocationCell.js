@@ -52,7 +52,7 @@ makeHomeLocationButton(){
     if(deviceHeightDiff > 1){
       deviceHeightDiff += 0.25
     }
-    let fulladdress = shop.address + '+' + shop.location + ',+' + shop.state + '+' + shop.zip_code
+    let fulladdress = shop.address + '+' + shop.state + '+' + shop.zip_code
 
     let homeLocationButton = null
 

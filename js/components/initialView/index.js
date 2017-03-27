@@ -174,7 +174,7 @@ increasePecentage(){
 
       <Animated.Image
       style={{
-        marginTop: deviceHeight*0.8,
+        marginTop: deviceHeight*0.7,
         alignSelf:'center',
         resizeMode: 'contain',
         width: 60,

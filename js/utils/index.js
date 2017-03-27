@@ -15,3 +15,8 @@ export function openExternalMaps(location, lastPosition){
     }
   }).catch(err => console.error('An error occurred', err));
 }
+
+export function toTitleCase(str)
+{
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}

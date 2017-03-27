@@ -204,7 +204,7 @@ this.props.user.favorites.map((favorite)=>{
       if(shop.coordinatesObj.shop !== null){
           if(shop.coordinatesObj.shop != undefined){
               shop.coordinatesObj.shop.flavors.map((flavor)=>{
-                if(favorite.shopId === shop.coordinatesObj.shop.id && favorite.flavorName === flavor){
+                if(favorite.shopId === shop.coordinatesObj.shop.id && favorite.flavorName === flavor.flavor){
                   let element = {keyVal:favorite.key, shop: shop.coordinatesObj.shop, distance:shop.distance, flavorName:favorite.flavorName}
                   favoriteArray.push(element)
                 }

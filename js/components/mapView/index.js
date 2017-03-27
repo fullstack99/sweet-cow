@@ -231,11 +231,18 @@ replaceRoute(route) {
 getLocationList(){
   console.warn(`getLocationList`);
   this.setState({isLoading: true})
-  fetch('https://sweet-cow-store-locations.herokuapp.com/api/locations')
+  fetch('http://www.theanalect.com/DEMOS/sweetcow/api.php')
   .then((response) => response.json())
   .then((responseJson) => {
     console.log(responseJson)
-    this.setState({isLoading: true, shops: responseJson})
+
+    let shopsArray = []
+    responseJson.map((shop)=>{
+      let shopElement = {'location':shop.storeId, 'address':shop.streetaddress, 'flavors':shop.store_data, 'hours':null, 'id':shop.storeId, 'phone': shop.phone1, 'state':shop.state, 'zip_code':shop.postalCode}
+      shopsArray.push(shopElement)
+      console.warn(shopsArray.location);
+    })
+    this.setState({isLoading: true, shops: shopsArray})
 
     //Getting location corrdinates
     let element = {'identifier':marker_identifier ,'latitude': this.state.lastPosition.coords.latitude, 'longitude': this.state.lastPosition.coords.longitude, 'title': "Current Position", 'image': null, 'shop':null}
@@ -311,7 +318,7 @@ returnShopCoordinates(){
   this.setState({isLoading: true})
     this.state.shops.map((shop) => {
       let url = 'https://maps.googleapis.com/maps/api/geocode/json?address='
-      let address =  shop.address + '+' + shop.location
+      let address =  shop.address + '+' + shop.state + '+' + shop.zip_code
       var fulladdress = address
       fulladdress = fulladdress.replace(/\s/g, "+");
       url = url+fulladdress+'&key=AIzaSyCUdBK1qZKBI6IDzTl9eT0HW-QEN-YgHqE'
@@ -489,9 +496,7 @@ render() {
 
 
 
-    <View style={{width: deviceWidth, height: borderwidth,  backgroundColor:'rgba(37, 0, 97, 1)' }}>
-    </View>
-    <View style={{width: deviceWidth, height: deviceHeight*0.42}}>
+<View style={{width: deviceWidth, height: deviceHeight*0.42, borderColor:'rgba(37, 0, 97, 1)', borderWidth:borderwidth }}>
     <Text style={{alignSelf:'center', marginTop: 50}}> Map view here </Text>
     <Map
     provider={this.props.provider}
@@ -503,27 +508,23 @@ render() {
     {markers}
     </Map>
     </View>
-    </View>
+</View>
 
-    <View style={{marginTop:-borderwidth, width: deviceWidth, height: ((deviceHeight * 0.45))}}>
-    <View style={{width: deviceWidth, height: borderwidth,  backgroundColor:'rgba(37, 0, 97, 1)' }}>
-    </View>
+<View style={{marginTop:borderwidth, width: deviceWidth, height: ((deviceHeight * 0.45))}}>
+
     <View>
-
     <Text style={{alignSelf:'center', marginTop: 10, fontSize: 25, color: 'rgba(37, 0, 97, 1)', fontFamily:"Trade Gothic LT Std"}}> SHOPS AROUND ME </Text>
     </View>
 
-    <View>
-
-    </View>
 
     <ScrollView
     automaticallyAdjustContentInsets={false}
-    vertical={true} style={{marginBottom: 20}}
+    vertical={true} style={{marginBottom: 10}}
     >
     {locList}
     </ScrollView>
-    </View>
+  </View>
+
     <Loading isLoading={this.state.isLoading}/>
     <SearchResults isSearchMode={this.state.isSearchMode} distanceArray={this.state.distanceArray} lastPosition={this.state.lastPosition}
      crossAction={()=>this.searchDismiss()}

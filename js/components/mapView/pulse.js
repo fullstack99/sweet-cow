@@ -51,13 +51,13 @@ export default class Pulse extends Component{
 
     var alpha = this.state.alpha
     var radius = this.state.radius
-    let color = 'rgba(92,133,192,' + alpha +')'
+    let color = 'rgba(37, 0, 97,' + alpha +')'
     var offset = (100 - radius)/2
 
     return(
       <View accessible={false} pointerEvents="none" style={{width: 100, height: 100, justifyContent:'center'}}>
       <View accessible={false} style={{backgroundColor:color, height:radius,width:radius, borderRadius:radius/2, justifyContent:'center', alignSelf: "center" }}>
-      <View accessible={false} style={{height:10 , width: 10, backgroundColor:'rgba(92,133,192,1)', borderRadius:5, alignSelf: 'center'}}>
+      <View accessible={false} style={{height:10 , width: 10, backgroundColor:'rgba(37, 0, 97,1)', borderRadius:5, alignSelf: 'center'}}>
       </View>
       </View>
       </View>
