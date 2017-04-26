@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Image, Dimensions, Alert, ActivityIndicator, TouchableOpacity, ScrollView, Linking } from 'react-native';
+import { Image, Dimensions, Alert, ActivityIndicator, TouchableOpacity, ScrollView, Linking, TextInput } from 'react-native';
 import { connect } from 'react-redux';
 import { actions } from 'react-native-navigation-redux-helpers';
 import { Container, Content, Button, View, Text } from 'native-base';
@@ -11,6 +11,7 @@ import * as firebase from "firebase";
 import FirDatabase from "../../database/";
 import { setUser } from '../../actions/user';
 import SearchResults from "../SearchScreen/SearchResults"
+import { toTitleCase } from '../../utils/';
 
 
 
@@ -95,6 +96,10 @@ class MyProfile extends Component {
 
   popRoute() {
   this.props.popRoute(this.props.navigation.key);
+  }
+
+  logoClicked(){
+    this.mapButtonClicked()
   }
 
   openMyFavorites(){
@@ -201,7 +206,24 @@ class MyProfile extends Component {
             <Image source={password_icon} style={{ width: 20,height:20, resizeMode: 'contain'}}/>
             <Text style={{marginLeft:10 , marginTop: 4, fontSize: 20, color: 'rgba(29, 16, 96, 1)', fontFamily:"Trade Gothic LT Std"}}> PASSWORD: </Text>
         </View>
-        <TextField width={deviceWidth * 0.85} labelName="*******" isSecureEntry={true} isEditable={false} onChangeText={(text)=>this.onEmailChangeText(text)}/>
+
+
+        <View style={{backgroundColor: 'rgba(255,255,255,0.95)',
+        borderWidth: 2,
+        borderColor: '#6b8ac3',
+        height: 50,
+        alignSelf: 'center',
+        flexDirection: 'row', width: deviceWidth * 0.85}}>
+
+        <TextInput placeholder="*******" placeholderTextColor='#1f1360'
+          style={{flex: 1, marginLeft: 20,marginTop:8, color: '#1f1360', fontSize: 20}}
+          onChangeText={(text)=>this.onEmailChangeText(text)}
+          secureTextEntry={true}
+          editable={false}
+          underlineColorAndroid='rgba(0,0,0,0)'
+          autoCorrect={false}
+        />
+        </View>
 
         <View style={{marginLeft: deviceWidth*0.075, marginTop: 10, alignSelf:'flex-start'}}>
             <HyperlinkButton width={deviceWidth * 0.15} text="Reset Password" textColor="#422575" fontSize={15} onPress={()=>this.resetPassword()}/>
@@ -261,11 +283,13 @@ setUser(user) {
       emailOrFacebookView = this.uiForFaceBookLogin()
     }
     let homeLocationText = 'No Home Location Set'
+    let homeLocationName = ''
     let resetButton = null
     if(this.state.homeLocationId !== -1 || this.state.homeLocationId !== undefined){
         this.props.distanceArray.map((obj)=>{
           if(obj.coordinatesObj.shop !== null && obj.coordinatesObj.shop.id === this.state.homeLocationId){
-            homeLocationText = 'Home Location:' +  ' ' + obj.coordinatesObj.shop.location
+            homeLocationText = 'HOME LOCATION:'
+            homeLocationName = toTitleCase(obj.coordinatesObj.shop.location)
             resetButton = this.resetHomeLocation()
           }
         })
@@ -276,8 +300,9 @@ setUser(user) {
       <Container>
 
       <View style={{width: deviceWidth, height: deviceHeight * 0.14, flexDirection:'row'}}>
+        <TouchableOpacity onPress={()=>this.logoClicked()}>
           <Image source={logoCow} style={{marginLeft: 10, width: deviceWidth/2.2, height: deviceHeight/6.2, alignSelf:'flex-start', marginTop: 0, resizeMode: 'contain'}}/>
-
+        </TouchableOpacity>
           <TouchableOpacity onPress={()=>this.mapButtonClicked()}>
               <Image source={map_icon} style={{marginLeft: 25, marginTop: 25, width: deviceWidth/12, height: deviceHeight/12, resizeMode: 'contain'}}/>
           </TouchableOpacity>
@@ -311,10 +336,11 @@ setUser(user) {
 
           {emailOrFacebookView}
 
-          <View style={{width:deviceWidth*0.95, marginBottom:2, marginTop: 20,  backgroundColor: 'rgba(92,133,192,1)', height: deviceHeight*0.076, flexDirection:'row', justifyContent:'space-between', alignSelf:'center'}}>
-              <Image source={home_icon} style={{ marginLeft: 20, marginRight: 5, width: deviceWidth/15, height: deviceHeight/15, resizeMode: 'contain'}}/>
-              <Text style={{width:deviceWidth*0.6, marginRight: 20,marginLeft: 2, alignSelf:'center', fontSize: 15, fontFamily: 'ProximaNova-Regular', color: 'white'}}>{homeLocationText} </Text>
-              <View style={{marginRight: 20, alignSelf:'center'}}>
+          <View style={{width:deviceWidth*0.95, marginBottom:2, marginTop: 20,  backgroundColor: 'rgba(92,133,192,1)', height: deviceHeight*0.076, flexDirection:'row', justifyContent:'center', alignSelf:'center'}}>
+              <Image source={home_icon} style={{ marginLeft: 15, marginRight: 5, width: deviceWidth/15, height: deviceHeight/15, resizeMode: 'contain'}}/>
+              <Text style={{marginLeft: 2, alignSelf:'center', fontSize: 15, fontFamily: 'ProximaNova-Semibold', color: 'white'}}> {homeLocationText} </Text>
+              <Text style={{marginRight: 20,marginLeft:1, alignSelf:'center', fontSize: 15, fontFamily: 'ProximaNova-Regular', color: 'white'}}>{homeLocationName}</Text>
+              <View style={{marginRight: 15, alignSelf:'center'}}>
               {resetButton}
               </View>
           </View>

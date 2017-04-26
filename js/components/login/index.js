@@ -78,13 +78,16 @@ class Login extends Component {
     this.state = {
       email: '',
       password: '',
-      isLoading: false
+      isLoading: false,
+      token: ''
     };
+
   }
 
   componentWillUnmount() {
     this.listenUserData = undefined
   }
+
 
   setUser(user) {
     this.props.setUser(user);
@@ -123,6 +126,13 @@ class Login extends Component {
 
 
 async resetPassword(){
+
+  if(this.state.email === ""){
+    return;
+  }
+
+  this.setState({isLoading: true})
+
   try {
     await firebase.auth().sendPasswordResetEmail(this.state.email).then(() => {
       this.setState({isLoading: false})
@@ -239,12 +249,13 @@ await LoginManager.logInWithReadPermissions(['public_profile']).then((result) =>
                       const credential = provider.credential(data.accessToken);
                       auth.signInWithCredential(credential).then((userData) => {
                         console.warn(`test ${data}`)
-
+                        
                         try{
-                          FirDatabase.setUserData(userData.uid, emailId, name)
+                          FirDatabase.updateUserData(userData.uid, emailId, name)
                           setTimeout(() => {
                               // this.replaceRoute("mapView")
                               // this.setState({isLoading: false})
+                              console.warn("here")
                               this.getLoginData(userData.uid)
                           }, 150);
 
@@ -286,7 +297,7 @@ await LoginManager.logInWithReadPermissions(['public_profile']).then((result) =>
     try{
       // Listen for UserData Changes
         this.listenUserData = FirDatabase.listenUserData(uid, (userDataVal) => {
-            // console.warn(userDataVal.email)
+            console.warn(userDataVal)
             // console.warn(userDataVal.name)
             if(userDataVal.email == undefined){
               Alert.alert(
@@ -349,7 +360,7 @@ await LoginManager.logInWithReadPermissions(['public_profile']).then((result) =>
           <Image source={logoCow} style={styles.logoCow}/>
           <Image source={logo_title} style={{width: deviceWidth/2.2, height: deviceHeight/8.0, alignSelf:'center', marginTop: -10, resizeMode: 'contain'}}/>
           <View style={{marginTop: 10*deviceHeightDiff}}>
-          <TextField width={deviceWidth * 0.85} labelName="EMAIL:" iconImage={email_icon} onChangeText={(text)=>this.onEmailChangeText(text)}/>
+          <TextField text={this.state.email} width={deviceWidth * 0.85} labelName="EMAIL:" iconImage={email_icon} onChangeText={(text)=>this.onEmailChangeText(text)}/>
           </View>
           <View style={{marginTop: 10*deviceHeightDiff}}>
           <TextField width={deviceWidth * 0.85} labelName="PASSWORD:" iconImage={password_icon} isSecureEntry={true} onChangeText={(text)=>this.onPasswordChangeText(text)}/>

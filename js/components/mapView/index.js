@@ -11,10 +11,12 @@ import FirDatabase from "../../database/";
 import Map from 'react-native-maps';
 import ShopLocationCell from "./shopLocationCell";
 import Loading from '../base/loading/'
+import HomeLocationLoading from '../base/HomeLocationLoading/'
 import { openExternalMaps } from '../../utils/';
 import SearchResults from "../SearchScreen/SearchResults"
 import { setUser } from '../../actions/user';
 import { setShopData } from '../../actions/shopData';
+import { setSearchData } from '../../actions/searchData';
 import { setLastPosition } from '../../actions/lastPosition';
 
 
@@ -30,6 +32,8 @@ const {
   pushRoute,
 } = actions;
 
+let cellHeightArr = []
+
 const background = require('../../../images/background_login.png');
 const logoCow = require('../../../images/logo_cow_horizontal.png');
 const map_icon = require('../../../images/map-locator.png');
@@ -37,6 +41,7 @@ const search_icon = require('../../../images/search-icon.png');
 const favorite_icon = require('../../../images/favorite-icon.png');
 const user_icon = require('../../../images/user-icon.png');
 const sweetCow_Marker = require('../../../images/SweetCow-marker.png');
+const sweetCow_MarkerSelected = require('../../../images/map-markerSelected.png');
 const currentLocation_Marker = require('../../../images/map-marker1.png');
 
 const marker_identifier = 'M'
@@ -103,6 +108,8 @@ class MapView extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      selectedMarkerTitle: "",
+      isInitialView: true,
       isSearchMode: false,
       isLoading: false,
       initialPosition: undefined,
@@ -112,6 +119,7 @@ class MapView extends Component {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       }
+
     },
     shops: [],
     shopsCoordinates: [],
@@ -124,6 +132,7 @@ class MapView extends Component {
       longitudeDelta: 0.0421,
     }
   };
+
 }
 
 
@@ -134,7 +143,12 @@ componentDidMount() {
 }
 
 fetchCurrentLocation(){
-console.warn(`fetchCurrentLocation`);
+// console.warn(`fetchCurrentLocation`);
+  if(this.props.locationId !== -1 && this.props.locationId !== undefined){
+  this.setState({isInitialView: true})
+}else{
+  this.setState({isInitialView: false})
+}
     navigator.geolocation.getCurrentPosition(
     (position) => {
 
@@ -229,7 +243,7 @@ replaceRoute(route) {
 }
 
 getLocationList(){
-  console.warn(`getLocationList`);
+  // console.warn(`getLocationList`);
   this.setState({isLoading: true})
   fetch('http://www.theanalect.com/DEMOS/sweetcow/api.php')
   .then((response) => response.json())
@@ -237,12 +251,21 @@ getLocationList(){
     console.log(responseJson)
 
     let shopsArray = []
+    let searchShopArray = []
     responseJson.map((shop)=>{
-      let shopElement = {'location':shop.storeId, 'address':shop.streetaddress, 'flavors':shop.store_data, 'hours':null, 'id':shop.storeId, 'phone': shop.phone1, 'state':shop.state, 'zip_code':shop.postalCode}
-      shopsArray.push(shopElement)
-      console.warn(shopsArray.location);
+      if(shop.storeId.toUpperCase().includes('APP - Do Not Touch'.toUpperCase())){
+        console.warn(shop.storeId);
+        let shopElement = {'location':shop.storeId, 'address':shop.streetaddress, 'flavors':shop.store_data, 'hours':null, 'id':shop.storeId, 'phone': shop.phone1, 'state':shop.state, 'zip_code':shop.postalCode, 'dayhourseconds':shop.dayhourseconds, 'dayhours':shop.dayhours, 'city': shop.city}
+        searchShopArray.push(shopElement)
+
+      }else{
+        let shopElement = {'location':shop.storeId, 'address':shop.streetaddress, 'flavors':shop.store_data, 'hours':null, 'id':shop.storeId, 'phone': shop.phone1, 'state':shop.state, 'zip_code':shop.postalCode, 'dayhourseconds':shop.dayhourseconds, 'dayhours':shop.dayhours, 'city': shop.city}
+        shopsArray.push(shopElement)
+      }
+
     })
     this.setState({isLoading: true, shops: shopsArray})
+    this.props.setSearchData(searchShopArray);
 
     //Getting location corrdinates
     let element = {'identifier':marker_identifier ,'latitude': this.state.lastPosition.coords.latitude, 'longitude': this.state.lastPosition.coords.longitude, 'title': "Current Position", 'image': null, 'shop':null}
@@ -258,7 +281,7 @@ getLocationList(){
 }
 
 getDistanceBetweenPoints(){
-console.warn(`getDistanceBetweenPoints`);
+// console.warn(`getDistanceBetweenPoints`);
   this.setState({distanceArray: []})
   if(this.state.shopsCoordinates[0]!== undefined){
     var i = 0
@@ -280,29 +303,55 @@ console.warn(`getDistanceBetweenPoints`);
 
       var index = 0
       let currentArray = []
+      let shopObj = null
+
       responseJson.rows[0].elements.map((element) => {
 
+
         if(element.status === 'OK'){
+
           let distance = element.distance.text
-          let shopElement = {'coordinatesObj':this.state.shopsCoordinates[index], 'distance': distance}
+          let distanceVal = element.distance.value
+          let shopElement = {'coordinatesObj':this.state.shopsCoordinates[index], 'distance': distance, 'distanceValue': distanceVal}
           currentArray.push(shopElement)
-          // this.setState({isLoading: false, distanceArray: currentArray})
+
+          if(this.state.shopsCoordinates[index].shop !== null && this.state.shopsCoordinates[index].shop.id === this.props.locationId){
+            shopObj = shopElement
+          }
           index++
         } else{
 
-          let shopElement = {'coordinatesObj':this.state.shopsCoordinates[index], 'distance': null}
+          let shopElement = {'coordinatesObj':this.state.shopsCoordinates[index], 'distance': null, 'distanceValue': 0}
           currentArray.push(shopElement)
-          // this.setState({isLoading: false, distanceArray: currentArray})
+          if(this.state.shopsCoordinates[index].shop !== null && this.state.shopsCoordinates[index].shop.id === this.props.locationId){
+            shopObj = shopElement
+          }
           index++
         }
       })
 
       currentArray.sort((obj1, obj2) => {
-        if (obj1.distance > obj2.distance) return 1;
-        if (obj1.distance < obj2.distance) return -1;
+
+        if (obj1.distanceValue > obj2.distanceValue) {
+          console.warn(`greater`, obj1.distanceValue, obj2.distanceValue);
+          return 1;
+        }
+
+        if (obj1.distanceValue < obj2.distanceValue) {
+          console.warn(`less`, obj1.distanceValue, obj2.distanceValue);
+          return -1;
+        }
+        console.warn(`equal`, obj1.distanceValue, obj2.distanceValue);
         return 0;
       })
+
       this.setState({isLoading: false, distanceArray: currentArray})
+      if((this.props.locationId !== -1 && this.props.locationId !== undefined) && this.state.isInitialView === true ){
+        this.openShopDetails(shopObj)
+        setTimeout(() => {
+          this.setState({isInitialView: false})
+        }, 500);
+      }
     })
     .catch((error) => {
       console.error(error);
@@ -312,7 +361,7 @@ console.warn(`getDistanceBetweenPoints`);
 }
 
 returnShopCoordinates(){
-  console.warn(`returnShopCoordinates`);
+  // console.warn(`returnShopCoordinates`);
 
   var index = 0
   this.setState({isLoading: true})
@@ -330,7 +379,7 @@ returnShopCoordinates(){
 
         if(responseJson.results[0] !== undefined && responseJson.status !== 'ZERO_RESULTS'){
             let currentArray = this.state.shopsCoordinates
-            let element = {'identifier':marker_identifier, 'latitude': responseJson.results[0].geometry.location.lat, 'longitude': responseJson.results[0].geometry.location.lng, 'title': 'Sweet Cow', image:sweetCow_Marker, 'shop':shop}
+            let element = {'identifier':marker_identifier, 'latitude': responseJson.results[0].geometry.location.lat, 'longitude': responseJson.results[0].geometry.location.lng, 'title': shop.location, image:sweetCow_Marker, 'shop':shop}
             currentArray.push(element)
             this.setState({shopsCoordinates: currentArray})
             index++
@@ -356,6 +405,21 @@ centerMapAtMyLocation(){
   this.getDistanceBetweenPoints()
 }
 
+logoClicked(){
+  console.warn('logoClicked')
+    console.warn(this.props.user.locationId)
+  if(this.props.user.locationId !== -1 && this.props.user.locationId !== undefined){
+    console.warn(this.props.user.locationId)
+    this.state.distanceArray.map((shop) => {
+      if(shop.coordinatesObj.shop !== null){
+        console.warn(this.props.user.locationId)
+        if(shop.coordinatesObj.shop.id === this.props.user.locationId)
+        this.openShopDetails(shop)
+      }
+    })
+  }
+}
+
 _onRegionChange = (region) => {
   this.setState({
     region: region,
@@ -374,14 +438,72 @@ getAnimatedMarkers(marker){
   )
 }
 
+
+markerClicked (marker){
+
+  let index = -1
+  let shopIndex = -1
+  var markerTitle = ""
+  if(this.props.user.locationId === -1 || this.props.user.locationId === undefined){
+    this.state.distanceArray.map((shop) => {
+      if(shop.coordinatesObj.shop !== null){
+        index++
+        if(shop.coordinatesObj.shop.id === marker.title){
+            shopIndex = index
+            markerTitle = marker.title
+        }
+      }
+    })
+  }else{
+    if(this.props.user.locationId === marker.title){
+      shopIndex = 0
+      markerTitle = marker.title
+    }else{
+      index++
+      this.state.distanceArray.map((shop) => {
+        if(shop.coordinatesObj.shop !== null){
+          index++
+          if(this.props.user.locationId === shop.coordinatesObj.shop.id){
+            index--
+          }
+
+          if(shop.coordinatesObj.shop.id === marker.title){
+              shopIndex = index
+              markerTitle = marker.title
+          }
+        }
+      })
+    }
+  }
+//iPhone5 21
+
+  let totalHeight = 0;
+
+//shopIndex
+
+  for(var i = 0; i < shopIndex; i++){
+    let height = cellHeightArr[i]
+    totalHeight += height
+  }
+
+  this.scrollview.scrollTo({x: 0, y: totalHeight, animated: true})
+  this.setState({selectedMarkerTitle: markerTitle})
+}
+
 getMarkers(marker){
+
+  let imgSource = marker.image
+  if(marker.title === this.state.selectedMarkerTitle){
+    imgSource = sweetCow_MarkerSelected
+  }
+
   return(
 
-    <Map.Marker
+    <Map.Marker onPress={()=>this.markerClicked(marker)}
     coordinate={{latitude: marker.latitude,longitude: marker.longitude,}}
     identifier={marker.identifier}
     title={marker.title}
-    image={marker.image}
+    image={imgSource}
     />
   )
 }
@@ -423,6 +545,17 @@ searchDismiss() {
   this.setState({isSearchMode: false})
 }
 
+addInitialView(){
+  return(
+    <HomeLocationLoading isLoading={this.state.isInitialView}/>
+  )
+}
+
+shopCellSizeCallback(index, rect){
+  if(index < cellHeightArr.length){
+    cellHeightArr[index] = rect.height
+  }
+}
 
 
 render() {
@@ -435,19 +568,28 @@ render() {
 
   var locList = []
 
+let initialView = this.addInitialView()
 
-
+  var index = 0;
   this.state.distanceArray.map((shop) => {
     if(shop.coordinatesObj.shop !== null){
-      if(shop.coordinatesObj.shop.id === this.props.user.locationId)
-      locList.push(<ShopLocationCell shop={shop} locationId={this.props.user.locationId} onPress={(location)=>this.openExternalMaps(location)} openShopDetail={(shopDetails)=>this.openShopDetails(shopDetails)}  setHomeLocation={(locationId)=>this.setHomeLocation(locationId)}/> )
+      if(shop.coordinatesObj.shop.id === this.props.user.locationId){
+        locList.push(<ShopLocationCell index={index} cellSizeCallback={(index, rect) => this.shopCellSizeCallback(index, rect)} shop={shop} locationId={this.props.user.locationId} onPress={(location)=>this.openExternalMaps(location)} openShopDetail={(shopDetails)=>this.openShopDetails(shopDetails)}  setHomeLocation={(locationId)=>this.setHomeLocation(locationId)}/> )
+        index += 1
+        cellHeightArr.push(0)
+      }
+
     }
   })
 
   this.state.distanceArray.map((shop) => {
     if(shop.coordinatesObj.shop !== null){
-      if(shop.coordinatesObj.shop.id !== this.props.user.locationId)
-      locList.push(<ShopLocationCell shop={shop} locationId={this.props.user.locationId} onPress={(location)=>this.openExternalMaps(location)} openShopDetail={(shopDetails)=>this.openShopDetails(shopDetails)}  setHomeLocation={(locationId)=>this.setHomeLocation(locationId)}/> )
+      if(shop.coordinatesObj.shop.id !== this.props.user.locationId){
+        locList.push(<ShopLocationCell shop={shop} index={index} cellSizeCallback={(index, rect) => this.shopCellSizeCallback(index, rect)} locationId={this.props.user.locationId} onPress={(location)=>this.openExternalMaps(location)} openShopDetail={(shopDetails)=>this.openShopDetails(shopDetails)}  setHomeLocation={(locationId)=>this.setHomeLocation(locationId)}/> )
+        index += 1
+        cellHeightArr.push(0)
+      }
+
     }
   })
 
@@ -467,8 +609,9 @@ render() {
 
     <View style={{ }}>
     <View style={{width: deviceWidth, height: deviceHeight * 0.13, flexDirection:'row'}}>
+    <TouchableOpacity onPress={()=>this.logoClicked()}>
     <Image source={logoCow} style={{marginLeft: 10, width: deviceWidth/2.2, height: deviceHeight/6.2, alignSelf:'flex-start', marginTop: 0, resizeMode: 'contain'}}/>
-
+    </TouchableOpacity>
     <TouchableOpacity onPress={()=>this.centerMapAtMyLocation()}>
     <View>
     <Image source={map_icon} style={{marginLeft: 25, marginTop: 25, width: deviceWidth/12, height: deviceHeight/12, resizeMode: 'contain'}}/>
@@ -517,7 +660,10 @@ render() {
     </View>
 
 
-    <ScrollView
+    <ScrollView ref={ref => { this.scrollview = ref; }}
+    onScroll={()=>{
+      console.warn("onScroll")
+    }}
     automaticallyAdjustContentInsets={false}
     vertical={true} style={{marginBottom: 10}}
     >
@@ -529,6 +675,8 @@ render() {
     <SearchResults isSearchMode={this.state.isSearchMode} distanceArray={this.state.distanceArray} lastPosition={this.state.lastPosition}
      crossAction={()=>this.searchDismiss()}
     />
+
+    {initialView}
 
     </Container>
 
@@ -546,6 +694,7 @@ function bindActions(dispatch) {
     setUser: name => dispatch(setUser(name)),
     setLastPosition: name => dispatch(setLastPosition(name)),
     setShopData: name => dispatch(setShopData(name)),
+    setSearchData: name => dispatch(setSearchData(name)),
     popRoute: (key) => dispatch(popRoute(key)),
     pushRoute: (route, key) => dispatch(pushRoute(route, key)),
 

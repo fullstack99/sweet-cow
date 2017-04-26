@@ -20,10 +20,12 @@ const user_icon = require('../../../images/user-icon.png');
 const background = require('../../../images/background_ShopDetails.png');
 const allergies_Icon = require('../../../images/Allergies_Icon.png');
 const favorite_Icon = require('../../../images/like.png');
+const favorite_Icon_white = require('../../../images/like_white.png');
 const favorited_Icon = require('../../../images/liked.png');
 
 let totalLikes = 0
 let isFavorite = false
+let showAllergens =  false
 
 export default class FlavorInfo extends Component {
 
@@ -35,9 +37,14 @@ export default class FlavorInfo extends Component {
     };
     totalLikes = 0
     isFavorite = this.props.flavorData.isFavorite
-    this.getTotalLikesCount()
-  }
 
+  }
+  componentDidMount(){
+    setTimeout(() => {
+      this.getTotalLikesCount()
+    }, 1000);
+
+  }
 
   pushRoute(route){
     this.props.pushRoute({ key: route }, this.props.navigation.key);
@@ -51,33 +58,61 @@ getTotalLikesCount(){
   let details = {flavorName:this.props.flavorData.flavorData.flavor, shopId:this.props.flavorData.shopId}
   FirDatabase.getFavoritesCount(details, (data) => {
   totalLikes = data.count
-  this.setState({isLoading: false})
+
+  if(isFavorite == true && totalLikes == 0){
+    this.getTotalLikesCount()
+  }
+  else{
+    this.setState({isLoading: false})
+  }
 
   })
 }
 
 setFavoritesAction(){
-  this.props.setFavoritesAction(this.props.flavorData.flavorData.flavor)
-  isFavorite = true
-  totalLikes += 1
+  this.props.setFavoritesAction(this.props.flavorData.flavorData,isFavorite)
+  if(isFavorite === true){
+    isFavorite = false
+    totalLikes -= 1
+    if(totalLikes < 0){
+      totalLikes = 0
+    }
+
+  }else{
+    isFavorite = true
+    totalLikes += 1
+
+  }
   this.forceUpdate()
 }
 
   setFavoriteButton(){
 
     let onPress = ()=>this.setFavoritesAction()
-    let favoriteImage = favorite_Icon
+    let favoriteImage = favorite_Icon_white
+    let buttonText = 'ADD TO MY FAVORITES'
       if(isFavorite === true){
-      onPress = null
+
       favoriteImage = favorited_Icon
+      buttonText = 'REMOVE FROM MY FAVORITES'
       }
 
     return(
       <TouchableOpacity style={{width:deviceWidth*0.8, marginBottom:10,  backgroundColor: 'rgba(36,124,187,1)', height: deviceHeight*0.076, flexDirection:'row', alignSelf:'center'}} onPress={onPress}>
           <Image source={favoriteImage} style={{alignSelf:'center', marginLeft: 20, marginRight: 5, width: deviceWidth/15, height: deviceHeight/15, resizeMode: 'contain'}}/>
-          <Text style={{ width:deviceWidth*0.6, alignSelf:'center', textAlign:'center', fontSize: 15, fontFamily:'Typeka Mix', color: 'white'}}>ADD TO MY FAVORITE</Text>
+          <Text style={{ width:deviceWidth*0.6, alignSelf:'center', textAlign:'center', fontSize: 15, fontFamily:'ProximaNova-Semibold', color: 'white'}}>{buttonText}</Text>
       </TouchableOpacity>
     )
+  }
+
+  showHideAllergens(){
+    if(showAllergens === true){
+        showAllergens = false
+    }else{
+        showAllergens = true
+    }
+    this.forceUpdate()
+
   }
 
 
@@ -87,46 +122,71 @@ let borderwidth = 6
 let setFavoriteButton = this.setFavoriteButton()
 let flavorColor = '#'+((this.props.flavorData.flavorData.color.split('x'))[1])
 
+let imageUrl = background
+if(this.props.flavorData.flavorData.imageUrl !== null && this.props.flavorData.flavorData.imageUrl !== ''){
+  imageUrl = {uri : this.props.flavorData.flavorData.imageUrl}
+}
+
+let allergensText = ''
+let colon = ''
+if(showAllergens === true){
+    colon = ':'
+   allergensText = this.props.flavorData.flavorData.allergens
+}
+
+var descriptionString = this.props.flavorData.flavorData.description
+if(descriptionString[descriptionString.length-1] == " "){
+  descriptionString = descriptionString.substring(0, descriptionString.length-1);
+
+}
+
 
 console.warn(this.props.flavorData);
     return (
 <Container>
 
   <View style={{width: deviceWidth*0.9, height: deviceHeight * 0.9, borderWidth:borderwidth, borderColor:'rgba(29, 16, 96, 1)', alignSelf:'center', marginTop:deviceHeight*0.05 }}>
-    <View style={{backgroundColor:'rgba(243,243,243,1)', width: deviceWidth*0.9 - (2 * borderwidth), height: deviceHeight * 0.14, alignSelf:'center', flexDirection:'row', justifyContent:'space-between'}}>
-      <View style={{height: deviceHeight * 0.14, alignSelf:'center', flexDirection:'row'}}>
-        <Image source={info_Icon} style={{marginLeft: 20, alignSelf:'center', width: deviceWidth/12, height: deviceHeight/12, resizeMode: 'contain'}}/>
-        <Text style={{color:flavorColor, width:deviceWidth*0.55, marginLeft:10, alignSelf:'center', fontSize:18,fontFamily:'Typeka Mix'}}>{toTitleCase(this.props.flavorData.flavorData.flavor)}</Text>
-      </View>
-      <TouchableOpacity style={{marginRight: 20, alignSelf:'center'}} onPress={this.props.crossAction}>
-        <Image source={cross_Icon} style={{ width: deviceWidth/15, height: deviceWidth/15, resizeMode: 'contain'}}/>
-      </TouchableOpacity>
+  <View style={{backgroundColor:'rgba(243,243,243,1)', width: deviceWidth*0.9 - (2 * borderwidth), height: deviceHeight * 0.12, alignSelf:'center', flexDirection:'row', justifyContent:'space-between'}}>
+    <View style={{height: deviceHeight * 0.14, alignSelf:'center', flexDirection:'row'}}>
+      <Text style={{color:flavorColor, width:deviceWidth*0.7, marginLeft:20, alignSelf:'center', fontSize:22,fontFamily:'ProximaNova-Semibold'}}>{toTitleCase(this.props.flavorData.flavorData.flavor)}</Text>
     </View>
-    <View style={{backgroundColor:'rgba(29, 16, 96, 1)', width: deviceWidth*0.9, height:borderwidth, alignSelf:'center'}}>
-    </View>
+    <TouchableOpacity style={{marginRight: 20, alignSelf:'center'}} onPress={this.props.crossAction}>
+      <Image source={cross_Icon} style={{ width: deviceWidth/15, height: deviceWidth/15, resizeMode: 'contain'}}/>
+    </TouchableOpacity>
+  </View>
 
-    <Image source={background} style={{flex: 1, width: (deviceWidth * 0.9)-(2*borderwidth), height: deviceHeight*0.5, resizeMode: 'stretch'}}>
+  <View style={{backgroundColor:'rgba(29, 16, 96, 1)', width: deviceWidth*0.9, height:borderwidth, alignSelf:'center'}}>
+  </View>
+  <Content style={{backgroundColor:'rgba(243,243,243,1)'}}>
+
+    <Image source={imageUrl} style={{flex: 1, width: (deviceWidth * 0.9)-(2*borderwidth), height: (deviceWidth * 0.9)-(2*borderwidth), resizeMode: 'contain'}}>
     <View style={{height: deviceHeight * 0.10, flexDirection:'row'}}>
-      <Image source={user_icon} style={{marginLeft: 20, alignSelf:'center', width: deviceWidth/12, height: deviceHeight/12, resizeMode: 'contain'}}/>
-      <Text style={{marginLeft:10, alignSelf:'center',fontSize:20, color:'rgba(62, 57, 21, 1)'}}>{totalLikes}</Text>
+      <Image source={favorite_Icon} style={{marginLeft: 20, alignSelf:'center', width: deviceWidth/12, height: deviceHeight/12, resizeMode: 'contain'}}/>
+      <Text style={{fontFamily:'ProximaNova-Semibold', marginLeft:10, alignSelf:'center',fontSize:25, color:'rgba(62, 57, 21, 1)', backgroundColor:'rgba(62, 57, 21, 0)'}}>{totalLikes}</Text>
     </View>
-
-      <View style={{marginLeft:20, width: deviceWidth*0.7, height: deviceHeight * 0.35, borderWidth:borderwidth/2, borderColor:'rgba(29, 16, 96, 1)', backgroundColor:'rgba(243,243,243,0.5)' }}>
-      <Text style={{alignSelf:'center',fontSize:15, color:'rgba(29, 16, 96, 1)'}}>{this.props.flavorData.flavorData.description}</Text>
-      </View>
-
     </Image>
+
     <View style={{backgroundColor:'rgba(29, 16, 96, 1)', width: deviceWidth*0.9, height:borderwidth, alignSelf:'center'}}>
     </View>
-    <View style={{backgroundColor:'rgba(243,243,243,1)', width: deviceWidth*0.9 - (2* borderwidth), height: deviceHeight * 0.20, alignSelf:'center', flexDirection:'column', justifyContent:'space-between'}}>
-      <View style={{width:deviceWidth*0.4, height: deviceHeight * 0.1, flexDirection:'row'}}>
-        <Image source={allergies_Icon} style={{marginLeft: 10, alignSelf:'center', width: deviceWidth/17, height: deviceWidth/17, resizeMode: 'contain'}}/>
-        <Text style={{marginLeft:5, alignSelf:'center',fontSize:16, fontFamily:'Typeka Mix', color:'rgba(29, 16, 96, 1)'}}>ALLERGENS:</Text>
-        <Text style={{marginLeft:5, alignSelf:'center', fontSize:13, color:'rgba(29, 16, 96, 1)'}}>{this.props.flavorData.flavorData.allergens}</Text>
+
+    <View style={{backgroundColor:'rgba(243,243,243,1)', width: deviceWidth*0.9 - (2* borderwidth), alignSelf:'center', flexDirection:'column', justifyContent:'space-between'}}>
+      <View style={{marginTop:20, marginBottom:10, marginLeft:15, marginRight: 15, alignSelf:'flex-start'}}>
+      <Text style={{textAlign:'left', fontSize:15, color:'rgba(29, 16, 96, 1)'}}>{descriptionString}.</Text>
+      </View>
+      {setFavoriteButton}
+      <View style={{width:deviceWidth*0.5, marginBottom: 15, flexDirection:'row'}}>
+        <Image source={allergies_Icon} style={{marginLeft: 15, alignSelf:'center', width: deviceWidth/17, height: deviceWidth/17, resizeMode: 'contain'}}/>
+        <TouchableOpacity style={{marginLeft:5, alignSelf:'center'}} onPress={()=>this.showHideAllergens()}>
+        <Text style={{fontSize:16, fontFamily:'ProximaNova-Regular', color:'rgba(11, 126, 192, 1)'}}>Allergens</Text>
+        </TouchableOpacity>
+        <Text style={{marginTop:2, fontSize:16, fontFamily:'ProximaNova-Regular', color:'rgba(11, 126, 192, 1)'}}>{colon}</Text>
+        <Text style={{marginLeft:5, alignSelf:'center', fontSize:13, color:'rgba(11, 126, 192, 1)', fontFamily:'ProximaNova-Regular'}}>{allergensText}</Text>
       </View>
 
-      {setFavoriteButton}
+
     </View>
+    </Content>
+
   </View>
   <Loading isLoading={this.state.isLoading}/>
 </Container>

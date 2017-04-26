@@ -46,9 +46,29 @@ class SignUp extends Component {
       name: '',
       email: '',
       password: '',
-      isLoading: false
+      isLoading: false,
+
     };
+        // this.getFcmToken()
   }
+
+  // getFcmToken(){
+    // FCM.requestPermissions(); // for iOS
+    //     FCM.getFCMToken().then(token => {
+    //
+    //       this.setState({token: token})
+    //         console.log(token)
+    //         console.warn(token)
+    //         // store fcm token in your server
+    //     });
+    //     this.refreshTokenListener = FCM.on(FCMEvent.RefreshToken, (token) => {
+    //       this.setState({token: token})
+    //         console.log(token)
+    //         console.warn(token)
+    //         // fcm token may not be available on first load, catch it here
+    //     });
+  // }
+
 
   setUser(name) {
     this.props.setUser(name);
@@ -108,7 +128,9 @@ class SignUp extends Component {
         try{
           FirDatabase.setUserData(userData.uid, this.state.email, this.state.name)
           setTimeout(() => {
-              this.replaceRoute("login")
+            let userdataval = {uid:userData.uid, email:this.state.email, name: this.state.name, locationId:null, favorites:[]}
+            this.setUser(userdataval)
+              this.replaceRoute("mapView")
               this.setState({isLoading: false})
           }, 150);
 
@@ -178,10 +200,13 @@ class SignUp extends Component {
                           console.warn(`test ${data}`)
 
                           try{
-                            FirDatabase.setUserData(userData.uid, emailId, name)
+                            FirDatabase.updateUserData(userData.uid, emailId, name)
                             setTimeout(() => {
-                                this.replaceRoute("mapView")
-                                this.setState({isLoading: false})
+                              // let userdataval = {uid:userData.uid, email:emailId, name: name, locationId:null, favorites:[]}
+                              // this.setUser(userdataval)
+                              //   this.replaceRoute("mapView")
+                              //   this.setState({isLoading: false})
+                              this.getLoginData(userData.uid)
                             }, 150);
 
                           }
@@ -216,6 +241,38 @@ class SignUp extends Component {
       alert('Login failed with error: ' + error);
     }
   );
+    }
+
+
+    getLoginData(uid){
+      try{
+        // Listen for UserData Changes
+          this.listenUserData = FirDatabase.listenUserData(uid, (userDataVal) => {
+              console.warn(userDataVal)
+              // console.warn(userDataVal.name)
+              if(userDataVal.email == undefined){
+                Alert.alert(
+                  'Error',
+                  '',
+                )
+              }
+              else{
+                this.setUser(userDataVal)
+                this.setState({isLoading: false})
+                this.replaceRoute("mapView")
+              }
+          });
+
+      }
+      catch(error){
+        console.warn(`setError: ${error.toString()}`);
+        this.setState({isLoading: false})
+        Alert.alert(
+          'Error',
+          `${error.toString()}`,
+        )
+
+      }
     }
 
 

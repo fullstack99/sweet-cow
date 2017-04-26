@@ -28,17 +28,40 @@ export default class MyFavoriteCell extends Component{
     )
   }
 
+  showHeart(){
+    return(
+      <Image source={favorited_Icon} style={{alignSelf:'center', width: deviceWidth/12, height: deviceWidth/12, resizeMode: 'contain'}}/>
+    )
+  }
+
+  getAvailableFlavours(fulladdress, distanceFormatted){
+    return(
+      <TouchableOpacity style={{flexDirection:'row', justifyContent:'center'}} onPress={()=>this.props.onPress(fulladdress)}>
+      <Image source={miles_icon} style={{marginTop:3, width: deviceWidth/22, height: deviceWidth/22, resizeMode: 'contain'}}/>
+      <Text style={{marginTop:2, marginBottom:10, alignSelf:'center', width: deviceWidth*0.63, fontSize: 15, textDecorationLine:'underline',  fontFamily: 'ProximaNova-Regular', color: 'rgba(37, 0, 97, 1)'}}>  {distanceFormatted}</Text>
+      </TouchableOpacity>
+    )
+  }
+
+  getUnavailableFlavors() {
+    return(<View style={{flexDirection:'row', justifyContent:'center'}}>
+    <Text style={{marginTop:2, marginBottom:10, alignSelf:'center', width: deviceWidth*0.63, fontSize: 15, textDecorationLine:'underline',  fontFamily: 'ProximaNova-Regular', color: 'rgba(37, 0, 97, 1)'}}>  Flavor currently unavailable</Text>
+    </View>)
+
+  }
+
 
   render(){
     let shop = this.props.shop
     let distance = this.props.distance
+if(this.props.isAvailable === true){
     if(distance === null){
       distance = ''
     }else{
       const words = distance.split(' ');
       distance = words[0] + " Miles"
-
     }
+  }
 
     let borderwidth = 6
 
@@ -49,30 +72,35 @@ export default class MyFavoriteCell extends Component{
     let crossButton = null
     if(cancel){
       crossButton = this.getCrossButton()
+    }else{
+      crossButton =  this.showHeart()
     }
 
-    let flavorName = toTitleCase(this.props.flavorName)
-    let distanceFormatted = toTitleCase(distance+ ' away @' + shop.location)
+    let flavorName = toTitleCase(this.props.flavorData.flavor)
+    let flavorColor = '#'+((this.props.flavorData.color.split('x'))[1])
+    let distanceFormatted = toTitleCase(distance+ ' @ ' + shop.location)
+
+    let secondRow = null
+    if(this.props.isAvailable === true){
+      secondRow = this.getAvailableFlavours(fulladdress, distanceFormatted)
+    }else {
+      secondRow = this.getUnavailableFlavors()
+    }
 
 
     return(
-    <View style={{alignSelf:'center', borderWidth:borderwidth/2, borderColor:'rgba(63, 57, 19, 1)', width: deviceWidth * 0.95, marginTop:5}}>
+<View style={{alignSelf:'center', borderWidth:borderwidth/2, borderColor:'rgba(63, 57, 19, 1)', width: deviceWidth * 0.95, marginTop:5}}>
 
-    <View style={{width: deviceWidth*0.8,marginLeft:10, flexDirection:'row', marginBottom:5, justifyContent:'space-between'}}>
+  <View style={{width: deviceWidth*0.8,marginLeft:10, flexDirection:'row', marginBottom:5, justifyContent:'space-between'}}>
 
-    <Image source={favorited_Icon} style={{alignSelf:'center', width: deviceWidth/12, height: deviceHeight/12, resizeMode: 'contain'}}/>
-
-    <View style={{flexDirection:'column', marginLeft:15}}>
-      <Text style={{width:deviceWidth*0.65, fontSize: 17, fontFamily: 'Typeka Mix',marginTop:10 }}>{flavorName}</Text>
-      <TouchableOpacity style={{flexDirection:'row',marginTop:2}} onPress={()=>this.props.onPress(fulladdress)}>
-      <Image source={miles_icon} style={{width: deviceWidth/20, height: deviceWidth/20, resizeMode: 'contain'}}/>
-      <Text style={{alignSelf:'center',width: deviceWidth*0.62, fontSize: 16, textDecorationLine:'underline',  fontFamily: 'ProximaNova-Regular', color: 'rgba(37, 0, 97, 1)'}}> {distanceFormatted}</Text>
-      </TouchableOpacity>
-      </View>
+    <View style={{flexDirection:'column', marginLeft:10}}>
+      <Text style={{color:flavorColor, width:deviceWidth*0.75, fontSize: 17, fontFamily: 'Typeka Mix',marginTop:10 }}>{flavorName}</Text>
+      {secondRow}
+    </View>
       {crossButton}
 
-      </View>
-        </View>
+  </View>
+</View>
     );
   }
 

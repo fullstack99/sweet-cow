@@ -10,6 +10,7 @@ import { openExternalMaps } from '../../utils/';
 import SearchResultCell from '../SearchResultCell/searchResultCell'
 import TextField from '../base/textField/'
 import FirDatabase from "../../database/";
+import FlavourInfoView from '../ShopDetails/FlavourDetail'
 
 
 
@@ -20,7 +21,7 @@ const search_icon = require('../../../images/search-icon.png');
 const cross_Icon = require('../../../images/Cross_Icon.png');
 
 
-
+let flavorDetail = null
 
 const {
   replaceAt,
@@ -44,6 +45,7 @@ class SearchScreen extends Component {
     this.state = {
       isEditMode: false,
       searchText: '',
+      isInfoMode: false
     };
   }
 
@@ -51,6 +53,9 @@ class SearchScreen extends Component {
 
   }
 
+  flavorInfoDismiss(){
+    this.setState({isInfoMode: false})
+  }
 
   pushRoute(route){
     this.props.pushRoute({ key: route }, this.props.navigation.key);
@@ -69,15 +74,82 @@ class SearchScreen extends Component {
     openExternalMaps(location,this.props.lastPosition)
   }
 
-  searchResultCell(flavorName, shop, distance){
-    let isFavorite = this.checkFavorite(flavorName,shop.id)
+  openFlavorInfo(flavorData, shop, isFavorite){
+    console.warn(isFavorite)
+    let flavorElement = {flavorData:flavorData, isFavorite:isFavorite, shopId:shop.id}
+    flavorDetail = flavorElement
+    this.setState({isInfoMode: true})
+  }
+
+  searchResultCell(flavorData, shop, distance, isAvailable){
+    let isFavorite = this.checkFavorite(flavorData.flavor,shop.id)
+    let favKey = this.getFavoriteKey(flavorData.flavor,shop.id)
     return(
-      <SearchResultCell flavorName={flavorName} shop={shop} distance={distance} isFavorite={isFavorite}  onPress={(location)=>this.openExternalMaps(location)} setFavorites={(details)=>this.setFavorites(details)}/>
+      <SearchResultCell flavorData={flavorData} shop={shop} distance={distance} isFavorite={isFavorite} favKey={favKey} isAvailable={isAvailable} onPress={(location)=>this.openExternalMaps(location)} changeFavorites={(details)=>this.changeFavouriteState(details)} openFlavorInfo={(flavorData, shop, isFavorite) => this.openFlavorInfo(flavorData, shop, isFavorite)}/>
     )
+  }
+
+  setFavoritesFromDetails(flavorData, isFavorite){
+    console.warn(isFavorite);
+    let shopId = flavorDetail.shopId;
+    let favId = this.getFavoriteKey(flavorData.flavor, shopId)
+    console.warn(favId)
+    let element = {flavorName:flavorData.flavor, shopId:shopId, isFavorite:isFavorite, key:favId}
+    this.changeFavouriteState(element)
+  }
+
+  changeFavouriteState(details){
+    if(details.isFavorite === false){
+      console.warn("add to fav")
+      this.setFavorites(details)
+    }
+    else{
+      console.warn("remove from fav")
+      this.removeFavorites(details)
+    }
+  }
+
+  removeFavorites(details){
+    try{
+      FirDatabase.removeFavorites(this.props.user.uid, details)
+      FirDatabase.getFavoritesCount(details, (data) => {
+      console.warn(data.count);
+
+      let value = data.count-1
+      if(value < 0){
+        value = 0
+      }
+      FirDatabase.setFavoritesCount(details, value)
+      })
+
+      let user = this.props.user
+// removing from users
+
+let tempUSerArray = []
+user.favorites.map((fav)=>{
+  if(fav.key !== details.key){
+    tempUSerArray.push(fav)
+  }
+})
+      user.favorites = tempUSerArray
+      this.setUser(user)
+      this.forceUpdate()
+    }
+    catch(error){
+
+      this.setState({isLoading: false})
+      Alert.alert(
+        'Error',
+        `${error.toString()}`,
+      )
+    }
   }
 
   setFavorites(details){
     try{
+
+
+
       let key = FirDatabase.setFavorites(this.props.user.uid, details)
       let detailVal = {key:key, flavorName:details.flavorName, shopId:details.shopId}
 
@@ -111,11 +183,23 @@ class SearchScreen extends Component {
     let favorites = this.props.user.favorites
 
     favorites.map((favorite)=>{
-      if(favorite.shopId == shopId && favorite.flavorName === flavorName){
+      if(favorite.flavorName === flavorName){
         isFavorite = true
       }
     })
     return isFavorite
+  }
+
+  getFavoriteKey(flavorName, shopId){
+    let favKey = ""
+    let favorites = this.props.user.favorites
+
+    favorites.map((favorite)=>{
+      if(favorite.flavorName === flavorName){
+        favKey = favorite.key
+      }
+    })
+    return favKey
   }
 
   render() {
@@ -128,18 +212,68 @@ class SearchScreen extends Component {
             if(shop.coordinatesObj.shop != undefined){
                 shop.coordinatesObj.shop.flavors.map((flavor)=>{
                   if(flavor.flavor.toUpperCase().includes(this.state.searchText.toUpperCase())){
-                    let element = {flavorName:flavor.flavor, shop:shop.coordinatesObj.shop, distance:shop.distance}
+                    let element = {flavorData:flavor, shop:shop.coordinatesObj.shop, distance:shop.distance, isAvailable:true}
                     searchResultArray.push(element)
                   }
                 })
             }
         }
       })
+    }else{
+      this.props.distanceArray.map((shop)=>{
+        if(shop.coordinatesObj.shop !== null){
+            if(shop.coordinatesObj.shop != undefined){
+                shop.coordinatesObj.shop.flavors.map((flavor)=>{
+                    let element = {flavorData:flavor, shop:shop.coordinatesObj.shop, distance:shop.distance, isAvailable:true}
+                    searchResultArray.push(element)
+                })
+            }
+        }
+      })
     }
 
+
+    // if(searchResultArray.length === 0){
+    //   console.warn(this.props.searchData);
+    //   this.props.searchData.map((searchObj)=>{
+    //         if(searchObj != undefined){
+    //             searchObj.flavors.map((flavor)=>{
+    //               if(flavor.flavor.toUpperCase().includes(this.state.searchText.toUpperCase())){
+    //                 let element = {flavorData:flavor, shop:searchObj, distance:0, isAvailable:false}
+    //                 console.warn(flavor);
+    //                 searchResultArray.push(element)
+    //               }
+    //             })
+    //         }
+    //   })
+    // }
+
+
+      this.props.searchData.map((searchObj)=>{
+            if(searchObj != undefined){
+                searchObj.flavors.map((flavor)=>{
+
+                  var isAlreadyAdded = false;
+                  searchResultArray.map((addedFlavour) => {
+
+                    if(addedFlavour.flavorData.flavor.toUpperCase() === flavor.flavor.toUpperCase()){
+                      isAlreadyAdded = true;
+                    }
+                  })
+
+                  if(isAlreadyAdded === false && flavor.flavor.toUpperCase().includes(this.state.searchText.toUpperCase())){
+                    let element = {flavorData:flavor, shop:searchObj, distance:0, isAvailable:false}
+                    console.warn(flavor);
+                    searchResultArray.push(element)
+                  }
+                })
+            }
+      })
+
     searchResultArray.map((searchResult)=>{
-      searchResultCell.push(this.searchResultCell(searchResult.flavorName, searchResult.shop, searchResult.distance))
+      searchResultCell.push(this.searchResultCell(searchResult.flavorData, searchResult.shop, searchResult.distance, searchResult.isAvailable))
     })
+
 
     return (
       <Container>
@@ -147,7 +281,7 @@ class SearchScreen extends Component {
 
     <View style={{marginTop: 10, width:deviceWidth*0.85, flexDirection: 'row', alignSelf:'center', height:50}}>
       <Image source={search_icon} style={{marginLeft: 10, alignSelf: 'center', width: deviceWidth/12, height: deviceHeight/12, marginTop: 2, resizeMode: 'contain'}}/>
-      <TextInput placeholder='Search Flavor' placeholderTextColor='rgba(89, 135, 198, 1)' placeholderFont='Typeka Mix'
+      <TextInput autoFocus={true} placeholder='Search Flavor' placeholderTextColor='rgba(89, 135, 198, 1)' placeholderFont='Typeka Mix'
         style={{width:deviceWidth*0.6, marginLeft: 5, color: 'rgba(89, 135, 198, 1)', fontSize: 20,fontFamily:'Typeka Mix'}}
         onChangeText={(text)=>this.onSearchChangeText(text)}
         underlineColorAndroid='rgba(0,0,0,0)'
@@ -161,7 +295,13 @@ class SearchScreen extends Component {
       <ScrollView>
       {searchResultCell}
       </ScrollView>
+
+
       </View>
+      <FlavourInfoView isInfoMode={this.state.isInfoMode} flavorData={flavorDetail}
+        crossAction={()=>this.flavorInfoDismiss()} setFavoritesAction={(flavorData, isFavorite)=>this.setFavoritesFromDetails(flavorData, isFavorite)}
+      />
+
 
       </Container>
     );
@@ -179,7 +319,9 @@ function bindActions(dispatch) {
 
 const mapStateToProps = state => ({
   navigation: state.cardNavigation,
-  user: state.user.name
+  user: state.user.name,
+  searchData: state.searchData.name
+
 });
 
 export default connect(mapStateToProps, bindActions)(SearchScreen);

@@ -6,6 +6,7 @@ import { actions } from 'react-native-navigation-redux-helpers';
 import { Container, Content, Button, View, Text } from 'native-base';
 import TextField from '../base/textField/'
 import CustomButton from '../base/button/'
+import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType} from 'react-native-fcm';
 
 import { setUser } from '../../actions/user';
 
@@ -63,8 +64,8 @@ class HomeScreen extends Component {
 
   constructor(props) {
     super(props);
-
   }
+
 
 
   replaceRoute(route) {

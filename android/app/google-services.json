@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "729713908625",
+    "firebase_url": "https://sweet-cow-df10d.firebaseio.com",
+    "project_id": "sweet-cow-df10d",
+    "storage_bucket": "sweet-cow-df10d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:729713908625:android:9b09c2a3bf93cd99",
+        "android_client_info": {
+          "package_name": "com.sweetcow.sweetcow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "729713908625-jjq7che2nikpla328d34er2149fe9iej.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sweetcow.sweetcow",
+            "certificate_hash": "df4cfa434cf5e49bddb890594a499ec42f9f50aa"
+          }
+        },
+        {
+          "client_id": "729713908625-vevrc4t6fsv25n28lk2gu5h95k1k3l08.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKKCmLTZBby6s8AF4LF09-UlggF8WlpCc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "729713908625-vevrc4t6fsv25n28lk2gu5h95k1k3l08.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "729713908625-p9nr1mijfren3loj2gevglebo676kk5o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sweetcow.sweetcow"
+              }
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -6,6 +6,7 @@ import cardNavigation from './cardNavigation';
 import user from './user';
 import lastPosition from './lastPosition';
 import shopData from './shopData';
+import searchData from './searchData';
 import list from './list';
 
 export default combineReducers({
@@ -16,6 +17,7 @@ export default combineReducers({
   cardNavigation,
   lastPosition,
   shopData,
+  searchData,
 
 
 });

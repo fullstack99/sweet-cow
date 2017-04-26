@@ -14,7 +14,7 @@ import HyperlinkButton from '../base/hyperlinkButton/'
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
-const background = require('../../../images/background_ShopDetails.png');
+const background = require('../../../images/background_login.png');
 const logoCow = require('../../../images/logo_cow_horizontal.png');
 const map_icon = require('../../../images/map-locator.png');
 const search_icon = require('../../../images/search-icon.png');
@@ -113,15 +113,17 @@ class ShopDetails extends Component {
     let flavorColor = '#'+((flavorData.color.split('x'))[1])
 
     let shop = this.props.data.coordinatesObj.shop
-    let element = {flavorName:flavorData.flavor, shopId:shop.id}
-
-
-
-    let onPress = ()=>this.setFavorites(element)
-    let favoriteImage = favorite_icon_brown
+    let favId = this.getFavoriteKey(flavorData.flavor, shop.id)
     let isFavorite = this.checkFavorite(flavorData.flavor, shop.id)
+    let element = {flavorName:flavorData.flavor, shopId:shop.id, key: favId, isFavorite: isFavorite}
+
+
+
+    let onPress = ()=>this.changeFavouriteState(element)
+    let favoriteImage = favorite_icon_brown
+
       if(isFavorite === true){
-      onPress = null
+      // onPress = null
       favoriteImage = favorite_icon_red
       }
     let flavorElement = {flavorData:flavorData, isFavorite:isFavorite, shopId:shop.id}
@@ -129,11 +131,13 @@ class ShopDetails extends Component {
 
     return(
       <View style={{backgroundColor:'white', marginLeft:10, marginBottom:10, height:50, flexDirection:'row', justifyContent:"space-between"}}>
-<TouchableOpacity style={{alignSelf:'center', marginLeft: 10, marginRight: 5, width: deviceWidth/15, height: deviceWidth/15}} onPress={onPress}>
+<TouchableOpacity style={{marginBottom: 2, alignSelf:'center', marginLeft: 10, marginRight: 5, width: deviceWidth/15, height: deviceWidth/15}} onPress={onPress}>
       <Image source={favoriteImage} style={{resizeMode: 'contain'}}/>
 </TouchableOpacity>
+<TouchableOpacity style={{justifyContent:'center'}} onPress={()=>this.openFlavorInfo(flavorElement)}>
       <Text style={{marginLeft:10, width:deviceWidth*0.6, color:flavorColor, alignSelf:'center', textAlign:'center', fontSize: 17,  fontFamily:"Typeka Mix"}}> {toTitleCase(flavorData.flavor)}</Text>
-<TouchableOpacity style={{alignSelf:'center', marginLeft: 10, marginBottom: 5, marginRight: 20, width: deviceWidth/15, height: deviceWidth/15}} onPress={()=>this.openFlavorInfo(flavorElement)}>
+      </TouchableOpacity>
+<TouchableOpacity style={{alignSelf:'center', marginLeft: 10, marginBottom: 7, marginRight: 20, width: deviceWidth/15, height: deviceWidth/15}} onPress={()=>this.openFlavorInfo(flavorElement)}>
       <Image source={next_page_icon_brown} style={{ resizeMode: 'contain'}}/>
 </TouchableOpacity>
       </View>
@@ -164,7 +168,7 @@ class ShopDetails extends Component {
       return(
   <View style={{marginBottom:2, marginTop: 2,  backgroundColor: 'rgba(92,133,192,1)', height: deviceHeight*0.076, marginLeft:10, marginRight:10, flexDirection:'row', justifyContent:'center'}}>
       <Image source={home_icon} style={{alignSelf:'center', marginLeft: 5, marginRight: 5, width: deviceWidth/15, height: deviceHeight/15, resizeMode: 'contain'}}/>
-      <Text style={{ alignSelf:'center', fontSize: 15, fontFamily: 'ProximaNova-Regular', color: 'white'}}> Home Location </Text>
+      <Text style={{ alignSelf:'center', fontSize: 15, fontFamily: 'ProximaNova-Regular', color: 'white'}}> This is my home location. </Text>
       <View style={{alignSelf:'center', marginLeft:10}}>
       <HyperlinkButton width={deviceWidth * 0.15} text="Remove" textColor="white" fontSize={15} onPress={()=>this.resetHomeLocationButtonPressed()}/>
       </View>
@@ -217,22 +221,89 @@ class ShopDetails extends Component {
     let favorites = this.props.user.favorites
 
     favorites.map((favorite)=>{
-      if(favorite.shopId == shopId && favorite.flavorName === flavorName){
+      if(favorite.flavorName === flavorName){
         isFavorite = true
       }
     })
     return isFavorite
   }
 
+  getFavoriteKey(flavorName, shopId){
+    let favKey = ""
+    let favorites = this.props.user.favorites
+
+    favorites.map((favorite)=>{
+      if(favorite.flavorName === flavorName){
+        favKey = favorite.key
+      }
+    })
+    return favKey
+  }
+
   searchDismiss() {
     this.setState({isSearchMode: false})
   }
 
-  setFavoritesFromDetails(flavorName){
-    let shop = this.props.data.coordinatesObj.shop
-    let element = {flavorName:flavorName, shopId:shop.id}
-    this.setFavorites(element)
+  logoClicked(){
+    this.popRoute()
   }
+
+  setFavoritesFromDetails(flavorData, isFavorite){
+    console.warn(isFavorite);
+    let shop = this.props.data.coordinatesObj.shop
+    let favId = this.getFavoriteKey(flavorData.flavor, shop.id)
+    console.warn(favId)
+    let element = {flavorName:flavorData.flavor, shopId:shop.id, isFavorite:isFavorite, key:favId}
+    this.changeFavouriteState(element)
+  }
+
+  changeFavouriteState(details){
+
+    if(details.isFavorite === false){
+      this.setFavorites(details)
+    }
+    else{
+      this.removeFavorites(details)
+    }
+
+  }
+
+  removeFavorites(details){
+    try{
+      FirDatabase.removeFavorites(this.props.user.uid, details)
+      FirDatabase.getFavoritesCount(details, (data) => {
+      console.warn(data.count);
+
+      let value = data.count-1
+      if(value < 0){
+        value = 0
+      }
+      FirDatabase.setFavoritesCount(details, value)
+      })
+
+      let user = this.props.user
+  // removing from users
+
+  let tempUSerArray = []
+  user.favorites.map((fav)=>{
+  if(fav.key !== details.key){
+    tempUSerArray.push(fav)
+  }
+  })
+      user.favorites = tempUSerArray
+      this.setUser(user)
+      this.forceUpdate()
+    }
+    catch(error){
+
+      this.setState({isLoading: false})
+      Alert.alert(
+        'Error',
+        `${error.toString()}`,
+      )
+    }
+  }
+
 
   setFavorites(details){
     try{
@@ -280,15 +351,16 @@ class ShopDetails extends Component {
     // let flavorArray = ['Super Delicious Vanilla', 'Butter Pecan', 'Oatmeal Cookie', 'Chocolate Chip Cookie Dough', 'Chocolate Peanut Butter', 'Dutch Chocolate']
     let flavorsColors = ['rgba(89, 135, 198, 1)', 'rgba(238, 37, 53, 1)', 'rgba(243, 123, 34, 1)', 'rgba(85, 7, 91, 1)', 'rgba(89, 135, 198, 1)', 'rgba(62, 56, 20, 1)']
 
-      var weekdayData = 'MON - THU'//shop.hours[0].split(':');
-      var weekDays = 'MON - THU'//weekdayData[0]
-      var weekDaysTime = '10am - 9pm'//weekdayData[1]
+      var weekdayData = shop.dayhours.split(' ');
+      var weekDays = weekdayData[0]
+      var weekDaysTime = weekdayData[1]
 
-      var weekendData = 'FRI - SUN'//shop.hours[1].split(':');
-      var weekEnds = 'FRI - SUN'//weekendData[0]
-      var weekEndsTime = '10am - 10pm'//weekendData[1]
+      var weekendData = shop.dayhourseconds.split(' ');
+      var weekEnds = weekendData[0]
+      var weekEndsTime = weekendData[1]
 
-    let formattedAddress =  shop.address + ' - ' + shop.location + ', ' + shop.state + ' ' + shop.zip_code
+    let formattedAddress =  shop.address + ' - ' + shop.city
+    formattedAddress = toTitleCase(formattedAddress)  + ', ' + shop.state.toUpperCase() + ' ' + toTitleCase(shop.zip_code)
     let todayFlavorText = "TODAY'S FLAVORS"
     let numberOfFlavors = flavorArray.length
     let phone = 'tel:'+shop.phone
@@ -300,8 +372,9 @@ class ShopDetails extends Component {
     return (
       <Container>
         <View style={{width: deviceWidth, height: deviceHeight * 0.14, flexDirection:'row'}}>
+          <TouchableOpacity onPress={()=>this.logoClicked()}>
             <Image source={logoCow} style={{marginLeft: 10, width: deviceWidth/2.2, height: deviceHeight/6.2, alignSelf:'flex-start', marginTop: 0, resizeMode: 'contain'}}/>
-
+            </TouchableOpacity>
             <TouchableOpacity onPress={()=>this.popRoute()}>
                 <Image source={map_icon} style={{marginLeft: 25, marginTop: 25, width: deviceWidth/12, height: deviceHeight/12, resizeMode: 'contain'}}/>
             </TouchableOpacity>
@@ -329,30 +402,27 @@ class ShopDetails extends Component {
       vertical={true}
       >
 
-      <Text style={{alignSelf:'center', marginTop: 15, fontSize: 15, color: 'rgba(92,133,192,1)', fontFamily:'ProximaNova-Regular'}}> Optional Promo Message Message Subtitle.</Text>
-      <Text style={{alignSelf:'center', marginTop: 5, fontSize: 15, color: 'rgba(92,133,192,1)', fontFamily:'ProximaNova-Regular'}}> Get Your Ice Cream Fix...Moo.</Text>
-
       <TouchableOpacity onPress={()=>this.popRoute()}>
-      <View style={{marginBottom:2, marginTop: 20,  backgroundColor: 'rgba(92,133,192,1)', height: 45, marginLeft:10, marginRight:10, justifyContent:'center'}}>
+      <View style={{marginBottom:2, marginTop: 15,  backgroundColor: 'rgba(92,133,192,1)', height: 45, marginLeft:10, marginRight:10, justifyContent:'center'}}>
       <Text style={{alignSelf:'center',  fontSize: 18, fontFamily: 'ProximaNova-Regular', color: 'white'}}> VIEW ALL SHOPS </Text>
       </View>
       </TouchableOpacity>
 
 
       <View style={{flexDirection:'column', justifyContent: 'center'}}>
-      <Text style={{alignSelf:'center', marginTop: 20, fontSize: 25, color: 'rgba(29, 16, 96, 1)', fontFamily:"Trade Gothic LT Std"}}> {toTitleCase(shop.location)} </Text>
-      <Text style={{textAlign:'center',width:deviceWidth*0.85, alignSelf:'center', fontSize: 16,  fontFamily: 'ProximaNova-Regular', color: 'rgba(63, 57, 19, 1)'}}>{toTitleCase(formattedAddress)}</Text>
+      <Text style={{alignSelf:'center', marginTop: 20, fontSize: 25, color: 'rgba(29, 16, 96, 1)', fontFamily:"Trade Gothic LT Std"}}> {shop.location.toUpperCase()} </Text>
+      <Text style={{marginBottom:20, textAlign:'center',width:deviceWidth*0.85, alignSelf:'center', fontSize: 16,  fontFamily: 'ProximaNova-Regular', color: 'rgba(63, 57, 19, 1)'}}>{formattedAddress}</Text>
       </View>
 
       {homeLocationButton}
 
       <View style={{marginLeft:10, marginRight:10, flexDirection:'row', justifyContent:'center'}}>
       <TouchableOpacity style={{backgroundColor: 'rgba(29,16,96,1)', height: 45 , marginRight:1, flexDirection:'row', justifyContent:'center', flex:1}} onPress={(location)=>this.openExternalMAps(fulladdress)} >
-      <Image source={miles_icon} style={{alignSelf:'center', marginLeft: 5, marginRight: 5, width: 25, height: 25, resizeMode: 'contain'}}/>
+      <Image source={miles_icon} style={{alignSelf:'center', marginLeft: 5, marginRight: 5, width: 20, height: 20, resizeMode: 'contain'}}/>
       <Text style={{alignSelf:'center', fontSize: 13, fontFamily: 'ProximaNova-Regular', color: 'white'}}> GET DIRECTIONS </Text>
       </TouchableOpacity>
       <TouchableOpacity style={{backgroundColor: 'rgba(29,16,96,1)', height: 45 ,marginLeft:1, flexDirection:'row', justifyContent:'center',flex:1}} onPress={() => this.makePhoneCall(phone)}>
-      <Image source={call_icon} style={{alignSelf:'center', marginLeft: 5, marginRight: 5, width: 25, height: 25, resizeMode: 'contain'}}/>
+      <Image source={call_icon} style={{alignSelf:'center', marginLeft: 5, marginRight: 5, width: 20, height: 20, resizeMode: 'contain'}}/>
       <Text style={{alignSelf:'center', fontSize: 13, fontFamily: 'ProximaNova-Regular', color: 'white'}}> CALL </Text>
       </TouchableOpacity>
       </View>
@@ -376,7 +446,7 @@ class ShopDetails extends Component {
 </ScrollView>
 
       <FlavourInfoView isInfoMode={this.state.isInfoMode} flavorData={flavorDetail}
-        crossAction={()=>this.flavorInfoDismiss()} setFavoritesAction={(flavorName)=>this.setFavoritesFromDetails(flavorName)}
+        crossAction={()=>this.flavorInfoDismiss()} setFavoritesAction={(flavorData, isFavorite)=>this.setFavoritesFromDetails(flavorData, isFavorite)}
       />
 
       <SearchResults isSearchMode={this.state.isSearchMode} distanceArray={this.props.distanceArray} lastPosition={this.props.lastPosition}

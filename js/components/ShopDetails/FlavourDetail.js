@@ -44,7 +44,7 @@ export default class FlavourDetail extends Component{
     if(this.props.isInfoMode == true){
       return(
         <View style={styles.overlayView}>
-          <FlavorInfo flavorData={this.props.flavorData} crossAction={this.props.crossAction} setFavoritesAction={(flavorName)=>this.props.setFavoritesAction(flavorName)}/>
+          <FlavorInfo flavorData={this.props.flavorData} crossAction={this.props.crossAction} setFavoritesAction={(flavorData,isFavorite)=>this.props.setFavoritesAction(flavorData, isFavorite)}/>
         </View>
       )
     }

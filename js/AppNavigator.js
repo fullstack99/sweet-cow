@@ -111,7 +111,7 @@ class AppNavigator extends Component {
       case "signup":
           return <SignUp />
       case "mapView":
-          return <MapView />
+          return <MapView locationId={props.scene.route.locationId}/>
       case "home":
         return <HomeScreen />
       case "shopDetail":

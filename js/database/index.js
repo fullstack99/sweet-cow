@@ -16,6 +16,13 @@ class Database {
     })
   }
 
+  static updateUserData(userId, email, name) {
+    var updates = {};
+    updates['/user/' + userId + '/details/email'] = email;
+    updates['/user/' + userId + '/details/name'] = name;
+    return firebase.database().ref().update(updates)
+  }
+
   static setHomeLocation(userId, details) {
     // Write the new post's data simultaneously in the posts list and the user's post list.
     var updates = {};
@@ -26,20 +33,22 @@ class Database {
 
   static setFavorites(userId, details) {
     // Write the new post's data simultaneously in the posts list and the user's post list.
+
+    let element = {'flavorName': details.flavorName, 'shopId': details.shopId}
     let userDataPath = "/user/" + userId + "/details/favorites";
-    var ref = firebase.database().ref(userDataPath).push(details)
+    var ref = firebase.database().ref(userDataPath).push(element)
     return ref.key
   }
 
   static setFavoritesCount(details, value) {
     // Write the new post's data simultaneously in the posts list and the user's post list.
     var updates = {};
-    updates["/flavours/" + details.flavorName + '_' + details.shopId + "/count"] = value;
+    updates["/flavours/" + details.flavorName + "/count"] = value;
     return firebase.database().ref().update(updates)
   }
 
   static getFavoritesCount(details, callback) {
-    let userDataPath = "/flavours/"+details.flavorName+'_'+details.shopId+"/";
+    let userDataPath = "/flavours/"+details.flavorName+"/";
     firebase.database().ref(userDataPath).once('value', (snapshot) => {
       var data = {};
       if(snapshot.val() === null || snapshot.val().count === undefined){
@@ -59,6 +68,7 @@ class Database {
 
   static removeFavorites(userId, details) {
     // Write the new post's data simultaneously in the posts list and the user's post list.
+    console.warn(details.key)
     let userDataPath = "/user/" + userId + "/details/favorites/"+details.key;
     return firebase.database().ref(userDataPath).remove()
   }
@@ -73,6 +83,7 @@ class Database {
     let userDataPath = "/user/" + userId + "/details";
     this.userdataListener = firebase.database().ref(userDataPath).once('value', (snapshot) => {
       var data = {};
+      console.warn(snapshot.val());
       if (snapshot.val()) {
         let favoritesArray = []          // get children as an array
         if(snapshot.val().favorites!==undefined){

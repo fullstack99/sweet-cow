@@ -139,11 +139,24 @@ class MyFavorite extends Component {
   removeFavorite(key){
       this.props.user.favorites.map((favorite)=>{
         if(key === favorite.key){
-          this.setFavorites(favorite)
+          Alert.alert(
+  'Remove from favorites',
+  'Are you sure you want to remove this flavor from your favorites?',
+  [
+    {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+    {text: 'Yes', onPress: () => this.setFavorites(favorite)},
+  ],
+  { cancelable: false }
+)
         }
       })
   }
 
+
+
+  logoClicked(){
+    this.mapButtonClicked()
+  }
 
   setFavorites(details){
     try{
@@ -199,20 +212,48 @@ if(this.state.isEditMode){
 let favoriteCell = []
 let favoriteArray = []
 
+let unAvailableFavorites = []
+
 this.props.user.favorites.map((favorite)=>{
+  let isEntered = false
     this.props.distanceArray.map((shop)=>{
       if(shop.coordinatesObj.shop !== null){
           if(shop.coordinatesObj.shop != undefined){
               shop.coordinatesObj.shop.flavors.map((flavor)=>{
                 if(favorite.shopId === shop.coordinatesObj.shop.id && favorite.flavorName === flavor.flavor){
-                  let element = {keyVal:favorite.key, shop: shop.coordinatesObj.shop, distance:shop.distance, flavorName:favorite.flavorName}
+                  let element = {keyVal:favorite.key, shop: shop.coordinatesObj.shop, distance:shop.distance, flavorData:flavor, isAvailable:true}
                   favoriteArray.push(element)
+                  isEntered = true
                 }
               })
           }
       }
     })
+    if(isEntered === false){
+      unAvailableFavorites.push(favorite)
+    }
 })
+
+unAvailableFavorites.map((favorite)=>{
+  let isEntered = false
+    this.props.distanceArray.map((shop)=>{
+      if(shop.coordinatesObj.shop !== null){
+          if(shop.coordinatesObj.shop != undefined){
+              shop.coordinatesObj.shop.flavors.map((flavor)=>{
+                if(isEntered === false && (favorite.flavorName === flavor.flavor) ){
+                  let element = {keyVal:favorite.key, shop: shop.coordinatesObj.shop, distance:shop.distance, flavorData:flavor, isAvailable:true}
+                  favoriteArray.push(element)
+                  isEntered = true
+                }
+              })
+          }
+      }
+    })
+    if(isEntered === true){
+      unAvailableFavorites.pop(favorite)
+    }
+})
+
 
 favoriteArray.sort((obj1, obj2) => {
   if (obj1.distance > obj2.distance) return 1;
@@ -220,8 +261,23 @@ favoriteArray.sort((obj1, obj2) => {
   return 0;
 })
 
+
+  unAvailableFavorites.map((favorite)=>{
+  this.props.searchData.map((searchObj)=>{
+        if(searchObj != undefined){
+            searchObj.flavors.map((flavor)=>{
+              if(favorite.shopId === searchObj.id && favorite.flavorName === flavor.flavor){
+                let element = {keyVal:favorite.key, shop: searchObj, distance:0, flavorData:flavor, isAvailable:false}
+                favoriteArray.push(element)
+              }
+            })
+        }
+  })
+  })
+
+
 favoriteArray.map((favorite)=>{
-    favoriteCell.push(<MyFavoriteCell  keyVal={favorite.keyVal}  shop={favorite.shop} distance={favorite.distance} flavorName={favorite.flavorName} edit={this.state.isEditMode} onPress={(location)=>this.openExternalMaps(location)} removeFavorite={(key)=>this.removeFavorite(key)}/>)
+    favoriteCell.push(<MyFavoriteCell  keyVal={favorite.keyVal}  shop={favorite.shop} distance={favorite.distance} flavorData={favorite.flavorData} edit={this.state.isEditMode} isAvailable={favorite.isAvailable} onPress={(location)=>this.openExternalMaps(location)} removeFavorite={(key)=>this.removeFavorite(key)}/>)
 })
 
 
@@ -230,8 +286,9 @@ favoriteArray.map((favorite)=>{
       <Container>
 
       <View style={{width: deviceWidth, height: deviceHeight * 0.14, flexDirection:'row'}}>
+        <TouchableOpacity onPress={()=>this.logoClicked()}>
           <Image source={logoCow} style={{marginLeft: 10, width: deviceWidth/2.2, height: deviceHeight/6.2, alignSelf:'flex-start', marginTop: 0, resizeMode: 'contain'}}/>
-
+        </TouchableOpacity>
           <TouchableOpacity onPress={()=>this.mapButtonClicked()}>
               <Image source={map_icon} style={{marginLeft: 25, marginTop: 25, width: deviceWidth/12, height: deviceHeight/12, resizeMode: 'contain'}}/>
           </TouchableOpacity>
@@ -283,7 +340,8 @@ const mapStateToProps = state => ({
   navigation: state.cardNavigation,
   user: state.user.name,
   lastPosition: state.lastPosition.name,
-  distanceArray: state.shopData.name
+  distanceArray: state.shopData.name,
+  searchData: state.searchData.name
 });
 
 export default connect(mapStateToProps, bindActions)(MyFavorite);

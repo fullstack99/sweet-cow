@@ -11,6 +11,7 @@ import { setUser } from '../../actions/user';
 import * as firebase from "firebase";
 import FirDatabase from "../../database/";
 import Loading from '../base/loading/'
+import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType} from 'react-native-fcm';
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
@@ -24,6 +25,8 @@ const {
 
 const background = require('../../../images/sweet-cow-loading-screen.png');
 const loading_Circle = require('../../../images/loading_circle.png');
+
+let percentageLimit = 60
 
 const styles = StyleSheet.create({
   backgroundImage: {
@@ -53,6 +56,7 @@ class InitialView extends Component {
 
   constructor(props) {
     super(props);
+    console.warn('here')
     this.spinValue = new Animated.Value(0)
     this.state = {
       userLoaded: false,
@@ -62,8 +66,35 @@ class InitialView extends Component {
 
     };
     this.getInitialView()
+
     this.getInitialView = this.getInitialView.bind(this);
   }
+
+
+  getFcmToken(){
+    FCM.setBadgeNumber(0);  
+    FCM.requestPermissions(); // for iOS
+        FCM.getFCMToken().then(token => {
+            console.log(token)
+            console.warn(token)
+          //   Alert.alert(
+          //   'Token',
+          //   token,
+          // )
+            // store fcm token in your server
+        });
+
+        this.refreshTokenListener = FCM.on(FCMEvent.RefreshToken, (token) => {
+            console.log(token)
+            console.warn(token)
+          //   Alert.alert(
+          //   'Token',
+          //   token,
+          // )
+          //   // fcm token may not be available on first load, catch it here
+        });
+  }
+
 
   getInitialView() {
 
@@ -89,7 +120,11 @@ class InitialView extends Component {
               else{
 
                 this.setUser(userDataVal)
-                this.replaceRoute(initialView)
+                console.warn(userDataVal.locationId);
+                if(userDataVal.locationId === -1 || userDataVal.locationId === undefined){
+                  percentageLimit = 100
+                }
+                this.replaceRouteToMap(initialView, userDataVal.locationId)
               }
         });
       }
@@ -105,9 +140,11 @@ class InitialView extends Component {
     this.fireBaseListener = undefined
     this.listenUserData = undefined
     clearInterval(this.timer)
+    this.refreshTokenListener.remove();
   }
 
   componentDidMount () {
+    this.getFcmToken()
     this.spin()
     this.startPercentageIncrease()
   }
@@ -133,10 +170,10 @@ startPercentageIncrease(){
 
 increasePecentage(){
   var percentage = this.state.pecentage
-  percentage+= Math.floor(Math.random() * (10 - 1)) + 1
+  percentage+= Math.floor(Math.random() * ((percentageLimit/10) - 1)) + 1
 
   // console.warn(percentage)
-   if(percentage <= 100){
+   if(percentage <= percentageLimit){
     this.setState({pecentage: percentage})
   }
 }
@@ -145,7 +182,12 @@ increasePecentage(){
     setTimeout(() => {
       this.props.replaceAt('default', { key: route }, this.props.navigation.key);
     }, 500);
+  }
 
+  replaceRouteToMap(route, locationId) {
+    // setTimeout(() => {
+      this.props.replaceAt('default', { key: route, locationId:locationId }, this.props.navigation.key);
+    // }, 100);
   }
 
   setUser(user) {
