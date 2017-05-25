@@ -11,6 +11,7 @@ import SearchResults from "../SearchScreen/SearchResults"
 import { openExternalMaps } from '../../utils/';
 
 import FirDatabase from "../../database/";
+import FlavourInfoView from '../ShopDetails/FlavourDetail'
 
 
 const deviceWidth = Dimensions.get('window').width;
@@ -23,7 +24,7 @@ const favorite_icon = require('../../../images/favorite-icon.png');
 const user_icon = require('../../../images/user-icon.png');
 
 
-
+let flavorDetail = null
 
 const {
   replaceAt,
@@ -32,6 +33,7 @@ const {
 } = actions;
 
 class MyFavorite extends Component {
+
 
   static propTypes = {
     navigation: React.PropTypes.shape({
@@ -46,14 +48,87 @@ class MyFavorite extends Component {
     super(props);
     this.state = {
       isEditMode: false,
-      isSearchMode: false
+      isSearchMode: false,
+      isInfoMode: false
     };
   }
+
+  flavorInfoDismiss(){
+    this.setState({isInfoMode: false})
+  }
+
 
   componentDidMount() {
 
   }
 
+  openFlavorInfo(flavorData, shop){
+
+    let flavorElement = {flavorData:flavorData, isFavorite:true, shopId:shop.id}
+    flavorDetail = flavorElement
+    this.setState({isInfoMode: true})
+  }
+
+  addFavorites(details){
+    try{
+
+
+
+      let key = FirDatabase.setFavorites(this.props.user.uid, details)
+      let detailVal = {key:key, flavorName:details.flavorName, shopId:details.shopId}
+
+      FirDatabase.getFavoritesCount(details, (data) => {
+      console.warn(data.count);
+      let value = data.count+1
+      FirDatabase.setFavoritesCount(details, value)
+      })
+
+      let user = this.props.user
+      user.favorites.push(detailVal)
+      this.setUser(user)
+      this.forceUpdate()
+    }
+    catch(error){
+
+      this.setState({isLoading: false})
+      Alert.alert(
+        'Error',
+        `${error.toString()}`,
+      )
+    }
+  }
+
+  setFavoritesFromDetails(flavorData, isFavorite){
+    console.warn(isFavorite);
+    let shopId = flavorDetail.shopId;
+    let favId = this.getFavoriteKey(flavorData.flavor, shopId)
+    console.warn(favId)
+    let element = {flavorName:flavorData.flavor, shopId:shopId, isFavorite:isFavorite, key:favId}
+    this.changeFavouriteState(element)
+  }
+
+  getFavoriteKey(flavorName, shopId){
+    let favKey = ""
+    let favorites = this.props.user.favorites
+
+    favorites.map((favorite)=>{
+      if(favorite.flavorName === flavorName){
+        favKey = favorite.key
+      }
+    })
+    return favKey
+  }
+
+  changeFavouriteState(details){
+    if(details.isFavorite === false){
+      console.warn("add to fav")
+      this.addFavorites(details)
+    }
+    else{
+      console.warn("remove from fav")
+      this.removeFavorites(details)
+    }
+  }
 
   pushRoute(route){
     this.props.pushRoute({ key: route }, this.props.navigation.key);
@@ -150,6 +225,42 @@ class MyFavorite extends Component {
 )
         }
       })
+  }
+
+  removeFavorites(details){
+    try{
+      FirDatabase.removeFavorites(this.props.user.uid, details)
+      FirDatabase.getFavoritesCount(details, (data) => {
+      console.warn(data.count);
+
+      let value = data.count-1
+      if(value < 0){
+        value = 0
+      }
+      FirDatabase.setFavoritesCount(details, value)
+      })
+
+      let user = this.props.user
+// removing from users
+
+let tempUSerArray = []
+user.favorites.map((fav)=>{
+  if(fav.key !== details.key){
+    tempUSerArray.push(fav)
+  }
+})
+      user.favorites = tempUSerArray
+      this.setUser(user)
+      this.forceUpdate()
+    }
+    catch(error){
+
+      this.setState({isLoading: false})
+      Alert.alert(
+        'Error',
+        `${error.toString()}`,
+      )
+    }
   }
 
 
@@ -277,7 +388,7 @@ favoriteArray.sort((obj1, obj2) => {
 
 
 favoriteArray.map((favorite)=>{
-    favoriteCell.push(<MyFavoriteCell  keyVal={favorite.keyVal}  shop={favorite.shop} distance={favorite.distance} flavorData={favorite.flavorData} edit={this.state.isEditMode} isAvailable={favorite.isAvailable} onPress={(location)=>this.openExternalMaps(location)} removeFavorite={(key)=>this.removeFavorite(key)}/>)
+    favoriteCell.push(<MyFavoriteCell  keyVal={favorite.keyVal}  shop={favorite.shop} distance={favorite.distance} flavorData={favorite.flavorData} edit={this.state.isEditMode} isAvailable={favorite.isAvailable} onPress={(location)=>this.openExternalMaps(location)} removeFavorite={(key)=>this.removeFavorite(key)} openFlavorInfo={(flavorData, shop) => this.openFlavorInfo(flavorData, shop)}/>)
 })
 
 
@@ -322,6 +433,12 @@ favoriteArray.map((favorite)=>{
       <SearchResults isSearchMode={this.state.isSearchMode} distanceArray={this.props.distanceArray} lastPosition={this.props.lastPosition}
        crossAction={()=>this.searchDismiss()}
       />
+
+
+      <FlavourInfoView isInfoMode={this.state.isInfoMode} flavorData={flavorDetail}
+        crossAction={()=>this.flavorInfoDismiss()} setFavoritesAction={(flavorData, isFavorite)=>this.setFavoritesFromDetails(flavorData, isFavorite)}
+      />
+
       </Container>
     );
   }

@@ -44,8 +44,9 @@ getUnavailableFlavors() {
       if(distance === null){
         distance = ''
       }else{
-        const words = distance.split(' ');
-        distance = words[0] + " Miles"
+        var res = distance.replace("mi", "Miles");
+        res = res.replace("ft", "Feets");
+        distance = res
       }
     }
 

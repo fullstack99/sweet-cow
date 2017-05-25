@@ -43,12 +43,20 @@ class Database {
   static setFavoritesCount(details, value) {
     // Write the new post's data simultaneously in the posts list and the user's post list.
     var updates = {};
-    updates["/flavours/" + details.flavorName + "/count"] = value;
+
+    var myString = details.flavorName
+  var detailsFlavor = myString.replace(/[[]|[.]|#|]|[$]|[ ]/gi, "_");
+
+
+    updates["/flavours/" + detailsFlavor + "/count"] = value;
     return firebase.database().ref().update(updates)
   }
 
   static getFavoritesCount(details, callback) {
-    let userDataPath = "/flavours/"+details.flavorName+"/";
+    var myString = details.flavorName
+  var detailsFlavor = myString.replace(/[[]|[.]|#|]|[$]|[ ]/gi, "_");
+
+    let userDataPath = "/flavours/"+detailsFlavor+"/";
     firebase.database().ref(userDataPath).once('value', (snapshot) => {
       var data = {};
       if(snapshot.val() === null || snapshot.val().count === undefined){

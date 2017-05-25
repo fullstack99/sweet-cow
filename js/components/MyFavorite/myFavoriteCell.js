@@ -58,8 +58,9 @@ if(this.props.isAvailable === true){
     if(distance === null){
       distance = ''
     }else{
-      const words = distance.split(' ');
-      distance = words[0] + " Miles"
+      var res = distance.replace("mi", "Miles");
+      res = res.replace("ft", "Feets");
+      distance = res
     }
   }
 
@@ -89,7 +90,7 @@ if(this.props.isAvailable === true){
 
 
     return(
-<View style={{alignSelf:'center', borderWidth:borderwidth/2, borderColor:'rgba(63, 57, 19, 1)', width: deviceWidth * 0.95, marginTop:5}}>
+<TouchableOpacity style={{alignSelf:'center', borderWidth:borderwidth/2, borderColor:'rgba(63, 57, 19, 1)', width: deviceWidth * 0.95, marginTop:5}} onPress={()=>this.props.openFlavorInfo(this.props.flavorData, this.props.shop)}>
 
   <View style={{width: deviceWidth*0.8,marginLeft:10, flexDirection:'row', marginBottom:5, justifyContent:'space-between'}}>
 
@@ -100,7 +101,7 @@ if(this.props.isAvailable === true){
       {crossButton}
 
   </View>
-</View>
+</TouchableOpacity>
     );
   }
 

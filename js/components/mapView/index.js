@@ -65,6 +65,8 @@ const styles = StyleSheet.create({
   },
 });
 
+var isDistanceFetchCalled = false
+
 class MapView extends Component {
 
   static propTypes = {
@@ -175,7 +177,21 @@ fetchCurrentLocation(){
   );
   this.watchID = navigator.geolocation.watchPosition((position) => {
     var lastPosition = position;
-    this.setState({lastPosition});
+
+    let prevPos = this.state.lastPosition;
+    var shouldReload = false;
+    let distance = this.distance(prevPos.coords.latitude, prevPos.coords.longitude, position.coords.latitude, position.coords.longitude, "M");
+    // console.warn(`distance`, distance);
+
+
+
+
+        if(distance > 0.5){
+          this.setState({lastPosition});
+          this.centerMapAtMyLocation()
+        }
+
+
 
   });
 
@@ -286,7 +302,7 @@ getDistanceBetweenPoints(){
   if(this.state.shopsCoordinates[0]!== undefined){
     var i = 0
     var urlDistance = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins='+this.state.lastPosition.coords.latitude+','+this.state.lastPosition.coords.longitude+'&destinations='
-
+console.log(this.state.shopsCoordinates);
     this.state.shopsCoordinates.map((shopCoordinates)=>{
       if(i < this.state.shopsCoordinates.length - 1){
         urlDistance = urlDistance+shopCoordinates.latitude+','+shopCoordinates.longitude+'|'
@@ -296,10 +312,12 @@ getDistanceBetweenPoints(){
       i++
     })
     urlDistance = urlDistance+'&mode=driving&key=AIzaSyCUdBK1qZKBI6IDzTl9eT0HW-QEN-YgHqE'
+    isDistanceFetchCalled = true
     fetch(urlDistance)
     .then((response) => response.json())
     .then((responseJson) => {
       console.log(responseJson);
+      isDistanceFetchCalled = false
 
       var index = 0
       let currentArray = []
@@ -307,7 +325,7 @@ getDistanceBetweenPoints(){
 
       responseJson.rows[0].elements.map((element) => {
 
-
+// console.log(responseJson);
         if(element.status === 'OK'){
 
           let distance = element.distance.text
@@ -333,15 +351,15 @@ getDistanceBetweenPoints(){
       currentArray.sort((obj1, obj2) => {
 
         if (obj1.distanceValue > obj2.distanceValue) {
-          console.warn(`greater`, obj1.distanceValue, obj2.distanceValue);
+          // console.warn(`greater`, obj1.distanceValue, obj2.distanceValue);
           return 1;
         }
 
         if (obj1.distanceValue < obj2.distanceValue) {
-          console.warn(`less`, obj1.distanceValue, obj2.distanceValue);
+          // console.warn(`less`, obj1.distanceValue, obj2.distanceValue);
           return -1;
         }
-        console.warn(`equal`, obj1.distanceValue, obj2.distanceValue);
+        // console.warn(`equal`, obj1.distanceValue, obj2.distanceValue);
         return 0;
       })
 
@@ -401,6 +419,10 @@ openExternalMaps(location){
 
 
 centerMapAtMyLocation(){
+  if(isDistanceFetchCalled){
+    return;
+  }
+
   this.focus1()
   this.getDistanceBetweenPoints()
 }
@@ -421,10 +443,27 @@ logoClicked(){
 }
 
 _onRegionChange = (region) => {
+
   this.setState({
     region: region,
   });
+
 };
+
+
+distance(lat1, lon1, lat2, lon2, unit) {
+	var radlat1 = Math.PI * lat1/180
+	var radlat2 = Math.PI * lat2/180
+	var theta = lon1-lon2
+	var radtheta = Math.PI * theta/180
+	var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+	dist = Math.acos(dist)
+	dist = dist * 180/Math.PI
+	dist = dist * 60 * 1.1515
+	if (unit=="K") { dist = dist * 1.609344 }
+	if (unit=="N") { dist = dist * 0.8684 }
+	return dist
+}
 
 getAnimatedMarkers(marker){
   return(

@@ -59,12 +59,12 @@ getTotalLikesCount(){
   FirDatabase.getFavoritesCount(details, (data) => {
   totalLikes = data.count
 
-  if(isFavorite == true && totalLikes == 0){
-    this.getTotalLikesCount()
-  }
-  else{
+  // if(isFavorite == true && totalLikes == 0){
+  //   this.getTotalLikesCount()
+  // }
+  // else{
     this.setState({isLoading: false})
-  }
+  // }
 
   })
 }
