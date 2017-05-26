@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Image, Dimensions, Alert, ActivityIndicator, StyleSheet } from 'react-native';
+import { Image, Dimensions, Alert, ActivityIndicator, StyleSheet, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux';
 import { actions } from 'react-native-navigation-redux-helpers';
 import { Container, Content, Button, View, Text } from 'native-base';
@@ -79,9 +79,9 @@ class Login extends Component {
       email: '',
       password: '',
       isLoading: false,
-      token: ''
+      deviceToken: ''
     };
-
+    this.getDeviceToken();
   }
 
   componentWillUnmount() {
@@ -211,6 +211,22 @@ async resetPassword(){
   }
 
 
+  async getDeviceToken (){
+
+    try {
+      const deviceToken = await AsyncStorage.getItem('@deviceToken:key');
+      if (deviceToken !== null){
+        this.setState({deviceToken: deviceToken})
+        return deviceToken;
+      }
+      return "";
+    }
+    catch (error) {
+      console.warn(error);
+      return "";
+    }
+  }
+
   async loginWithFacebook(){
     // Attempt a login using the Facebook login dialog,
 // asking for default permissions.
@@ -249,9 +265,11 @@ await LoginManager.logInWithReadPermissions(['public_profile']).then((result) =>
                       const credential = provider.credential(data.accessToken);
                       auth.signInWithCredential(credential).then((userData) => {
                         console.warn(`test ${data}`)
-                        
+
                         try{
-                          FirDatabase.updateUserData(userData.uid, emailId, name)
+                          this.getDeviceToken();
+                          let token = this.state.deviceToken
+                          FirDatabase.updateUserData(userData.uid, emailId, name, token)
                           setTimeout(() => {
                               // this.replaceRoute("mapView")
                               // this.setState({isLoading: false})

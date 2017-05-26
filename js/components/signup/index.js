@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Image, Dimensions, Alert, ActivityIndicator } from 'react-native';
+import { Image, Dimensions, Alert, ActivityIndicator, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux';
 import { actions } from 'react-native-navigation-redux-helpers';
 import { Container, Content, Button, View, Text } from 'native-base';
@@ -47,8 +47,12 @@ class SignUp extends Component {
       email: '',
       password: '',
       isLoading: false,
+      deviceToken: ''
 
     };
+
+    this.getDeviceToken()
+
         // this.getFcmToken()
   }
 
@@ -116,6 +120,23 @@ class SignUp extends Component {
     }
   }
 
+
+  async getDeviceToken (){
+
+    try {
+      const deviceToken = await AsyncStorage.getItem('@deviceToken:key');
+      if (deviceToken !== undefined && deviceToken !== null){
+          this.setState({deviceToken: deviceToken})
+        return deviceToken;
+      }
+      return "";
+    }
+    catch (error) {
+      console.warn(error);
+      return "";
+    }
+  }
+
   async signup() {
 
     try {
@@ -126,7 +147,9 @@ class SignUp extends Component {
 
 
         try{
-          FirDatabase.setUserData(userData.uid, this.state.email, this.state.name)
+          this.getDeviceToken();
+          let token = this.state.deviceToken;
+          FirDatabase.setUserData(userData.uid, this.state.email, this.state.name, token)
           setTimeout(() => {
             let userdataval = {uid:userData.uid, email:this.state.email, name: this.state.name, locationId:null, favorites:[]}
             this.setUser(userdataval)
@@ -200,7 +223,9 @@ class SignUp extends Component {
                           console.warn(`test ${data}`)
 
                           try{
-                            FirDatabase.updateUserData(userData.uid, emailId, name)
+                            this.getDeviceToken();
+                            let token = this.state.deviceToken
+                            FirDatabase.updateUserData(userData.uid, emailId, name, token)
                             setTimeout(() => {
                               // let userdataval = {uid:userData.uid, email:emailId, name: name, locationId:null, favorites:[]}
                               // this.setUser(userdataval)

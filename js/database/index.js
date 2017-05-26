@@ -8,20 +8,30 @@ class Database {
   * @param mobile
   * @returns {firebase.Promise<any>|!firebase.Promise.<void>}
   */
-  static setUserData(userId, email, name) {
+  static setUserData(userId, email, name, token) {
     let userDataPath = "/user/" + userId + "/details";
     return firebase.database().ref(userDataPath).set({
       email: email,
-      name: name
+      name: name,
+      token: token
     })
   }
 
-  static updateUserData(userId, email, name) {
+  static updateUserData(userId, email, name, token) {
     var updates = {};
     updates['/user/' + userId + '/details/email'] = email;
     updates['/user/' + userId + '/details/name'] = name;
+    updates['/user/' + userId + '/details/token'] = token;
     return firebase.database().ref().update(updates)
   }
+
+  static updateUserDeviceToken(userId, token) {
+    // console.warn(`token123`, token)
+    var updates = {};
+    updates['/user/' + userId + '/details/token'] = token;
+    return firebase.database().ref().update(updates)
+  }
+
 
   static setHomeLocation(userId, details) {
     // Write the new post's data simultaneously in the posts list and the user's post list.

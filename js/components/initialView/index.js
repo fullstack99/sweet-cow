@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Image, Dimensions, Alert, ActivityIndicator, StyleSheet,Animated,Easing} from 'react-native';
+import { Image, Dimensions, Alert, ActivityIndicator, StyleSheet,Animated,Easing, AsyncStorage} from 'react-native';
 import { connect } from 'react-redux';
 import { actions } from 'react-native-navigation-redux-helpers';
 import { Container, Content, Button, View, Text } from 'native-base';
@@ -62,9 +62,11 @@ class InitialView extends Component {
       userLoaded: false,
       initialView: null,
       isLoading: false,
-      pecentage: 0
+      pecentage: 0,
+      deviceToken: ''
 
     };
+    this.getDeviceToken()
     this.getInitialView()
 
     this.getInitialView = this.getInitialView.bind(this);
@@ -72,29 +74,61 @@ class InitialView extends Component {
 
 
   getFcmToken(){
-    FCM.setBadgeNumber(0);  
+    FCM.setBadgeNumber(0);
     FCM.requestPermissions(); // for iOS
-        FCM.getFCMToken().then(token => {
-            console.log(token)
-            console.warn(token)
-          //   Alert.alert(
-          //   'Token',
-          //   token,
-          // )
-            // store fcm token in your server
-        });
+    FCM.getFCMToken().then(token => {
+      console.log(token)
+      console.warn(`token`, token)
+      this.saveDeviceToken(token)
 
-        this.refreshTokenListener = FCM.on(FCMEvent.RefreshToken, (token) => {
-            console.log(token)
-            console.warn(token)
-          //   Alert.alert(
-          //   'Token',
-          //   token,
-          // )
-          //   // fcm token may not be available on first load, catch it here
-        });
+      //   Alert.alert(
+      //   'Token',
+      //   token,
+      // )
+      // store fcm token in your server
+    });
+
+    this.refreshTokenListener = FCM.on(FCMEvent.RefreshToken, (token) => {
+      console.log(token)
+      console.warn(`token`, token)
+      this.saveDeviceToken(token)
+      //   Alert.alert(
+      //   'Token',
+      //   token,
+      // )
+      //   // fcm token may not be available on first load, catch it here
+    });
   }
 
+  //To save the deviceToken
+  async saveDeviceToken (deviceToken){
+    if (deviceToken !== undefined && deviceToken !== null){
+    try {
+      // console.warn('savedevicetoken')
+
+      await AsyncStorage.setItem('@deviceToken:key', deviceToken );
+    } catch (error) {
+      console.warn(`error ${error}`);
+    }
+  }
+  }
+
+  async getDeviceToken (){
+
+    try {
+      const deviceToken = await AsyncStorage.getItem('@deviceToken:key');
+
+      if (deviceToken !== undefined && deviceToken !== null){
+        this.setState({deviceToken: deviceToken})
+        return deviceToken;
+      }
+      return "";
+    }
+    catch (error) {
+      console.warn(error);
+      return "";
+    }
+  }
 
   getInitialView() {
 
@@ -109,23 +143,27 @@ class InitialView extends Component {
 
       this.fireBaseListener()
       if(user){
-          this.listenUserData = FirDatabase.listenUserData(user.uid, (userDataVal) => {
+        this.listenUserData = FirDatabase.listenUserData(user.uid, (userDataVal) => {
 
-              this.setState({
-                isLoading: false
-              })
-              if(userDataVal.email == undefined){
+          let token = this.state.deviceToken;
+          console.warn(`token123`, token)
+          FirDatabase.updateUserDeviceToken(user.uid, token)
 
-              }
-              else{
+          this.setState({
+            isLoading: false
+          })
+          if(userDataVal.email == undefined){
 
-                this.setUser(userDataVal)
-                console.warn(userDataVal.locationId);
-                if(userDataVal.locationId === -1 || userDataVal.locationId === undefined){
-                  percentageLimit = 100
-                }
-                this.replaceRouteToMap(initialView, userDataVal.locationId)
-              }
+          }
+          else{
+
+            this.setUser(userDataVal)
+            console.warn(userDataVal.locationId);
+            if(userDataVal.locationId === -1 || userDataVal.locationId === undefined){
+              percentageLimit = 100
+            }
+            this.replaceRouteToMap(initialView, userDataVal.locationId)
+          }
         });
       }
       else{

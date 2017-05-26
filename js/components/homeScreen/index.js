@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Image, Dimensions, StyleSheet } from 'react-native';
+import { Image, Dimensions, StyleSheet, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux';
 import { actions } from 'react-native-navigation-redux-helpers';
 import { Container, Content, Button, View, Text } from 'native-base';
@@ -66,6 +66,42 @@ class HomeScreen extends Component {
     super(props);
   }
 
+  componentWillUnmount() {
+    this.refreshTokenListener.remove();
+  }
+
+  componentDidMount () {
+    this.getFcmToken()
+  }
+
+  getFcmToken(){
+    FCM.setBadgeNumber(0);
+    FCM.requestPermissions(); // for iOS
+    FCM.getFCMToken().then(token => {
+      console.log(token)
+      console.warn(`token`, token)
+      this.saveDeviceToken(token)
+    });
+
+    this.refreshTokenListener = FCM.on(FCMEvent.RefreshToken, (token) => {
+      console.log(token)
+      console.warn(`token`, token)
+      this.saveDeviceToken(token)
+    });
+  }
+
+  //To save the deviceToken
+  async saveDeviceToken (deviceToken){
+    if (deviceToken !== undefined && deviceToken !== null){
+    try {
+      // console.warn('savedevicetoken')
+
+      await AsyncStorage.setItem('@deviceToken:key', deviceToken );
+    } catch (error) {
+      console.warn(`error ${error}`);
+    }
+  }
+  }
 
 
   replaceRoute(route) {
