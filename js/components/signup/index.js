@@ -19,7 +19,7 @@ const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
 const {
-  replaceAt,
+  replaceAt, popRoute
 } = actions;
 
 const background = require('../../../images/background_login.png');
@@ -35,6 +35,7 @@ class SignUp extends Component {
   static propTypes = {
     setUser: React.PropTypes.func,
     replaceAt: React.PropTypes.func,
+    popRoute: React.PropTypes.func,
     navigation: React.PropTypes.shape({
       key: React.PropTypes.string,
     }),
@@ -80,6 +81,10 @@ class SignUp extends Component {
 
   replaceRoute(route) {
     this.props.replaceAt('signup', { key: route }, this.props.navigation.key);
+  }
+
+  popRoute() {
+  this.props.popRoute(this.props.navigation.key);
   }
 
   onNameChangeText(name){
@@ -153,7 +158,7 @@ class SignUp extends Component {
           setTimeout(() => {
             let userdataval = {uid:userData.uid, email:this.state.email, name: this.state.name, locationId:null, favorites:[]}
             this.setUser(userdataval)
-              this.replaceRoute("mapView")
+              this.popRoute()
               this.setState({isLoading: false})
           }, 150);
 
@@ -284,7 +289,7 @@ class SignUp extends Component {
               else{
                 this.setUser(userDataVal)
                 this.setState({isLoading: false})
-                this.replaceRoute("mapView")
+                this.popRoute()
               }
           });
 
@@ -350,6 +355,7 @@ function bindActions(dispatch) {
   return {
     replaceAt: (routeKey, route, key) => dispatch(replaceAt(routeKey, route, key)),
     setUser: name => dispatch(setUser(name)),
+    popRoute: (key) => dispatch(popRoute(key)),
   };
 }
 

@@ -82,31 +82,63 @@ class SearchScreen extends Component {
   }
 
   searchResultCell(flavorData, shop, distance, isAvailable){
-    let isFavorite = this.checkFavorite(flavorData.flavor,shop.id)
-    let favKey = this.getFavoriteKey(flavorData.flavor,shop.id)
+    let isFavorite = false
+    let favKey = null
+if(this.props.user){
+  isFavorite = this.checkFavorite(flavorData.flavor,shop.id)
+  favKey = this.getFavoriteKey(flavorData.flavor,shop.id)
+
+}
+
     return(
       <SearchResultCell flavorData={flavorData} shop={shop} distance={distance} isFavorite={isFavorite} favKey={favKey} isAvailable={isAvailable} onPress={(location)=>this.openExternalMaps(location)} changeFavorites={(details)=>this.changeFavouriteState(details)} openFlavorInfo={(flavorData, shop, isFavorite) => this.openFlavorInfo(flavorData, shop, isFavorite)}/>
     )
   }
 
   setFavoritesFromDetails(flavorData, isFavorite){
+    if(this.props.user){
     console.warn(isFavorite);
     let shopId = flavorDetail.shopId;
     let favId = this.getFavoriteKey(flavorData.flavor, shopId)
     console.warn(favId)
     let element = {flavorName:flavorData.flavor, shopId:shopId, isFavorite:isFavorite, key:favId}
     this.changeFavouriteState(element)
+  }else{
+    this.loginConfimation()
+  }
   }
 
   changeFavouriteState(details){
-    if(details.isFavorite === false){
-      console.warn("add to fav")
-      this.setFavorites(details)
+    if(this.props.user){
+      if(details.isFavorite === false){
+        console.warn("add to fav")
+        this.setFavorites(details)
+      }
+      else{
+        console.warn("remove from fav")
+        this.removeFavorites(details)
+      }
+    }else{
+      this.loginConfimation()
     }
-    else{
-      console.warn("remove from fav")
-      this.removeFavorites(details)
-    }
+
+  }
+
+  loginConfimation(){
+    Alert.alert(
+  'Confirm',
+  'This action requires login, do you want to login or create an account?',
+  [
+  {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+  {text: 'Yes', onPress: () => this.goToLogin()},
+  ],
+  { cancelable: false }
+  )
+  }
+
+
+  goToLogin(){
+    this.props.pushRoute({ key: 'home'}, this.props.navigation.key);
   }
 
   removeFavorites(details){
@@ -146,9 +178,8 @@ user.favorites.map((fav)=>{
   }
 
   setFavorites(details){
+
     try{
-
-
 
       let key = FirDatabase.setFavorites(this.props.user.uid, details)
       let detailVal = {key:key, flavorName:details.flavorName, shopId:details.shopId}

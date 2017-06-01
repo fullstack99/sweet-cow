@@ -134,7 +134,7 @@ class InitialView extends Component {
 
     this.fireBaseListener = firebase.auth().onAuthStateChanged((user) => {
 
-      let initialView = user ? "mapView" : "home";
+      let initialView = 'mapView'// user ? "mapView" : "home";
 
       this.setState({
         userLoaded: true,
@@ -142,7 +142,7 @@ class InitialView extends Component {
       })
 
       this.fireBaseListener()
-      if(user){
+       if(user){
         this.listenUserData = FirDatabase.listenUserData(user.uid, (userDataVal) => {
 
           let token = this.state.deviceToken;
@@ -167,7 +167,7 @@ class InitialView extends Component {
         });
       }
       else{
-        this.replaceRoute(initialView)
+        this.replaceRouteToMap(initialView, -1)
       }
 
     });

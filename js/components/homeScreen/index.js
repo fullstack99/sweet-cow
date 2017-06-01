@@ -109,11 +109,14 @@ class HomeScreen extends Component {
   }
 
   render() {
+
+    console.warn(this.props.appInfoData[0].homeImageUrl);
+    let imageUrl = {uri : this.props.appInfoData[0].homeImageUrl}
     return (
       <Container>
         <Content bounces={false}>
 
-        <Image source={background} style={styles.backgroundImage}>
+        <Image source={imageUrl} style={styles.backgroundImage}>
           <Image source={logoCow} style={styles.logoCow}/>
           <Image source={logo_title} style={styles.logoTitle}/>
           <View style={{marginTop: deviceHeight * 0.045}}>
@@ -138,6 +141,7 @@ function bindActions(dispatch) {
 
 const mapStateToProps = state => ({
   navigation: state.cardNavigation,
+  appInfoData: state.appInfoData.name,
 });
 
 export default connect(mapStateToProps, bindActions)(HomeScreen);

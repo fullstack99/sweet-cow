@@ -19,7 +19,7 @@ const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
 const {
-  replaceAt,
+  replaceAt, popRoute
 } = actions;
 
 const background = require('../../../images/background_login.png');
@@ -68,6 +68,7 @@ class Login extends Component {
   static propTypes = {
     setUser: React.PropTypes.func,
     replaceAt: React.PropTypes.func,
+    popRoute: React.PropTypes.func,
     navigation: React.PropTypes.shape({
       key: React.PropTypes.string,
     }),
@@ -180,7 +181,7 @@ async resetPassword(){
                 else{
                   this.setUser(userDataVal)
                   this.setState({isLoading: false})
-                  this.replaceRoute("mapView")
+                  this.popRoute()
                 }
             });
 
@@ -208,6 +209,10 @@ async resetPassword(){
         )
     }
 
+  }
+
+  popRoute() {
+  this.props.popRoute(this.props.navigation.key);
   }
 
 
@@ -326,7 +331,7 @@ await LoginManager.logInWithReadPermissions(['public_profile']).then((result) =>
             else{
               this.setUser(userDataVal)
               this.setState({isLoading: false})
-              this.replaceRoute("mapView")
+              this.popRoute()
             }
         });
 
@@ -417,6 +422,7 @@ function bindActions(dispatch) {
   return {
     replaceAt: (routeKey, route, key) => dispatch(replaceAt(routeKey, route, key)),
     setUser: user => dispatch(setUser(user)),
+    popRoute: (key) => dispatch(popRoute(key)),
   };
 }
 

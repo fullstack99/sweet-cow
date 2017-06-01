@@ -17,6 +17,7 @@ import SearchResults from "../SearchScreen/SearchResults"
 import { setUser } from '../../actions/user';
 import { setShopData } from '../../actions/shopData';
 import { setSearchData } from '../../actions/searchData';
+import { setAppInfoData } from '../../actions/appInfoData';
 import { setLastPosition } from '../../actions/lastPosition';
 
 
@@ -102,9 +103,14 @@ class MapView extends Component {
   }
 
   openMyFavorites(){
+    if(this.props.user){
       this.props.setLastPosition(this.state.lastPosition);
       this.props.setShopData(this.state.distanceArray);
       this.props.pushRoute({ key: 'myFavorite'}, this.props.navigation.key);
+    }else{
+      this.loginConfimation()
+    }
+
   }
 
   constructor(props) {
@@ -260,28 +266,38 @@ replaceRoute(route) {
 
 getLocationList(){
   // console.warn(`getLocationList`);
+  // fetch('http://www.theanalect.com/DEMOS/sweetcow/api.php')
   this.setState({isLoading: true})
-  fetch('http://www.theanalect.com/DEMOS/sweetcow/api.php')
+  fetch('http://www.sweetcowicecream.com/api.php')
   .then((response) => response.json())
   .then((responseJson) => {
     console.log(responseJson)
 
     let shopsArray = []
     let searchShopArray = []
+    let appInfoArray = []
     responseJson.map((shop)=>{
+      if(shop.storeId !== undefined){
       if(shop.storeId.toUpperCase().includes('APP - Do Not Touch'.toUpperCase())){
         console.warn(shop.storeId);
-        let shopElement = {'location':shop.storeId, 'address':shop.streetaddress, 'flavors':shop.store_data, 'hours':null, 'id':shop.storeId, 'phone': shop.phone1, 'state':shop.state, 'zip_code':shop.postalCode, 'dayhourseconds':shop.dayhourseconds, 'dayhours':shop.dayhours, 'city': shop.city}
+        let shopElement = {'location':shop.storeId, 'address':shop.shortaddress, 'flavors':shop.store_data, 'hours':null, 'id':shop.storeId, 'phone': shop.phone1, 'state':shop.state, 'zip_code':shop.postalCode, 'dayhourseconds':shop.dayhourseconds, 'dayhours':shop.dayhours, 'city': shop.city}
         searchShopArray.push(shopElement)
 
       }else{
-        let shopElement = {'location':shop.storeId, 'address':shop.streetaddress, 'flavors':shop.store_data, 'hours':null, 'id':shop.storeId, 'phone': shop.phone1, 'state':shop.state, 'zip_code':shop.postalCode, 'dayhourseconds':shop.dayhourseconds, 'dayhours':shop.dayhours, 'city': shop.city}
+        let shopElement = {'location':shop.storeId, 'address':shop.shortaddress, 'flavors':shop.store_data, 'hours':null, 'id':shop.storeId, 'phone': shop.phone1, 'state':shop.state, 'zip_code':shop.postalCode, 'dayhourseconds':shop.dayhourseconds, 'dayhours':shop.dayhours, 'city': shop.city}
         shopsArray.push(shopElement)
       }
+    }else{
+      let shopElement = {'homeImageUrl':shop.app_info_content.home_initial_image, 'promoMessage': shop.app_info_content.promo_message }
+      appInfoArray.push(shopElement)
+      console.warn(shop.app_info_content.home_initial_image);
+
+    }
 
     })
     this.setState({isLoading: true, shops: shopsArray})
     this.props.setSearchData(searchShopArray);
+    this.props.setAppInfoData(appInfoArray);
 
     //Getting location corrdinates
     let element = {'identifier':marker_identifier ,'latitude': this.state.lastPosition.coords.latitude, 'longitude': this.state.lastPosition.coords.longitude, 'title': "Current Position", 'image': null, 'shop':null}
@@ -549,22 +565,46 @@ getMarkers(marker){
 
 
 setHomeLocation(locationId){
-  try{
-    FirDatabase.setHomeLocation(this.props.user.uid, locationId)
-    this.setState({homeLocationId: locationId})
 
-    let user = this.props.user
-    user.locationId = locationId
-    this.setUser(user)
-  }
-  catch(error){
+  if(this.props.user){
+    try{
+      FirDatabase.setHomeLocation(this.props.user.uid, locationId)
+      this.setState({homeLocationId: locationId})
 
-    this.setState({isLoading: false})
-    Alert.alert(
-      'Error',
-      `${error.toString()}`,
-    )
+      let user = this.props.user
+      user.locationId = locationId
+      this.setUser(user)
+    }
+    catch(error){
+
+      this.setState({isLoading: false})
+      Alert.alert(
+        'Error',
+        `${error.toString()}`,
+      )
+    }
+
+  }else{
+this.loginConfimation()
   }
+
+}
+
+loginConfimation(){
+  Alert.alert(
+'Confirm',
+'This action requires login, do you want to login or create an account?',
+[
+{text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+{text: 'Yes', onPress: () => this.goToLogin()},
+],
+{ cancelable: false }
+)
+}
+
+
+goToLogin(){
+  this.props.pushRoute({ key: 'home'}, this.props.navigation.key);
 }
 
 setUser(user) {
@@ -599,6 +639,8 @@ shopCellSizeCallback(index, rect){
 
 render() {
 
+console.warn(`usersss`,this.props.user);
+
   let borderwidth = 6
   let deviceHeightDiff = deviceHeight/568.0
   if(deviceHeightDiff > 1){
@@ -617,7 +659,6 @@ let initialView = this.addInitialView()
         index += 1
         cellHeightArr.push(0)
       }
-
     }
   })
 
@@ -734,6 +775,7 @@ function bindActions(dispatch) {
     setLastPosition: name => dispatch(setLastPosition(name)),
     setShopData: name => dispatch(setShopData(name)),
     setSearchData: name => dispatch(setSearchData(name)),
+    setAppInfoData: name => dispatch(setAppInfoData(name)),
     popRoute: (key) => dispatch(popRoute(key)),
     pushRoute: (route, key) => dispatch(pushRoute(route, key)),
 

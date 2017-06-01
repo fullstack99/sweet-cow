@@ -24,7 +24,7 @@ export default class TextField extends Component{
     iconImage: null,
     width: deviceWidth * 0.9,
     placeholder: "",
-    labelName: "Name:",
+    labelName: "",
     isSecureEntry: false,
     isEditable: true
   };

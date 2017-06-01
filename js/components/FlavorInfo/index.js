@@ -27,7 +27,19 @@ let totalLikes = 0
 let isFavorite = false
 let showAllergens =  false
 
-export default class FlavorInfo extends Component {
+const {
+
+    pushRoute,
+} = actions;
+
+class FlavorInfo extends Component {
+
+  static propTypes = {
+    navigation: React.PropTypes.shape({
+      key: React.PropTypes.string,
+      pushRoute: React.PropTypes.func,
+    }),
+  }
 
 
   constructor(props) {
@@ -36,9 +48,32 @@ export default class FlavorInfo extends Component {
       isLoading: true,
     };
     totalLikes = 0
-    isFavorite = this.props.flavorData.isFavorite
+
+    isFavorite = this.checkFavorite(this.props.flavorData.flavorData.flavor)
 
   }
+
+
+  checkFavorite(flavorName, shopId){
+    if(this.props.user)
+    {let isFavorite = false
+
+
+    let favorites = this.props.user.favorites
+
+    favorites.map((favorite)=>{
+      if(favorite.flavorName === flavorName){
+        isFavorite = true
+      }
+    })
+    return isFavorite
+  }else{
+    return false
+  }
+
+
+  }
+
   componentDidMount(){
     setTimeout(() => {
       this.getTotalLikesCount()
@@ -70,20 +105,44 @@ getTotalLikesCount(){
 }
 
 setFavoritesAction(){
-  this.props.setFavoritesAction(this.props.flavorData.flavorData,isFavorite)
-  if(isFavorite === true){
-    isFavorite = false
-    totalLikes -= 1
-    if(totalLikes < 0){
-      totalLikes = 0
+   if(this.props.user){
+    this.props.setFavoritesAction(this.props.flavorData.flavorData,isFavorite)
+    if(isFavorite === true){
+      isFavorite = false
+      totalLikes -= 1
+      if(totalLikes < 0){
+        totalLikes = 0
+      }
+
+    }else{
+      isFavorite = true
+      totalLikes += 1
+
     }
-
+    this.forceUpdate()
   }else{
-    isFavorite = true
-    totalLikes += 1
-
+    this.loginConfimation()
   }
-  this.forceUpdate()
+
+
+}
+
+loginConfimation(){
+  Alert.alert(
+'Confirm',
+'This action requires login, do you want to login or create an account?',
+[
+{text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+{text: 'Yes', onPress: () => this.goToLogin()},
+],
+{ cancelable: false }
+)
+}
+
+
+goToLogin(){
+  ()=>this.props.crossAction
+  this.props.pushRoute({ key: 'home'}, this.props.navigation.key);
 }
 
   setFavoriteButton(){
@@ -117,7 +176,7 @@ setFavoritesAction(){
 
 
 render() {
-
+isFavorite = this.checkFavorite(this.props.flavorData.flavorData.flavor)
 let borderwidth = 6
 let setFavoriteButton = this.setFavoriteButton()
 let flavorColor = '#'+((this.props.flavorData.flavorData.color.split('x'))[1])
@@ -193,3 +252,17 @@ console.warn(this.props.flavorData);
     );
   }
 }
+
+
+function bindActions(dispatch) {
+  return {
+    pushRoute: (route, key) => dispatch(pushRoute(route, key)),
+  };
+}
+
+const mapStateToProps = state => ({
+  navigation: state.cardNavigation,
+  user: state.user.name,
+});
+
+export default connect(mapStateToProps, bindActions)(FlavorInfo);

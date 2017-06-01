@@ -26,8 +26,10 @@ const home_icon = require('../../../images/home-icon.png');
 const favorite_icon_brown = require('../../../images/like.png');
 const favorite_icon_red = require('../../../images/liked.png');
 const next_page_icon_brown = require('../../../images/next-page.png');
+const cross_Icon = require('../../../images/Cross_Icon.png');
 
 let flavorDetail = null
+var promoClosed = false
 
 const {
     popRoute,
@@ -54,6 +56,23 @@ class ShopDetails extends Component {
     };
   }
 
+  loginConfimation(){
+    Alert.alert(
+  'Confirm',
+  'This action requires login, do you want to login or create an account?',
+  [
+  {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+  {text: 'Yes', onPress: () => this.goToLogin()},
+  ],
+  { cancelable: false }
+  )
+  }
+
+
+  goToLogin(){
+    this.props.pushRoute({ key: 'home'}, this.props.navigation.key);
+  }
+
   componentDidMount() {
     this.setState({homeLocationId: this.props.user.locationId})
   }
@@ -72,7 +91,12 @@ class ShopDetails extends Component {
   }
 
   openMyFavorites(){
+    if(this.props.user){
       this.props.pushRoute({ key: 'myFavorite'}, this.props.navigation.key);
+    }else{
+      this.loginConfimation()
+    }
+
   }
 
   openMyProfile (){
@@ -108,13 +132,21 @@ class ShopDetails extends Component {
     }).catch(err => console.error('An error occurred', err));
   }
 
-  getFlavourCell(flavorData){
+getFlavourCell(flavorData){
 
     let flavorColor = '#'+((flavorData.color.split('x'))[1])
 
     let shop = this.props.data.coordinatesObj.shop
-    let favId = this.getFavoriteKey(flavorData.flavor, shop.id)
-    let isFavorite = this.checkFavorite(flavorData.flavor, shop.id)
+
+let favId = null
+let isFavorite = false
+if(this.props.user){
+  favId = this.getFavoriteKey(flavorData.flavor, shop.id)
+  isFavorite = this.checkFavorite(flavorData.flavor, shop.id)
+}else{
+  console.warn(`not logged in`);
+}
+
     let element = {flavorName:flavorData.flavor, shopId:shop.id, key: favId, isFavorite: isFavorite}
 
 
@@ -145,6 +177,7 @@ class ShopDetails extends Component {
   }
 
   resetHomeLocationButtonPressed(){
+    if(this.props.user){
     var locationId = -1
     try{
       FirDatabase.setHomeLocation(this.props.user.uid, locationId)
@@ -162,6 +195,9 @@ class ShopDetails extends Component {
         `${error.toString()}`,
       )
     }
+  }else{
+    this.loginConfimation()
+  }
   }
 
   homeLocationButton(){
@@ -187,21 +223,26 @@ class ShopDetails extends Component {
   }
 
   setHomeLocation(locationId){
-    try{
-      FirDatabase.setHomeLocation(this.props.user.uid, locationId)
-      this.setState({homeLocationId: locationId})
+    if(this.props.user){
+      try{
+        FirDatabase.setHomeLocation(this.props.user.uid, locationId)
+        this.setState({homeLocationId: locationId})
 
-      let user = this.props.user
-      user.locationId = locationId
-      this.setUser(user)
+        let user = this.props.user
+        user.locationId = locationId
+        this.setUser(user)
+      }
+      catch(error){
+        this.setState({isLoading: false})
+        Alert.alert(
+          'Error',
+          `${error.toString()}`,
+        )
+      }
+    }else{
+      this.loginConfimation()
     }
-    catch(error){
-      this.setState({isLoading: false})
-      Alert.alert(
-        'Error',
-        `${error.toString()}`,
-      )
-    }
+
   }
 
   setUser(user) {
@@ -218,6 +259,8 @@ class ShopDetails extends Component {
 
   checkFavorite(flavorName, shopId){
     let isFavorite = false
+
+
     let favorites = this.props.user.favorites
 
     favorites.map((favorite)=>{
@@ -249,22 +292,30 @@ class ShopDetails extends Component {
   }
 
   setFavoritesFromDetails(flavorData, isFavorite){
+    if(this.props.user){
     console.warn(isFavorite);
     let shop = this.props.data.coordinatesObj.shop
     let favId = this.getFavoriteKey(flavorData.flavor, shop.id)
     console.warn(favId)
     let element = {flavorName:flavorData.flavor, shopId:shop.id, isFavorite:isFavorite, key:favId}
     this.changeFavouriteState(element)
+  }else{
+    this.loginConfimation()
+  }
   }
 
-  changeFavouriteState(details){
 
+changeFavouriteState(details){
+if(this.props.user){
     if(details.isFavorite === false){
       this.setFavorites(details)
     }
     else{
       this.removeFavorites(details)
     }
+  }else{
+    this.loginConfimation()
+  }
 
   }
 
@@ -332,7 +383,25 @@ class ShopDetails extends Component {
     }
   }
 
+  closePromo(){
+    promoClosed = true
+    this.forceUpdate()
+
+  }
+
+  getPromoText(){
+    let borderwidth = 6
+    return(<View style={{flexDirection:'row', justifyContent: 'center', marginTop:-borderwidth, backgroundColor:"rgba(255, 255, 255, 1)"}}>
+    <Text style={{marginBottom:10, marginTop: 10, textAlign:'center', marginLeft: 40, marginRight:20, alignSelf:'center', fontSize: 16,  fontFamily: 'ProximaNova-Regular', color: 'rgba(29, 16, 96, 1)'}}>{this.props.appInfoData[0].promoMessage}</Text>
+    <TouchableOpacity onPress={()=>this.closePromo()} style={{marginRight: 20, marginTop:10}}>
+      <Image source={cross_Icon} style={{marginRight: 10, marginTop:10, width: deviceWidth/25, height: deviceWidth/25, alignSelf:'flex-end', marginTop: 0, resizeMode: 'contain'}}/>
+      </TouchableOpacity>
+
+    </View>)
+  }
+
   render() {
+    console.warn(this.props.appInfoData[0].promoMessage);
     let borderwidth = 6
     let shop = this.props.data.coordinatesObj.shop
     let distance = this.props.data.distance
@@ -359,6 +428,25 @@ class ShopDetails extends Component {
       var weekEnds = weekendData[0]
       var weekEndsTime = weekendData[1]
 
+      if(weekDays !== '-'){
+        weekDays= weekDays+':'
+      }else{
+        weekDays=''
+      }
+      if(weekDaysTime == '-'){
+        weekDaysTime=''
+      }
+
+
+      if(weekEnds !== '-'){
+        weekEnds= weekEnds+':'
+      }else{
+        weekEnds=''
+      }
+      if(weekEndsTime == '-'){
+        weekEndsTime=''
+      }
+
     let formattedAddress =  shop.address + ' - ' + shop.city
     formattedAddress = toTitleCase(formattedAddress)  + ', ' + shop.state.toUpperCase() + ' ' + toTitleCase(shop.zip_code)
     let todayFlavorText = "TODAY'S FLAVORS"
@@ -369,6 +457,13 @@ class ShopDetails extends Component {
     flavorArray.map((flavor)=>{
     flavorCell.push(this.getFlavourCell(flavor))
     })
+
+var promoMessage = null
+if(promoClosed === false){
+  promoMessage = this.getPromoText()
+}
+
+
     return (
       <Container>
         <View style={{width: deviceWidth, height: deviceHeight * 0.14, flexDirection:'row'}}>
@@ -396,11 +491,14 @@ class ShopDetails extends Component {
 
       <View style={{marginLeft:borderwidth/2, marginTop:-borderwidth, backgroundColor:'rgba(29, 16, 96, 1)', width: deviceWidth, height:borderwidth}}>
       </View>
+      {promoMessage}
 
       <ScrollView
       automaticallyAdjustContentInsets={false}
       vertical={true}
       >
+
+
 
       <TouchableOpacity onPress={()=>this.popRoute()}>
       <View style={{marginBottom:2, marginTop: 15,  backgroundColor: 'rgba(92,133,192,1)', height: 45, marginLeft:10, marginRight:10, justifyContent:'center'}}>
@@ -430,9 +528,9 @@ class ShopDetails extends Component {
       <View style={{flexDirection:'column', justifyContent: 'center'}}>
       <Text style={{alignSelf:'center', marginTop: 20, fontSize: 25, color: 'rgba(29, 16, 96, 1)', fontFamily:"Trade Gothic LT Std"}}> HOURS </Text>
       <View style={{flexDirection:'row', justifyContent: 'center', alignSelf:'center', width:deviceWidth*0.98}}>
-      <Text style={{alignSelf:'center', fontSize: 13,  fontFamily: 'ProximaNova-Semibold', color: 'rgba(63, 57, 19, 1)'}}>{weekDays}:</Text>
+      <Text style={{alignSelf:'center', fontSize: 13,  fontFamily: 'ProximaNova-Semibold', color: 'rgba(63, 57, 19, 1)'}}>{weekDays}</Text>
       <Text style={{alignSelf:'center', fontSize: 13,  fontFamily: 'ProximaNova-Regular', color: 'rgba(63, 57, 19, 1)'}}> {weekDaysTime}</Text>
-      <Text style={{alignSelf:'center', fontSize: 13,  fontFamily: 'ProximaNova-Semibold', color: 'rgba(63, 57, 19, 1)'}}>   {weekEnds}:</Text>
+      <Text style={{alignSelf:'center', fontSize: 13,  fontFamily: 'ProximaNova-Semibold', color: 'rgba(63, 57, 19, 1)'}}>   {weekEnds}</Text>
       <Text style={{alignSelf:'center', fontSize: 13,  fontFamily: 'ProximaNova-Regular', color: 'rgba(63, 57, 19, 1)'}}> {weekEndsTime}</Text>
       </View>
       </View>
@@ -470,7 +568,8 @@ const mapStateToProps = state => ({
   navigation: state.cardNavigation,
   user: state.user.name,
   lastPosition: state.lastPosition.name,
-  distanceArray: state.shopData.name
+  distanceArray: state.shopData.name,
+  appInfoData: state.appInfoData.name
 });
 
 export default connect(mapStateToProps, bindActions)(ShopDetails);

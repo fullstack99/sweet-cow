@@ -7,6 +7,7 @@ import user from './user';
 import lastPosition from './lastPosition';
 import shopData from './shopData';
 import searchData from './searchData';
+import appInfoData from './appInfoData';
 import list from './list';
 
 export default combineReducers({
@@ -18,6 +19,7 @@ export default combineReducers({
   lastPosition,
   shopData,
   searchData,
+  appInfoData,
 
 
 });
