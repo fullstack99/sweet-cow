@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: deviceWidth,
     height: deviceHeight,
-    resizeMode: 'stretch',
+    resizeMode: 'cover',
     marginLeft:3
   },
   logoCow: {

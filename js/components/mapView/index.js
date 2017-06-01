@@ -19,7 +19,7 @@ import { setShopData } from '../../actions/shopData';
 import { setSearchData } from '../../actions/searchData';
 import { setAppInfoData } from '../../actions/appInfoData';
 import { setLastPosition } from '../../actions/lastPosition';
-
+import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType} from 'react-native-fcm';
 
 
 import CustomPulse from './pulse'
@@ -111,6 +111,64 @@ class MapView extends Component {
       this.loginConfimation()
     }
 
+  }
+
+
+  getFcmToken(){
+    FCM.setBadgeNumber(0);
+    FCM.requestPermissions(); // for iOS
+    FCM.getFCMToken().then(token => {
+      console.log(token)
+      console.warn(`token`, token)
+      this.saveDeviceToken(token)
+
+      //   Alert.alert(
+      //   'Token',
+      //   token,
+      // )
+      // store fcm token in your server
+    });
+
+    this.refreshTokenListener = FCM.on(FCMEvent.RefreshToken, (token) => {
+      console.log(token)
+      console.warn(`token`, token)
+      this.saveDeviceToken(token)
+      //   Alert.alert(
+      //   'Token',
+      //   token,
+      // )
+      //   // fcm token may not be available on first load, catch it here
+    });
+  }
+
+  //To save the deviceToken
+  async saveDeviceToken (deviceToken){
+    if (deviceToken !== undefined && deviceToken !== null){
+    try {
+      // console.warn('savedevicetoken')
+
+      await AsyncStorage.setItem('@deviceToken:key', deviceToken );
+    } catch (error) {
+      console.warn(`error ${error}`);
+    }
+  }
+  }
+
+  async getDeviceToken (){
+
+    try {
+      const deviceToken = await AsyncStorage.getItem('@deviceToken:key');
+
+      if (deviceToken !== undefined && deviceToken !== null){
+        this.setState({deviceToken: deviceToken})
+        return deviceToken;
+      }
+      return "";
+    }
+    catch (error) {
+      console.warn(error);
+      return "";
+    }
   }
 
   constructor(props) {
