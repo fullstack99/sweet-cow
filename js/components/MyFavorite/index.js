@@ -214,15 +214,15 @@ class MyFavorite extends Component {
   removeFavorite(key){
       this.props.user.favorites.map((favorite)=>{
         if(key === favorite.key){
-          Alert.alert(
-  'Remove from favorites',
-  'Are you sure you want to remove this flavor from your favorites?',
-  [
-    {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-    {text: 'Yes', onPress: () => this.setFavorites(favorite)},
-  ],
-  { cancelable: false }
-)
+            Alert.alert(
+    'Remove from favorites',
+    'Are you sure you want to remove this flavor from your favorites?',
+    [
+      {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+      {text: 'Yes', onPress: () => this.setFavorites(favorite)},
+    ],
+    { cancelable: false }
+  )
         }
       })
   }
@@ -331,7 +331,7 @@ this.props.user.favorites.map((favorite)=>{
       if(shop.coordinatesObj.shop !== null){
           if(shop.coordinatesObj.shop != undefined){
               shop.coordinatesObj.shop.flavors.map((flavor)=>{
-                if(favorite.shopId === shop.coordinatesObj.shop.id && favorite.flavorName === flavor.flavor){
+                if(favorite.flavorName === flavor.flavor){
                   let element = {keyVal:favorite.key, shop: shop.coordinatesObj.shop, distance:shop.distance, flavorData:flavor, isAvailable:true}
                   favoriteArray.push(element)
                   isEntered = true
@@ -366,24 +366,25 @@ unAvailableFavorites.map((favorite)=>{
 })
 
 
-favoriteArray.sort((obj1, obj2) => {
-  if (obj1.distance > obj2.distance) return 1;
-  if (obj1.distance < obj2.distance) return -1;
-  return 0;
-})
-
 
   unAvailableFavorites.map((favorite)=>{
   this.props.searchData.map((searchObj)=>{
         if(searchObj != undefined){
             searchObj.flavors.map((flavor)=>{
-              if(favorite.shopId === searchObj.id && favorite.flavorName === flavor.flavor){
+              if(favorite.flavorName === flavor.flavor){
                 let element = {keyVal:favorite.key, shop: searchObj, distance:0, flavorData:flavor, isAvailable:false}
                 favoriteArray.push(element)
               }
             })
         }
   })
+  })
+
+
+  favoriteArray.sort((obj1, obj2) => {
+    if (obj1.distance > obj2.distance) return 1;
+    if (obj1.distance < obj2.distance) return -1;
+    return 0;
   })
 
 
