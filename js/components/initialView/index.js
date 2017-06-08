@@ -178,11 +178,11 @@ class InitialView extends Component {
     this.fireBaseListener = undefined
     this.listenUserData = undefined
     clearInterval(this.timer)
-    this.refreshTokenListener.remove();
+    // this.refreshTokenListener.remove();
   }
 
   componentDidMount () {
-    this.getFcmToken()
+    // this.getFcmToken()
     this.spin()
     this.startPercentageIncrease()
   }

@@ -132,7 +132,7 @@ class AppNavigator extends Component {
 
 
 
-
+console.warn("1");
       return (
         <Drawer
           ref={(ref) => { this._drawer = ref; }}

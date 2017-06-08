@@ -205,7 +205,25 @@ class MapView extends Component {
 watchID: ?number = null;
 
 componentDidMount() {
+
+  this.getFcmToken()
+
+setTimeout(() => {
   this.getCurrentLocationIfPermission()
+
+}, 1000);
+
+}
+
+gotoSettings(){
+
+  Linking.canOpenURL('app-settings:').then(supported => {
+  if (!supported) {
+    console.log('Can\'t handle settings url');
+  } else {
+    return Linking.openURL('app-settings:');
+  }
+}).catch(err => console.error('An error occurred', err));
 }
 
 fetchCurrentLocation(){
@@ -234,7 +252,30 @@ fetchCurrentLocation(){
     },
     (error) => {
       this.getLocationList()
-      alert(JSON.stringify(error))
+      // alert(JSON.stringify(error))
+      if(Platform.OS !== 'android'){
+        Alert.alert(
+      'Alert',
+      'If you do not allow location or push notifications, you will not be able to see the shops around you or be notified when your favorite flavors become available. Go to settings to allow location and push notifications access.',
+      [
+      {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+      {text: 'Settings', onPress: () => this.gotoSettings()},
+      ],
+      { cancelable: false }
+      )
+    }
+    else{
+      Alert.alert(
+    'Alert',
+    'If you do not allow location or push notifications, you will not be able to see the shops around you or be notified when your favorite flavors become available. Go to settings to allow location and push notifications access.',
+    [
+    {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+    {text: 'Settings', onPress: () => this.gotoSettings()},
+    ],
+    { cancelable: false }
+    )
+    }
+
 
     },
     { enableHighAccuracy: false, timeout: 20000 }
@@ -246,21 +287,15 @@ fetchCurrentLocation(){
     var shouldReload = false;
     let distance = this.distance(prevPos.coords.latitude, prevPos.coords.longitude, position.coords.latitude, position.coords.longitude, "M");
     // console.warn(`distance`, distance);
-
-
-
-
         if(distance > 0.5){
           this.setState({lastPosition});
           this.centerMapAtMyLocation()
         }
-
-
-
   });
-
-
 }
+
+
+
 
 async getCurrentLocationIfPermission(){
   this.setState({isLoading: true})
@@ -385,7 +420,9 @@ console.log(this.state.shopsCoordinates);
       }
       i++
     })
-    urlDistance = urlDistance+'&mode=driving&key=AIzaSyCUdBK1qZKBI6IDzTl9eT0HW-QEN-YgHqE'
+    // urlDistance = urlDistance+'&mode=driving&key=AIzaSyCUdBK1qZKBI6IDzTl9eT0HW-QEN-YgHqE'
+    urlDistance = urlDistance+'&mode=driving&key=AIzaSyDln7OOdOV2G0Kw3t8VvKKMmH1SUSUv3Vs'
+
     isDistanceFetchCalled = true
     fetch(urlDistance)
     .then((response) => response.json())
@@ -462,7 +499,7 @@ returnShopCoordinates(){
       let address =  shop.address + '+' + shop.state + '+' + shop.zip_code
       var fulladdress = address
       fulladdress = fulladdress.replace(/\s/g, "+");
-      url = url+fulladdress+'&key=AIzaSyCUdBK1qZKBI6IDzTl9eT0HW-QEN-YgHqE'
+      url = url+fulladdress+'&key=AIzaSyDln7OOdOV2G0Kw3t8VvKKMmH1SUSUv3Vs'
       fetch(url)
       .then((response) => response.json())
       .then((responseJson) => {

@@ -462,6 +462,9 @@ var promoMessage = null
 if(promoClosed === false){
   promoMessage = this.getPromoText()
 }
+if(this.props.appInfoData[0].promoMessage == undefined || this.props.appInfoData[0].promoMessage == ""){
+  promoMessage = null
+}
 
 
     return (
