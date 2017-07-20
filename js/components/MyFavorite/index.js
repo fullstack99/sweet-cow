@@ -332,7 +332,7 @@ this.props.user.favorites.map((favorite)=>{
           if(shop.coordinatesObj.shop != undefined){
               shop.coordinatesObj.shop.flavors.map((flavor)=>{
                 if(favorite.flavorName === flavor.flavor){
-                  let element = {keyVal:favorite.key, shop: shop.coordinatesObj.shop, distance:shop.distance, flavorData:flavor, isAvailable:true}
+                  let element = {keyVal:favorite.key, shop: shop.coordinatesObj.shop, distance:shop.distance, distanceValue:shop.distanceValue, flavorData:flavor, isAvailable:true}
                   favoriteArray.push(element)
                   isEntered = true
                 }
@@ -345,34 +345,39 @@ this.props.user.favorites.map((favorite)=>{
     }
 })
 
-unAvailableFavorites.map((favorite)=>{
-  let isEntered = false
-    this.props.distanceArray.map((shop)=>{
-      if(shop.coordinatesObj.shop !== null){
-          if(shop.coordinatesObj.shop != undefined){
-              shop.coordinatesObj.shop.flavors.map((flavor)=>{
-                if(isEntered === false && (favorite.flavorName === flavor.flavor) ){
-                  let element = {keyVal:favorite.key, shop: shop.coordinatesObj.shop, distance:shop.distance, flavorData:flavor, isAvailable:true}
-                  favoriteArray.push(element)
-                  isEntered = true
-                }
-              })
-          }
-      }
-    })
-    if(isEntered === true){
-      unAvailableFavorites.pop(favorite)
-    }
+// unAvailableFavorites.map((favorite)=>{
+//   let isEntered = false
+//     this.props.distanceArray.map((shop)=>{
+//       if(shop.coordinatesObj.shop !== null){
+//           if(shop.coordinatesObj.shop != undefined){
+//               shop.coordinatesObj.shop.flavors.map((flavor)=>{
+//                 if(isEntered === false && (favorite.flavorName === flavor.flavor) ){
+//                   let element = {keyVal:favorite.key, shop: shop.coordinatesObj.shop, distance:shop.distance, distanceValue:shop.distanceValue , flavorData:flavor, isAvailable:true}
+//                   favoriteArray.push(element)
+//                   isEntered = true
+//                 }
+//               })
+//           }
+//       }
+//     })
+//     if(isEntered === true){
+//       unAvailableFavorites.pop(favorite)
+//     }
+// })
+
+
+favoriteArray.sort((obj1, obj2) => {
+  if (obj1.distanceValue > obj2.distanceValue) return 1;
+  if (obj1.distanceValue < obj2.distanceValue) return -1;
+  return 0;
 })
-
-
 
   unAvailableFavorites.map((favorite)=>{
   this.props.searchData.map((searchObj)=>{
         if(searchObj != undefined){
             searchObj.flavors.map((flavor)=>{
               if(favorite.flavorName === flavor.flavor){
-                let element = {keyVal:favorite.key, shop: searchObj, distance:0, flavorData:flavor, isAvailable:false}
+                let element = {keyVal:favorite.key, shop: searchObj, distance:0 , distanceValue:0,  flavorData:flavor, isAvailable:false}
                 favoriteArray.push(element)
               }
             })
@@ -381,11 +386,7 @@ unAvailableFavorites.map((favorite)=>{
   })
 
 
-  favoriteArray.sort((obj1, obj2) => {
-    if (obj1.distance > obj2.distance) return 1;
-    if (obj1.distance < obj2.distance) return -1;
-    return 0;
-  })
+
 
 
 favoriteArray.map((favorite)=>{
