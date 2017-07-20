@@ -14,6 +14,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import "RNFIRMessaging.h"
+#import <KarmiesSDK/KarmiesSDK-Swift.h>
 
 @import GoogleMaps;
 
@@ -59,6 +60,8 @@
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   //  return YES;
+  // Karmies config
+  [Karmies.shared configureWithApplication:application clientID:@"sweetcow" autoUpdate:YES monitorLocation:YES alwaysLocation:YES ready:nil complete:nil];
   return [[FBSDKApplicationDelegate sharedInstance] application:application
                                   didFinishLaunchingWithOptions:launchOptions];
 }
@@ -70,6 +73,11 @@
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+  // Karmies open URL from Messages
+  if ([sourceApplication isEqualToString:@"com.apple.MobileSMS"]) {
+    [application openURL:url];
+    return YES;
+  }
   return [[FBSDKApplicationDelegate sharedInstance] application:application
                                                         openURL:url
                                               sourceApplication:sourceApplication

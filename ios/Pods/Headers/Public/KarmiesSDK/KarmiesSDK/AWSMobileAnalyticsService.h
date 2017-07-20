@@ -1,0 +1,1 @@
+../../../../KarmiesSDK/KarmiesSDK.framework/Headers/AWSMobileAnalyticsService.h

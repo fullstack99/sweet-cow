@@ -87,6 +87,11 @@
 		C16A65601E647B6400BA873C /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16A655F1E647B6400BA873C /* AudioToolbox.framework */; };
 		C16A65621E647B6C00BA873C /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16A65611E647B6C00BA873C /* MobileCoreServices.framework */; };
 		C16A65641E647B7200BA873C /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16A65631E647B7200BA873C /* SystemConfiguration.framework */; };
+		C17A8FB01F20FB6A00F4C928 /* Messages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C17A8FAF1F20FB6A00F4C928 /* Messages.framework */; };
+		C17A8FB31F20FB6A00F4C928 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17A8FB21F20FB6A00F4C928 /* MessagesViewController.swift */; };
+		C17A8FB61F20FB6A00F4C928 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C17A8FB41F20FB6A00F4C928 /* MainInterface.storyboard */; };
+		C17A8FB81F20FB6A00F4C928 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C17A8FB71F20FB6A00F4C928 /* Assets.xcassets */; };
+		C17A8FBC1F20FB6A00F4C928 /* SweetCowMessages.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C17A8FAE1F20FB6A00F4C928 /* SweetCowMessages.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C187563D1E680621000DA077 /* libRCTFBSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C18756371E6805B7000DA077 /* libRCTFBSDK.a */; };
 		C18756421E68078E000DA077 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C187563E1E68078E000DA077 /* Bolts.framework */; };
 		C18756431E68078E000DA077 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C187563F1E68078E000DA077 /* FBSDKCoreKit.framework */; };
@@ -117,6 +122,13 @@
 			remoteGlobalIDString = 2D02E47A1E0B4A5D006451C7;
 			remoteInfo = "SweetCow-tvOS";
 		};
+		C17A8FBA1F20FB6A00F4C928 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C17A8FAD1F20FB6A00F4C928;
+			remoteInfo = SweetCowMessages;
+		};
 		C18756361E6805B7000DA077 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 313611AE4E1243AFAC696BCC /* RCTFBSDK.xcodeproj */;
@@ -132,6 +144,20 @@
 			remoteInfo = RNFIRMessaging;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C17A8FC21F20FB6A00F4C928 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				C17A8FBC1F20FB6A00F4C928 /* SweetCowMessages.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
@@ -259,6 +285,12 @@
 		C16A655F1E647B6400BA873C /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		C16A65611E647B6C00BA873C /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		C16A65631E647B7200BA873C /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		C17A8FAE1F20FB6A00F4C928 /* SweetCowMessages.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SweetCowMessages.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		C17A8FAF1F20FB6A00F4C928 /* Messages.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Messages.framework; path = System/Library/Frameworks/Messages.framework; sourceTree = SDKROOT; };
+		C17A8FB21F20FB6A00F4C928 /* MessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewController.swift; sourceTree = "<group>"; };
+		C17A8FB51F20FB6A00F4C928 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		C17A8FB71F20FB6A00F4C928 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C17A8FB91F20FB6A00F4C928 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C187563E1E68078E000DA077 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = Frameworks/Bolts.framework; sourceTree = "<group>"; };
 		C187563F1E68078E000DA077 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = Frameworks/FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		C18756401E68078E000DA077 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = Frameworks/FBSDKLoginKit.framework; sourceTree = "<group>"; };
@@ -313,6 +345,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C17A8FAB1F20FB6A00F4C928 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C17A8FB01F20FB6A00F4C928 /* Messages.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -328,6 +368,7 @@
 				C16A655F1E647B6400BA873C /* AudioToolbox.framework */,
 				C16A65521E647AC800BA873C /* MapKit.framework */,
 				B7EB9CDE2C34CCB150DCAE37 /* libPods-SweetCow.a */,
+				C17A8FAF1F20FB6A00F4C928 /* Messages.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -412,6 +453,7 @@
 				BF53326C1E65CD2A008A09AF /* AirGoogleMaps */,
 				13B07FAE1A68108700A75B9A /* SweetCow */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
+				C17A8FB11F20FB6A00F4C928 /* SweetCowMessages */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				476B0665A05D4E0380323605 /* Resources */,
 				A203042AFCBA72EEFF3B94E1 /* Pods */,
@@ -428,6 +470,7 @@
 				00E356EE1AD99517003FC87E /* SweetCowTests.xctest */,
 				2D02E47B1E0B4A5D006451C7 /* SweetCow-tvOS.app */,
 				2D02E4901E0B4A5D006451C7 /* SweetCow-tvOSTests.xctest */,
+				C17A8FAE1F20FB6A00F4C928 /* SweetCowMessages.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -534,6 +577,17 @@
 			path = Callout;
 			sourceTree = "<group>";
 		};
+		C17A8FB11F20FB6A00F4C928 /* SweetCowMessages */ = {
+			isa = PBXGroup;
+			children = (
+				C17A8FB21F20FB6A00F4C928 /* MessagesViewController.swift */,
+				C17A8FB41F20FB6A00F4C928 /* MainInterface.storyboard */,
+				C17A8FB71F20FB6A00F4C928 /* Assets.xcassets */,
+				C17A8FB91F20FB6A00F4C928 /* Info.plist */,
+			);
+			path = SweetCowMessages;
+			sourceTree = "<group>";
+		};
 		C18756331E6805B7000DA077 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -582,10 +636,12 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				CBCBEC74D1AC418070902038 /* [CP] Embed Pods Frameworks */,
 				579388DADAEA0EF3467F3EE0 /* [CP] Copy Pods Resources */,
+				C17A8FC21F20FB6A00F4C928 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				C17A8FBB1F20FB6A00F4C928 /* PBXTargetDependency */,
 			);
 			name = SweetCow;
 			productName = "Hello World";
@@ -628,12 +684,30 @@
 			productReference = 2D02E4901E0B4A5D006451C7 /* SweetCow-tvOSTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		C17A8FAD1F20FB6A00F4C928 /* SweetCowMessages */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C17A8FC11F20FB6A00F4C928 /* Build configuration list for PBXNativeTarget "SweetCowMessages" */;
+			buildPhases = (
+				C17A8FAA1F20FB6A00F4C928 /* Sources */,
+				C17A8FAB1F20FB6A00F4C928 /* Frameworks */,
+				C17A8FAC1F20FB6A00F4C928 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SweetCowMessages;
+			productName = SweetCowMessages;
+			productReference = C17A8FAE1F20FB6A00F4C928 /* SweetCowMessages.appex */;
+			productType = "com.apple.product-type.app-extension.messages";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0830;
 				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
@@ -672,6 +746,10 @@
 						ProvisioningStyle = Automatic;
 						TestTargetID = 2D02E47A1E0B4A5D006451C7;
 					};
+					C17A8FAD1F20FB6A00F4C928 = {
+						CreatedOnToolsVersion = 8.3.2;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "SweetCow" */;
@@ -701,6 +779,7 @@
 				00E356ED1AD99517003FC87E /* SweetCowTests */,
 				2D02E47A1E0B4A5D006451C7 /* SweetCow-tvOS */,
 				2D02E48F1E0B4A5D006451C7 /* SweetCow-tvOSTests */,
+				C17A8FAD1F20FB6A00F4C928 /* SweetCowMessages */,
 			);
 		};
 /* End PBXProject section */
@@ -792,6 +871,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C17A8FAC1F20FB6A00F4C928 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C17A8FB81F20FB6A00F4C928 /* Assets.xcassets in Resources */,
+				C17A8FB61F20FB6A00F4C928 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -940,6 +1028,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C17A8FAA1F20FB6A00F4C928 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C17A8FB31F20FB6A00F4C928 /* MessagesViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -953,6 +1049,11 @@
 			target = 2D02E47A1E0B4A5D006451C7 /* SweetCow-tvOS */;
 			targetProxy = 2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */;
 		};
+		C17A8FBB1F20FB6A00F4C928 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C17A8FAD1F20FB6A00F4C928 /* SweetCowMessages */;
+			targetProxy = C17A8FBA1F20FB6A00F4C928 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -963,6 +1064,14 @@
 			);
 			name = LaunchScreen.xib;
 			path = SweetCow;
+			sourceTree = "<group>";
+		};
+		C17A8FB41F20FB6A00F4C928 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C17A8FB51F20FB6A00F4C928 /* Base */,
+			);
+			name = MainInterface.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1029,6 +1138,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4FA519A79DEA072AF9D1C642 /* Pods-SweetCow.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = SweetCow/SweetCow.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer: LUIS METZGER (DSW6DCSKW6)";
@@ -1071,6 +1181,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A44C255B99340B32CAB320BD /* Pods-SweetCow.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = SweetCow/SweetCow.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: LUIS METZGER (C7RR839V43)";
@@ -1319,6 +1430,52 @@
 			};
 			name = Release;
 		};
+		C17A8FBD1F20FB6A00F4C928 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer: LUIS METZGER (DSW6DCSKW6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = SweetCowMessages/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sweetcow.sweetcow.SweetCowMessages;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		C17A8FBE1F20FB6A00F4C928 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: LUIS METZGER (C7RR839V43)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = SweetCowMessages/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sweetcow.sweetcow.SweetCowMessages;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1366,6 +1523,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		C17A8FC11F20FB6A00F4C928 /* Build configuration list for PBXNativeTarget "SweetCowMessages" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C17A8FBD1F20FB6A00F4C928 /* Debug */,
+				C17A8FBE1F20FB6A00F4C928 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
