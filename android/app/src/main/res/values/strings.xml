@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Sweet Cow</string>
-    <string name="facebook_app_id">725538227608354</string>
+    <string name="facebook_app_id">1791842287745699</string>
+    <string name="fb_login_protocol_scheme">fb1791842287745699</string>
 </resources>
