@@ -14,7 +14,6 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import "RNFIRMessaging.h"
-#import <KarmiesSDK/KarmiesSDK-Swift.h>
 
 @import GoogleMaps;
 
@@ -61,7 +60,7 @@
   [self.window makeKeyAndVisible];
   //  return YES;
   // Karmies config
-  [Karmies.shared configureWithApplication:application clientID:@"sweetcow" autoUpdate:YES monitorLocation:YES alwaysLocation:YES ready:nil complete:nil];
+//[Karmies.shared configureWithApplication:application clientID:@"sweetcow" autoUpdate:YES monitorLocation:YES alwaysLocation:YES ready:nil complete:nil];
   return [[FBSDKApplicationDelegate sharedInstance] application:application
                                   didFinishLaunchingWithOptions:launchOptions];
 }

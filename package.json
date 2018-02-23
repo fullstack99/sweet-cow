@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
-    "sync-rnpc": "rm -rf ./node_modules/react-native-pathjs-charts; sane '/usr/bin/rsync -v -a --exclude .git --exclude example --exclude node_modules ../ ./node_modules/react-native-pathjs-charts/' .. --glob='{**/*.json,**/*.js}'"
+    "sync-rnpc": "rm -rf ./node_modules/react-native-pathjs-charts; sane '/usr/bin/rsync -v -a --exclude .git --exclude example --exclude node_modules ../ ./node_modules/react-native-pathjs-charts/' .. --glob='{**/*.json,**/*.js}'",
+    "eject-native-base": "node node_modules/native-base/ejectTheme.js"
   },
   "dependencies": {
     "@shoutem/theme": "0.8.6",
@@ -17,7 +18,7 @@
     "react-native-facebook-login": "1.4.0",
     "react-native-fbsdk": "0.5.1",
     "react-native-fcm": "6.2.0",
-    "react-native-maps": "0.12.4",
+    "react-native-maps": "0.13",
     "react-native-navigation-redux-helpers": "0.5.0",
     "react-native-spinkit": "1.0.2",
     "react-redux": "5.0.3",
