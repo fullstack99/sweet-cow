@@ -5,31 +5,33 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
-    "sync-rnpc": "rm -rf ./node_modules/react-native-pathjs-charts; sane '/usr/bin/rsync -v -a --exclude .git --exclude example --exclude node_modules ../ ./node_modules/react-native-pathjs-charts/' .. --glob='{**/*.json,**/*.js}'"
+    "sync-rnpc": "rm -rf ./node_modules/react-native-pathjs-charts; sane '/usr/bin/rsync -v -a --exclude .git --exclude example --exclude node_modules ../ ./node_modules/react-native-pathjs-charts/' .. --glob='{**/*.json,**/*.js}'",
+    "eject-native-base": "node node_modules/native-base/ejectTheme.js"
   },
   "dependencies": {
-    "firebase": "^3.6.10",
-    "invariant": "^2.2.2",
-    "native-base": "^2.0.10",
+    "@shoutem/theme": "0.8.6",
+    "firebase": "3.6.10",
+    "invariant": "2.2.2",
+    "native-base": "2.0.10",
     "react": "15.4.2",
     "react-native": "0.41.2",
-    "react-native-facebook-login": "^1.4.0",
-    "react-native-fbsdk": "^0.5.0",
-    "react-native-fcm": "^6.2.0",
-    "react-native-maps": "^0.12.4",
-    "react-native-navigation-redux-helpers": "^0.5.0",
-    "react-native-spinkit": "^1.0.2",
-    "react-redux": "^5.0.3",
-    "redux": "^3.6.0",
-    "redux-persist": "^4.4.2",
-    "redux-thunk": "^2.2.0"
+    "react-native-facebook-login": "1.4.0",
+    "react-native-fbsdk": "0.5.1",
+    "react-native-fcm": "6.2.0",
+    "react-native-maps": "0.13",
+    "react-native-navigation-redux-helpers": "0.5.0",
+    "react-native-spinkit": "1.0.2",
+    "react-redux": "5.0.3",
+    "redux": "3.6.0",
+    "redux-persist": "4.4.2",
+    "redux-thunk": "2.2.0"
   },
   "devDependencies": {
     "babel-jest": "19.0.0",
     "babel-preset-react-native": "1.9.1",
     "jest": "19.0.2",
     "react-test-renderer": "15.4.2",
-    "remote-redux-devtools": "^0.5.7"
+    "remote-redux-devtools": "0.5.7"
   },
   "jest": {
     "preset": "react-native"

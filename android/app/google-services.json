@@ -56,6 +56,57 @@
           "status": 2
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:729713908625:android:1ad37c1fb2913987",
+        "android_client_info": {
+          "package_name": "com.sweetcow.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "729713908625-ve951njf26voi16ukaa52g02kdck5nk1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sweetcow.app",
+            "certificate_hash": "df4cfa434cf5e49bddb890594a499ec42f9f50aa"
+          }
+        },
+        {
+          "client_id": "729713908625-vevrc4t6fsv25n28lk2gu5h95k1k3l08.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKKCmLTZBby6s8AF4LF09-UlggF8WlpCc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "729713908625-vevrc4t6fsv25n28lk2gu5h95k1k3l08.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "729713908625-p9nr1mijfren3loj2gevglebo676kk5o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sweetcow.sweetcow"
+              }
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
     }
   ],
   "configuration_version": "1"

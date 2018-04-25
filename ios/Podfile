@@ -22,7 +22,7 @@ target 'SweetCow' do
 
   pod 'GoogleMaps'  # <~~ remove this line if you do not want to support GoogleMaps on iOS
   pod 'Firebase/Messaging'
-  pod 'KarmiesSDK'
+ # pod 'KarmiesSDK'
 
 # when not using frameworks  we can do this instead of including the source files in our project (1/4):
 #  pod 'react-native-maps', path: '../../'
