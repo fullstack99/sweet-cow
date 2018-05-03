@@ -837,6 +837,7 @@
 				CODE_SIGN_ENTITLEMENTS = SweetCow/SweetCow.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer: LUIS METZGER (DSW6DCSKW6)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 6355LTZMQG;
@@ -879,6 +880,7 @@
 				CODE_SIGN_ENTITLEMENTS = SweetCow/SweetCow.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: LUIS METZGER (C7RR839V43)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6355LTZMQG;
 				FRAMEWORK_SEARCH_PATHS = (
