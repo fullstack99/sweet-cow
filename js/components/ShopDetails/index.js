@@ -150,15 +150,6 @@ class ShopDetails extends Component {
 
     let element = { flavorName: flavorData.flavor, shopId: shop.id, key: favId, isFavorite: isFavorite }
 
-
-    //***************Use flavorData.Searchable and remove the following*/
-    let isSearchable = 0
-    if (flavorData.flavor.toUpperCase().includes('CHOCOLATE')) {
-      isSearchable = 1// flavor.Searchable
-    }
-    //****************/
-
-
     let onPress = () => this.changeFavouriteState(element)
     let favoriteImage = favorite_icon_brown
 
@@ -168,7 +159,7 @@ class ShopDetails extends Component {
     }
     let flavorElement = { flavorData: flavorData, isFavorite: isFavorite, shopId: shop.id }
 
-    if (isSearchable) {
+    if (flavorData.available) {
       return (
         <View style={{ backgroundColor: 'white', marginLeft: 10, marginBottom: 10, height: 50, flexDirection: 'row', justifyContent: "space-between" }}>
           <TouchableOpacity style={{ marginBottom: 2, alignSelf: 'center', marginLeft: 10, marginRight: 5, width: deviceWidth / 15, height: deviceWidth / 15 }} onPress={onPress}>
@@ -482,30 +473,15 @@ class ShopDetails extends Component {
     let noOfFlavorsAvailable, noOfFlavorsUnavailable;
 
     var flavorCell = []
+    console.log(flavorArray, 'flavorArray')
     flavorArray.map((flavor) => {
-
-      //***************Use flavorData.Searchable and remove the following*/
-      let isSearchable = 0
-      if (flavor.flavor.toUpperCase().includes('CHOCOLATE')) {
-        isSearchable = 1// flavor.Searchable
-      }
-      //******************/
-
-      if (isSearchable == 1) {
+      if (flavor.available == 1) {
         flavorCell.push(this.getFlavourCell(flavor))
       }
     })
     noOfFlavorsAvailable = flavorCell.length;
     flavorArray.map((flavor) => {
-
-       //***************Use flavorData.Searchable and remove the following*/
-      let isSearchable = 0
-      if (flavor.flavor.toUpperCase().includes('CHOCOLATE')) {
-        isSearchable = 1// flavor.Searchable
-      }
-      //******************/
-      
-      if (isSearchable == 0) {
+      if (flavor.available == 0) {
         flavorCell.push(this.getFlavourCell(flavor))
       }
     })

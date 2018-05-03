@@ -10,6 +10,7 @@ class App extends Component {
 
   constructor(props) {
     super(props);
+    console.disableYellowBox = true;
   }
 
   render() {

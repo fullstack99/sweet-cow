@@ -244,14 +244,7 @@ class SearchScreen extends Component {
           if (shop.coordinatesObj.shop != undefined) {
             shop.coordinatesObj.shop.flavors.map((flavor) => {
               if (flavor.flavor.toUpperCase().includes(this.state.searchText.toUpperCase())) {
-                //***************Use flavorData.Searchable and remove the following*/
-                let isSearchable = 0
-                if (flavor.flavor.toUpperCase().includes('CHOCOLATE')) {
-                  isSearchable = 1// flavor.Searchable
-                }
-                //************************/
-
-                if (isSearchable == 1) {
+                if (flavor.available == 1) {
                   let element = { flavorData: flavor, shop: shop.coordinatesObj.shop, distance: shop.distance, isAvailable: true }
                   searchResultArray.push(element)
                 }
@@ -265,14 +258,7 @@ class SearchScreen extends Component {
           if (shop.coordinatesObj.shop != undefined) {
             shop.coordinatesObj.shop.flavors.map((flavor) => {
               if (flavor.flavor.toUpperCase().includes(this.state.searchText.toUpperCase())) {
-                //***************Use flavorData.Searchable and remove the following*/
-                let isSearchable = 0
-                if (flavor.flavor.toUpperCase().includes('CHOCOLATE')) {
-                  isSearchable = 1// flavor.Searchable
-                }
-                //************************/
-
-                if (isSearchable == 0) {
+                if (flavor.available == 0) {
                   let element = { flavorData: flavor, shop: shop.coordinatesObj.shop, distance: shop.distance, isAvailable: false }
                   searchResultArray.push(element)
                 }
@@ -286,15 +272,7 @@ class SearchScreen extends Component {
         if (shop.coordinatesObj.shop !== null) {
           if (shop.coordinatesObj.shop != undefined) {
             shop.coordinatesObj.shop.flavors.map((flavor) => {
-
-              //***************Use flavorData.Searchable and remove the following*/
-              let isSearchable = 0
-              if (flavor.flavor.toUpperCase().includes('CHOCOLATE')) {
-                isSearchable = 1// flavor.Searchable
-              }
-              //************************/
-
-              if (isSearchable == 1) {
+              if (flavor.available == 1) {
                 let element = { flavorData: flavor, shop: shop.coordinatesObj.shop, distance: shop.distance, isAvailable: true }
                 searchResultArray.push(element)
               }
@@ -307,15 +285,7 @@ class SearchScreen extends Component {
         if (shop.coordinatesObj.shop !== null) {
           if (shop.coordinatesObj.shop != undefined) {
             shop.coordinatesObj.shop.flavors.map((flavor) => {
-
-              //***************Use flavorData.Searchable and remove the following*/
-              let isSearchable = 0
-              if (flavor.flavor.toUpperCase().includes('CHOCOLATE')) {
-                isSearchable = 1// flavor.Searchable
-              }
-              //************************/
-
-              if (isSearchable == 0) {
+              if (flavor.available == 0) {
                 let element = { flavorData: flavor, shop: shop.coordinatesObj.shop, distance: shop.distance, isAvailable: false }
                 searchResultArray.push(element)
               }

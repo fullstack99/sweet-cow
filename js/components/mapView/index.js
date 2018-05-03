@@ -362,34 +362,40 @@ class MapView extends Component {
     // console.warn(`getLocationList`);
     // fetch('http://www.theanalect.com/DEMOS/sweetcow/api.php')
     this.setState({ isLoading: true })
-    fetch('http://www.sweetcowicecream.com/api.php')
+
+    fetch('https://sweetcowicecream.com/api.v2.php')
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log(responseJson)
-
+        
         let shopsArray = []
         let searchShopArray = []
         let appInfoArray = []
-        responseJson.map((shop) => {
-          if (shop.storeId !== undefined) {
-            if (shop.storeId.toUpperCase().includes('APP - Do Not Touch'.toUpperCase())) {
-              // console.warn(shop.storeId);
-              // let shopElement = { 'location': shop.storeId, 'address': shop.shortaddress, 'flavors': shop.store_data, 'hours': null, 'id': shop.storeId, 'phone': shop.phone1, 'state': shop.state, 'zip_code': shop.postalCode, 'dayhourseconds': shop.dayhourseconds, 'dayhours': shop.dayhours, 'city': shop.city }
-              // searchShopArray.push(shopElement)
-
+        if(responseJson && responseJson !== undefined){
+          responseJson.map((shop) => {
+            if (shop.storeId !== undefined) {
+              if (shop.storeId.toUpperCase().includes('APP - Do Not Touch'.toUpperCase())) {
+                // console.warn(shop.storeId);
+                // let shopElement = { 'location': shop.storeId, 'address': shop.shortaddress, 'flavors': shop.store_data, 'hours': null, 'id': shop.storeId, 'phone': shop.phone1, 'state': shop.state, 'zip_code': shop.postalCode, 'dayhourseconds': shop.dayhourseconds, 'dayhours': shop.dayhours, 'city': shop.city }
+                // searchShopArray.push(shopElement)
+  
+              } else {
+                let shopElement = { 'location': shop.storeId, 'address': shop.shortaddress, 'flavors': shop.store_data, 'hours': null, 'id': shop.storeId, 'phone': shop.phone1, 'state': shop.state, 'zip_code': shop.postalCode, 'dayhourseconds': shop.dayhourseconds, 'dayhours': shop.dayhours, 'city': shop.city }
+                shopsArray.push(shopElement)
+                searchShopArray.push(shopElement)
+              }
             } else {
-              let shopElement = { 'location': shop.storeId, 'address': shop.shortaddress, 'flavors': shop.store_data, 'hours': null, 'id': shop.storeId, 'phone': shop.phone1, 'state': shop.state, 'zip_code': shop.postalCode, 'dayhourseconds': shop.dayhourseconds, 'dayhours': shop.dayhours, 'city': shop.city }
-              shopsArray.push(shopElement)
-              searchShopArray.push(shopElement)
+              let shopElement = { 'homeImageUrl': shop.app_info_content.home_initial_image, 'promoMessage': shop.app_info_content.promo_message }
+              appInfoArray.push(shopElement)
+              console.warn(shop.app_info_content.home_initial_image);
+  
             }
-          } else {
-            let shopElement = { 'homeImageUrl': shop.app_info_content.home_initial_image, 'promoMessage': shop.app_info_content.promo_message }
-            appInfoArray.push(shopElement)
-            console.warn(shop.app_info_content.home_initial_image);
-
-          }
-
-        })
+  
+          })
+        } else{
+          this.setState({ isLoading: false })
+          return null
+        }
+      
         this.setState({ isLoading: true, shops: shopsArray })
         this.props.setSearchData(searchShopArray);
         this.props.setAppInfoData(appInfoArray);
