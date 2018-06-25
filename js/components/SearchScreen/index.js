@@ -98,7 +98,10 @@ class SearchScreen extends Component {
   setFavoritesFromDetails(flavorData, isFavorite) {
     if (this.props.user) {
       console.warn(isFavorite);
-      let shopId = flavorDetail.shopId;
+      let shopId = "unavailable"
+      if(flavorDetail.shopId  && flavorDetail.shopId !== null){
+      shopId = flavorDetail.shopId; 
+    }
       let favId = this.getFavoriteKey(flavorData.flavor, shopId)
       console.warn(favId)
       let element = { flavorName: flavorData.flavor, shopId: shopId, isFavorite: isFavorite, key: favId }
@@ -111,7 +114,7 @@ class SearchScreen extends Component {
   changeFavouriteState(details) {
     if (this.props.user) {
       if (details.isFavorite === false) {
-        console.warn("add to fav")
+        console.warn("add to fav", details.shopId)
         this.setFavorites(details)
       }
       else {
@@ -237,6 +240,29 @@ class SearchScreen extends Component {
     let borderwidth = 6
     let searchResultArray = []
     let searchResultCell = []
+    let unavailableFlavours = []
+
+    this.props.allFlavors.map((flavorObj) => {
+      let availableFlavour = false;
+
+      if (flavorObj != undefined) {
+        this.props.distanceArray.map((shop) => {
+          if (shop.coordinatesObj.shop !== null) {
+            if (shop.coordinatesObj.shop != undefined) {
+              shop.coordinatesObj.shop.flavors.map((flavor) => {
+                if (flavor.flavor.toUpperCase() === flavorObj.flavor.toUpperCase()) {
+                  availableFlavour = true;
+                }
+
+              })
+            }
+          }
+        })
+      }
+      if (availableFlavour === false && flavorObj.searchable === "1") {
+        unavailableFlavours.push(flavorObj)
+      }
+    })
 
     if (this.state.searchText.length > 0) {
       this.props.distanceArray.map((shop) => {
@@ -253,20 +279,18 @@ class SearchScreen extends Component {
           }
         }
       })
-      this.props.distanceArray.map((shop) => {
-        if (shop.coordinatesObj.shop !== null) {
-          if (shop.coordinatesObj.shop != undefined) {
-            shop.coordinatesObj.shop.flavors.map((flavor) => {
-              if (flavor.flavor.toUpperCase().includes(this.state.searchText.toUpperCase())) {
-                if (flavor.available == 0) {
-                  let element = { flavorData: flavor, shop: shop.coordinatesObj.shop, distance: shop.distance, isAvailable: false }
-                  searchResultArray.push(element)
-                }
-              }
-            })
+
+      unavailableFlavours.map((flavor) => {
+        if (flavor != undefined) {
+          if (flavor.flavor.toUpperCase().includes(this.state.searchText.toUpperCase())) {
+            let element = { flavorData: flavor, shop: '', distance: 0, isAvailable: false }
+            searchResultArray.push(element)
           }
         }
       })
+
+
+
     } else {
       this.props.distanceArray.map((shop) => {
         if (shop.coordinatesObj.shop !== null) {
@@ -281,20 +305,14 @@ class SearchScreen extends Component {
           }
         }
       })
-      this.props.distanceArray.map((shop) => {
-        if (shop.coordinatesObj.shop !== null) {
-          if (shop.coordinatesObj.shop != undefined) {
-            shop.coordinatesObj.shop.flavors.map((flavor) => {
-              if (flavor.available == 0) {
-                let element = { flavorData: flavor, shop: shop.coordinatesObj.shop, distance: shop.distance, isAvailable: false }
-                searchResultArray.push(element)
-              }
 
-            })
-          }
+      unavailableFlavours.map((flavor) => {
+        if (flavor != undefined) {
+          let element = { flavorData: flavor, shop: '', distance: 0, isAvailable: false }
+          searchResultArray.push(element)
         }
       })
-    }
+  }
 
 
     // if(searchResultArray.length === 0){
@@ -384,7 +402,7 @@ function bindActions(dispatch) {
 const mapStateToProps = state => ({
   navigation: state.cardNavigation,
   user: state.user.name,
-  searchData: state.searchData.name
+  allFlavors: state.searchData.name
 
 });
 

@@ -363,7 +363,7 @@ class MapView extends Component {
     // fetch('http://www.theanalect.com/DEMOS/sweetcow/api.php')
     this.setState({ isLoading: true })
 
-    fetch('https://sweetcowicecream.com/api.v2.php')
+    fetch('http://sweetcowicecream.com/api.v2.2.php')
       .then((response) => response.json())
       .then((responseJson) => {
         
@@ -381,12 +381,13 @@ class MapView extends Component {
               } else {
                 let shopElement = { 'location': shop.storeId, 'address': shop.shortaddress, 'flavors': shop.store_data, 'hours': null, 'id': shop.storeId, 'phone': shop.phone1, 'state': shop.state, 'zip_code': shop.postalCode, 'dayhourseconds': shop.dayhourseconds, 'dayhours': shop.dayhours, 'city': shop.city }
                 shopsArray.push(shopElement)
-                searchShopArray.push(shopElement)
+                // searchShopArray.push(shopElement)
               }
             } else {
               let shopElement = { 'homeImageUrl': shop.app_info_content.home_initial_image, 'promoMessage': shop.app_info_content.promo_message }
               appInfoArray.push(shopElement)
               console.warn(shop.app_info_content.home_initial_image);
+              searchShopArray = shop.flavors
   
             }
   

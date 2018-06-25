@@ -110,8 +110,14 @@ class HomeScreen extends Component {
 
   render() {
 
-    console.warn(this.props.appInfoData[0].homeImageUrl);
-    let imageUrl = {uri : this.props.appInfoData[0].homeImageUrl}
+    // console.warn(this.props.appInfoData[0].homeImageUrl);
+
+let imageUrl = ''
+if(this.props.appInfoData && this.props.appInfoData[0].homeImageUrl && this.props.appInfoData[0].homeImageUrl !== null){
+  imageUrl = {uri : this.props.appInfoData[0].homeImageUrl}
+}
+
+
     return (
       <Container>
         <Content bounces={false}>

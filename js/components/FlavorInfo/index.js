@@ -182,21 +182,43 @@ let setFavoriteButton = this.setFavoriteButton()
 let flavorColor = '#'+((this.props.flavorData.flavorData.color.split('x'))[1])
 
 let imageUrl = background
-if(this.props.flavorData.flavorData.imageUrl !== null && this.props.flavorData.flavorData.imageUrl !== ''){
-  imageUrl = {uri : this.props.flavorData.flavorData.imageUrl}
+if(this.props.flavorData.flavorData.imageUrl && this.props.flavorData.flavorData.imageUrl !== null && this.props.flavorData.flavorData.imageUrl !== ''){
+  if (this.props.flavorData.flavorData.imageUrl.includes('&')) {
+    var updatedURL = this.props.flavorData.flavorData.imageUrl.split('&');
+    var firstPart = updatedURL[0]
+    var secondPart = updatedURL[1]
+    imageUrl = {uri : firstPart+secondPart}
+
+    console.warn(imageUrl, "imageUrl")
+
+  }else{
+    imageUrl = {uri : this.props.flavorData.flavorData.imageUrl}
+  }
+  
 }
 
 let allergensText = ''
 let colon = ''
 if(showAllergens === true){
     colon = ':'
-   allergensText = this.props.flavorData.flavorData.allergens
+    if(this.props.flavorData.flavorData.allergens && this.props.flavorData.flavorData.allergens != null){
+      allergensText = this.props.flavorData.flavorData.allergens
+    }
+   
 }
 
-var descriptionString = this.props.flavorData.flavorData.description
-if(descriptionString[descriptionString.length-1] == " "){
-  descriptionString = descriptionString.substring(0, descriptionString.length-1);
+var descriptionString = ''
 
+if(this.props.flavorData.flavorData.description && this.props.flavorData.flavorData.description !== null && this.props.flavorData.flavorData.description !== "")
+{
+  descriptionString = this.props.flavorData.flavorData.description
+  if(descriptionString[descriptionString.length-1] == "." || descriptionString[descriptionString.length-1] == " "){
+    descriptionString = descriptionString.substring(0, descriptionString.length-1);
+    
+  
+  }
+  descriptionString = descriptionString+'.'
+  
 }
 
 
@@ -230,7 +252,7 @@ console.warn(this.props.flavorData);
 
     <View style={{backgroundColor:'rgba(243,243,243,1)', width: deviceWidth*0.9 - (2* borderwidth), alignSelf:'center', flexDirection:'column', justifyContent:'space-between'}}>
       <View style={{marginTop:20, marginBottom:10, marginLeft:15, marginRight: 15, alignSelf:'flex-start'}}>
-      <Text style={{textAlign:'left', fontSize:15, color:'rgba(29, 16, 96, 1)'}}>{descriptionString}.</Text>
+      <Text style={{textAlign:'left', fontSize:15, color:'rgba(29, 16, 96, 1)'}}>{descriptionString}</Text>
       </View>
       {setFavoriteButton}
       <View style={{width:deviceWidth*0.5, marginBottom: 15, flexDirection:'row'}}>

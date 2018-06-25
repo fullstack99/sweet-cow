@@ -100,7 +100,10 @@ class MyFavorite extends Component {
 
   setFavoritesFromDetails(flavorData, isFavorite){
     console.warn(isFavorite);
-    let shopId = flavorDetail.shopId;
+    let shopId = "unavailable"
+    if(flavorDetail.shopId  && flavorDetail.shopId !== null){
+      shopId = flavorDetail.shopId; 
+    }
     let favId = this.getFavoriteKey(flavorData.flavor, shopId)
     console.warn(favId)
     let element = {flavorName:flavorData.flavor, shopId:shopId, isFavorite:isFavorite, key:favId}
@@ -119,7 +122,7 @@ class MyFavorite extends Component {
     return favKey
   }
 
-  changeFavouriteState(details){
+  changeFavouriteState(details){    
     if(details.isFavorite === false){
       console.warn("add to fav")
       this.addFavorites(details)
