@@ -378,12 +378,12 @@ favoriteArray.sort((obj1, obj2) => {
   unAvailableFavorites.map((favorite)=>{
   this.props.searchData.map((searchObj)=>{
         if(searchObj != undefined){
-            searchObj.flavors.map((flavor)=>{
-              if(favorite.flavorName === flavor.flavor){
-                let element = {keyVal:favorite.key, shop: searchObj, distance:0 , distanceValue:0,  flavorData:flavor, isAvailable:false}
+            // searchObj.map((flavor)=>{
+              if(favorite.flavorName === searchObj.flavor){
+                let element = {keyVal:favorite.key, shop: searchObj, distance:0 , distanceValue:0,  flavorData:searchObj, isAvailable:false}
                 favoriteArray.push(element)
               }
-            })
+            // })
         }
   })
   })
