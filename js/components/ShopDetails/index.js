@@ -316,9 +316,9 @@ class ShopDetails extends Component {
     if(flavorDetail.shopId  && flavorDetail.shopId !== null){
       shopId = flavorDetail.shopId; 
     }
-      let favId = this.getFavoriteKey(flavorData.flavor, shop.id)
+      let favId = this.getFavoriteKey(flavorData.flavor, shopId)
       console.warn(favId)
-      let element = { flavorName: flavorData.flavor, shopId: shop.id, isFavorite: isFavorite, key: favId }
+      let element = { flavorName: flavorData.flavor, shopId: shopId, isFavorite: isFavorite, key: favId }
       this.changeFavouriteState(element)
     } else {
       this.loginConfimation()
