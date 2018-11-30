@@ -28,8 +28,8 @@ let flavorDetail = null
 
 const {
   replaceAt,
-    popRoute,
-    pushRoute,
+  popRoute,
+  pushRoute,
 } = actions;
 
 class MyFavorite extends Component {
@@ -53,8 +53,8 @@ class MyFavorite extends Component {
     };
   }
 
-  flavorInfoDismiss(){
-    this.setState({isInfoMode: false})
+  flavorInfoDismiss() {
+    this.setState({ isInfoMode: false })
   }
 
 
@@ -62,25 +62,22 @@ class MyFavorite extends Component {
 
   }
 
-  openFlavorInfo(flavorData, shop){
+  openFlavorInfo(flavorData, shop) {
 
-    let flavorElement = {flavorData:flavorData, isFavorite:true, shopId:shop.id}
+    let flavorElement = { flavorData: flavorData, isFavorite: true, shopId: shop.id }
     flavorDetail = flavorElement
-    this.setState({isInfoMode: true})
+    this.setState({ isInfoMode: true })
   }
 
-  addFavorites(details){
-    try{
-
-
-
+  addFavorites(details) {
+    try {
       let key = FirDatabase.setFavorites(this.props.user.uid, details)
-      let detailVal = {key:key, flavorName:details.flavorName, shopId:details.shopId}
+      let detailVal = { key: key, flavorName: details.flavorName, shopId: details.shopId }
 
       FirDatabase.getFavoritesCount(details, (data) => {
-      console.warn(data.count);
-      let value = data.count+1
-      FirDatabase.setFavoritesCount(details, value)
+        console.warn(data.count);
+        let value = data.count + 1
+        FirDatabase.setFavoritesCount(details, value)
       })
 
       let user = this.props.user
@@ -88,9 +85,9 @@ class MyFavorite extends Component {
       this.setUser(user)
       this.forceUpdate()
     }
-    catch(error){
+    catch (error) {
 
-      this.setState({isLoading: false})
+      this.setState({ isLoading: false })
       Alert.alert(
         'Error',
         `${error.toString()}`,
@@ -98,86 +95,86 @@ class MyFavorite extends Component {
     }
   }
 
-  setFavoritesFromDetails(flavorData, isFavorite){
+  setFavoritesFromDetails(flavorData, isFavorite) {
     console.warn(isFavorite);
     let shopId = "unavailable"
-    if(flavorDetail.shopId  && flavorDetail.shopId !== null){
-      shopId = flavorDetail.shopId; 
+    if (flavorDetail.shopId && flavorDetail.shopId !== null) {
+      shopId = flavorDetail.shopId;
     }
     let favId = this.getFavoriteKey(flavorData.flavor, shopId)
     console.warn(favId)
-    let element = {flavorName:flavorData.flavor, shopId:shopId, isFavorite:isFavorite, key:favId}
+    let element = { flavorName: flavorData.flavor, shopId: shopId, isFavorite: isFavorite, key: favId }
     this.changeFavouriteState(element)
   }
 
-  getFavoriteKey(flavorName, shopId){
+  getFavoriteKey(flavorName, shopId) {
     let favKey = ""
     let favorites = this.props.user.favorites
 
-    favorites.map((favorite)=>{
-      if(favorite.flavorName === flavorName){
+    favorites.map((favorite) => {
+      if (favorite.flavorName === flavorName) {
         favKey = favorite.key
       }
     })
     return favKey
   }
 
-  changeFavouriteState(details){    
-    if(details.isFavorite === false){
+  changeFavouriteState(details) {
+    if (details.isFavorite === false) {
       console.warn("add to fav")
       this.addFavorites(details)
     }
-    else{
+    else {
       console.warn("remove from fav")
       this.removeFavorites(details)
     }
   }
 
-  pushRoute(route){
+  pushRoute(route) {
     this.props.pushRoute({ key: route }, this.props.navigation.key);
   }
 
   popRoute() {
-  this.props.popRoute(this.props.navigation.key);
+    this.props.popRoute(this.props.navigation.key);
   }
 
-  openMyProfile (){
+  openMyProfile() {
     let routes = this.props.navigation.routes
     let tempRoute = []
-    routes.map((route)=>{
-      if(route.key === "mapView"){
+    routes.map((route) => {
+      if (route.key === "mapView") {
         tempRoute.push(route)
       }
     })
 
     var isContainMyProfile = false
 
-    routes.map((route)=>{
-      if(route.key === "myProfile"){
+    routes.map((route) => {
+      if (route.key === "myProfile") {
         tempRoute.push(route)
         isContainMyProfile = true
       }
     })
 
 
-    if(isContainMyProfile === true){
+    if (isContainMyProfile === true) {
       tempRoute.push(routes[routes.length - 1])
       routes = []
       routes = tempRoute
       this.props.navigation.routes = routes
       this.popRoute()
     }
-    else{
-    this.props.pushRoute({ key: 'myProfile'}, this.props.navigation.key);
-  }
+    else {
+      this.props.pushRoute({ key: 'myProfile' }, this.props.navigation.key);
+    }
   }
 
-  mapButtonClicked (){
+  mapButtonClicked() {
     let routes = this.props.navigation.routes
 
     let tempRoute = []
-    routes.map((route)=>{
-      if(route.key === "mapView"){
+    routes.map((route) => {
+      if (route.key === "mapView") {
         tempRoute.push(route)
       }
     })
@@ -189,76 +186,76 @@ class MyFavorite extends Component {
     this.popRoute()
   }
 
-  editButtonPressed(){
-    if(this.state.isEditMode == true){
-      this.setState({isEditMode: false})
-    }else{
-      this.setState({isEditMode: true})
+  editButtonPressed() {
+    if (this.state.isEditMode == true) {
+      this.setState({ isEditMode: false })
+    } else {
+      this.setState({ isEditMode: true })
     }
   }
 
   onSearchButtonClicked() {
-    if(this.state.isSearchMode == true){
-      this.setState({isSearchMode: false})
-    }else{
-      this.setState({isSearchMode: true})
+    if (this.state.isSearchMode == true) {
+      this.setState({ isSearchMode: false })
+    } else {
+      this.setState({ isSearchMode: true })
     }
   }
 
-  openExternalMaps(location){
-    openExternalMaps(location,this.props.lastPosition)
+  openExternalMaps(location) {
+    openExternalMaps(location, this.props.lastPosition)
   }
 
 
   searchDismiss() {
-    this.setState({isSearchMode: false})
+    this.setState({ isSearchMode: false })
   }
 
-  removeFavorite(key){
-      this.props.user.favorites.map((favorite)=>{
-        if(key === favorite.key){
-            Alert.alert(
-    'Remove from favorites',
-    'Are you sure you want to remove this flavor from your favorites?',
-    [
-      {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-      {text: 'Yes', onPress: () => this.setFavorites(favorite)},
-    ],
-    { cancelable: false }
-  )
-        }
-      })
+  removeFavorite(key) {
+    this.props.user.favorites.map((favorite) => {
+      if (key === favorite.key) {
+        Alert.alert(
+          'Remove from favorites',
+          'Are you sure you want to remove this flavor from your favorites?',
+          [
+            { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+            { text: 'Yes', onPress: () => this.setFavorites(favorite) },
+          ],
+          { cancelable: false }
+        )
+      }
+    })
   }
 
-  removeFavorites(details){
-    try{
+  removeFavorites(details) {
+    try {
       FirDatabase.removeFavorites(this.props.user.uid, details)
       FirDatabase.getFavoritesCount(details, (data) => {
-      console.warn(data.count);
+        console.warn(data.count);
 
-      let value = data.count-1
-      if(value < 0){
-        value = 0
-      }
-      FirDatabase.setFavoritesCount(details, value)
+        let value = data.count - 1
+        if (value < 0) {
+          value = 0
+        }
+        FirDatabase.setFavoritesCount(details, value)
       })
 
       let user = this.props.user
-// removing from users
+      // removing from users
 
-let tempUSerArray = []
-user.favorites.map((fav)=>{
-  if(fav.key !== details.key){
-    tempUSerArray.push(fav)
-  }
-})
+      let tempUSerArray = []
+      user.favorites.map((fav) => {
+        if (fav.key !== details.key) {
+          tempUSerArray.push(fav)
+        }
+      })
       user.favorites = tempUSerArray
       this.setUser(user)
       this.forceUpdate()
     }
-    catch(error){
+    catch (error) {
 
-      this.setState({isLoading: false})
+      this.setState({ isLoading: false })
       Alert.alert(
         'Error',
         `${error.toString()}`,
@@ -268,39 +265,39 @@ user.favorites.map((fav)=>{
 
 
 
-  logoClicked(){
+  logoClicked() {
     this.mapButtonClicked()
   }
 
-  setFavorites(details){
-    try{
+  setFavorites(details) {
+    try {
       FirDatabase.removeFavorites(this.props.user.uid, details)
       FirDatabase.getFavoritesCount(details, (data) => {
-      console.warn(data.count);
+        console.warn(data.count);
 
-      let value = data.count-1
-      if(value < 0){
-        value = 0
-      }
-      FirDatabase.setFavoritesCount(details, value)
+        let value = data.count - 1
+        if (value < 0) {
+          value = 0
+        }
+        FirDatabase.setFavoritesCount(details, value)
       })
 
       let user = this.props.user
-// removing from users
+      // removing from users
 
-let tempUSerArray = []
-user.favorites.map((fav)=>{
-  if(fav.key !== details.key){
-    tempUSerArray.push(fav)
-  }
-})
+      let tempUSerArray = []
+      user.favorites.map((fav) => {
+        if (fav.key !== details.key) {
+          tempUSerArray.push(fav)
+        }
+      })
       user.favorites = tempUSerArray
       this.setUser(user)
       this.forceUpdate()
     }
-    catch(error){
+    catch (error) {
 
-      this.setState({isLoading: false})
+      this.setState({ isLoading: false })
       Alert.alert(
         'Error',
         `${error.toString()}`,
@@ -315,134 +312,128 @@ user.favorites.map((fav)=>{
 
   render() {
 
-let borderwidth = 6
+    let borderwidth = 6
 
-let editButtonTitle = 'Edit'
-if(this.state.isEditMode){
-  editButtonTitle = 'Cancel'
-}
+    let editButtonTitle = 'Edit'
+    if (this.state.isEditMode) {
+      editButtonTitle = 'Cancel'
+    }
 
 
-let favoriteCell = []
-let favoriteArray = []
+    let favoriteCell = []
+    let favoriteArray = []
 
-let unAvailableFavorites = []
+    let unAvailableFavorites = []
 
-this.props.user.favorites.map((favorite)=>{
-  let isEntered = false
-    this.props.distanceArray.map((shop)=>{
-      if(shop.coordinatesObj.shop !== null){
-          if(shop.coordinatesObj.shop != undefined){
-              shop.coordinatesObj.shop.flavors.map((flavor)=>{
-                if(favorite.flavorName === flavor.flavor){
-                  let element = {keyVal:favorite.key, shop: shop.coordinatesObj.shop, distance:shop.distance, distanceValue:shop.distanceValue, flavorData:flavor, isAvailable:true}
-                  favoriteArray.push(element)
-                  isEntered = true
-                }
-              })
+    this.props.user.favorites.map((favorite) => {
+      let isEntered = false
+      this.props.distanceArray.map((shop) => {
+        if (shop.coordinatesObj.shop !== null) {
+          if (shop.coordinatesObj.shop != undefined) {
+            shop.coordinatesObj.shop.flavors.map((flavor) => {
+              if (favorite.flavorName === flavor.flavor) {
+                let element = { keyVal: favorite.key, shop: shop.coordinatesObj.shop, distance: shop.distance, distanceValue: shop.distanceValue, flavorData: flavor, isAvailable: true }
+                favoriteArray.push(element)
+                isEntered = true
+              }
+            })
           }
+        }
+      })
+      if (isEntered === false) {
+        unAvailableFavorites.push(favorite)
       }
     })
-    if(isEntered === false){
-      unAvailableFavorites.push(favorite)
-    }
-})
 
-// unAvailableFavorites.map((favorite)=>{
-//   let isEntered = false
-//     this.props.distanceArray.map((shop)=>{
-//       if(shop.coordinatesObj.shop !== null){
-//           if(shop.coordinatesObj.shop != undefined){
-//               shop.coordinatesObj.shop.flavors.map((flavor)=>{
-//                 if(isEntered === false && (favorite.flavorName === flavor.flavor) ){
-//                   let element = {keyVal:favorite.key, shop: shop.coordinatesObj.shop, distance:shop.distance, distanceValue:shop.distanceValue , flavorData:flavor, isAvailable:true}
-//                   favoriteArray.push(element)
-//                   isEntered = true
-//                 }
-//               })
-//           }
-//       }
-//     })
-//     if(isEntered === true){
-//       unAvailableFavorites.pop(favorite)
-//     }
-// })
+    // unAvailableFavorites.map((favorite)=>{
+    //   let isEntered = false
+    //     this.props.distanceArray.map((shop)=>{
+    //       if(shop.coordinatesObj.shop !== null){
+    //           if(shop.coordinatesObj.shop != undefined){
+    //               shop.coordinatesObj.shop.flavors.map((flavor)=>{
+    //                 if(isEntered === false && (favorite.flavorName === flavor.flavor) ){
+    //                   let element = {keyVal:favorite.key, shop: shop.coordinatesObj.shop, distance:shop.distance, distanceValue:shop.distanceValue , flavorData:flavor, isAvailable:true}
+    //                   favoriteArray.push(element)
+    //                   isEntered = true
+    //                 }
+    //               })
+    //           }
+    //       }
+    //     })
+    //     if(isEntered === true){
+    //       unAvailableFavorites.pop(favorite)
+    //     }
+    // })
 
 
-favoriteArray.sort((obj1, obj2) => {
-  if (obj1.distanceValue > obj2.distanceValue) return 1;
-  if (obj1.distanceValue < obj2.distanceValue) return -1;
-  return 0;
-})
+    favoriteArray.sort((obj1, obj2) => {
+      if (obj1.distanceValue > obj2.distanceValue) return 1;
+      if (obj1.distanceValue < obj2.distanceValue) return -1;
+      return 0;
+    })
 
-  unAvailableFavorites.map((favorite)=>{
-  this.props.searchData.map((searchObj)=>{
-        if(searchObj != undefined){
-            // searchObj.map((flavor)=>{
-              if(favorite.flavorName === searchObj.flavor){
-                let element = {keyVal:favorite.key, shop: searchObj, distance:0 , distanceValue:0,  flavorData:searchObj, isAvailable:false}
-                favoriteArray.push(element)
-              }
-            // })
+    unAvailableFavorites.map((favorite) => {
+      this.props.searchData.map((searchObj) => {
+        if (searchObj != undefined) {
+          // searchObj.map((flavor)=>{
+          if (favorite.flavorName === searchObj.flavor) {
+            let element = { keyVal: favorite.key, shop: searchObj, distance: 0, distanceValue: 0, flavorData: searchObj, isAvailable: false }
+            favoriteArray.push(element)
+          }
+          // })
         }
-  })
-  })
+      })
+    })
 
-
-
-
-
-favoriteArray.map((favorite)=>{
-    favoriteCell.push(<MyFavoriteCell  keyVal={favorite.keyVal}  shop={favorite.shop} distance={favorite.distance} flavorData={favorite.flavorData} edit={this.state.isEditMode} isAvailable={favorite.isAvailable} onPress={(location)=>this.openExternalMaps(location)} removeFavorite={(key)=>this.removeFavorite(key)} openFlavorInfo={(flavorData, shop) => this.openFlavorInfo(flavorData, shop)}/>)
-})
-
-
+    favoriteArray.map((favorite) => {
+      favoriteCell.push(<MyFavoriteCell keyVal={favorite.keyVal} shop={favorite.shop} distance={favorite.distance} flavorData={favorite.flavorData} edit={this.state.isEditMode} isAvailable={favorite.isAvailable} onPress={(location) => this.openExternalMaps(location)} removeFavorite={(key) => this.removeFavorite(key)} openFlavorInfo={(flavorData, shop) => this.openFlavorInfo(flavorData, shop)} />)
+    })
 
     return (
       <Container>
 
-      <View style={{width: deviceWidth, height: deviceHeight * 0.14, flexDirection:'row'}}>
-        <TouchableOpacity onPress={()=>this.logoClicked()}>
-          <Image source={logoCow} style={{marginLeft: 10, width: deviceWidth/2.2, height: deviceHeight/6.2, alignSelf:'flex-start', marginTop: 0, resizeMode: 'contain'}}/>
-        </TouchableOpacity>
-          <TouchableOpacity onPress={()=>this.mapButtonClicked()}>
-              <Image source={map_icon} style={{marginLeft: 25, marginTop: 25, width: deviceWidth/12, height: deviceHeight/12, resizeMode: 'contain'}}/>
+        <View style={{ width: deviceWidth, height: deviceHeight * 0.14, flexDirection: 'row' }}>
+          <TouchableOpacity onPress={() => this.logoClicked()}>
+            <Image source={logoCow} style={{ marginLeft: 10, width: deviceWidth / 2.2, height: deviceHeight / 6.2, alignSelf: 'flex-start', marginTop: 0, resizeMode: 'contain' }} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => this.mapButtonClicked()}>
+            <Image source={map_icon} style={{ marginLeft: 25, marginTop: 25, width: deviceWidth / 12, height: deviceHeight / 12, resizeMode: 'contain' }} />
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={()=>this.onSearchButtonClicked()}>
-              <Image source={search_icon} style={{marginLeft: 8, marginTop: 25, width: deviceWidth/12, height: deviceHeight/12, resizeMode: 'contain'}}/>
+          <TouchableOpacity onPress={() => this.onSearchButtonClicked()}>
+            <Image source={search_icon} style={{ marginLeft: 8, marginTop: 25, width: deviceWidth / 12, height: deviceHeight / 12, resizeMode: 'contain' }} />
           </TouchableOpacity>
 
           <TouchableOpacity>
-              <Image source={favorite_icon} style={{marginLeft: 8, marginTop: 25, width: deviceWidth/12, height: deviceHeight/12, resizeMode: 'contain'}}/>
+            <Image source={favorite_icon} style={{ marginLeft: 8, marginTop: 25, width: deviceWidth / 12, height: deviceHeight / 12, resizeMode: 'contain' }} />
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={()=>this.openMyProfile()}>
-              <Image source={user_icon} style={{marginLeft: 8, marginTop: 25, width: deviceWidth/12, height: deviceHeight/12, resizeMode: 'contain'}}/>
+          <TouchableOpacity onPress={() => this.openMyProfile()}>
+            <Image source={user_icon} style={{ marginLeft: 8, marginTop: 25, width: deviceWidth / 12, height: deviceHeight / 12, resizeMode: 'contain' }} />
           </TouchableOpacity>
-      </View>
+        </View>
 
-      <View style={{marginLeft:borderwidth/2, marginTop:-borderwidth, backgroundColor:'rgba(29, 16, 96, 1)', width: deviceWidth, height:borderwidth}}>
-      </View>
-      <View style={{width: deviceWidth, flexDirection:'row'}}>
-          <Text style={{marginLeft:deviceWidth*0.18, width: deviceWidth*0.62, textAlign:'center', marginTop: 20, fontSize: 30, color: 'rgba(29, 16, 96, 1)', fontFamily:"Trade Gothic LT Std"}}>MY FAVORITES</Text>
-          <View style={{width: deviceWidth * 0.2,  justifyContent:'flex-end',alignSelf:'center'}}>
-          <HyperlinkButton width={deviceWidth * 0.15} text={editButtonTitle} textColor="#422575" fontSize={20} onPress={()=>this.editButtonPressed()}/>
+        <View style={{ marginLeft: borderwidth / 2, marginTop: -borderwidth, backgroundColor: 'rgba(29, 16, 96, 1)', width: deviceWidth, height: borderwidth }}>
+        </View>
+        <View style={{ width: deviceWidth, flexDirection: 'row' }}>
+          <Text style={{ marginLeft: deviceWidth * 0.18, width: deviceWidth * 0.62, textAlign: 'center', marginTop: 20, fontSize: 30, color: 'rgba(29, 16, 96, 1)', fontFamily: "Trade Gothic LT Std" }}>MY FAVORITES</Text>
+          <View style={{ width: deviceWidth * 0.2, justifyContent: 'flex-end', alignSelf: 'center' }}>
+            <HyperlinkButton width={deviceWidth * 0.15} text={editButtonTitle} textColor="#422575" fontSize={20} onPress={() => this.editButtonPressed()} />
           </View>
-      </View>
+        </View>
 
-      <ScrollView>
-      {favoriteCell}
-      </ScrollView>
+        <ScrollView>
+          {favoriteCell}
+        </ScrollView>
 
-      <SearchResults isSearchMode={this.state.isSearchMode} distanceArray={this.props.distanceArray} lastPosition={this.props.lastPosition}
-       crossAction={()=>this.searchDismiss()}
-      />
+        <SearchResults isSearchMode={this.state.isSearchMode} distanceArray={this.props.distanceArray} lastPosition={this.props.lastPosition}
+          crossAction={() => this.searchDismiss()}
+        />
 
 
-      <FlavourInfoView isInfoMode={this.state.isInfoMode} flavorData={flavorDetail}
-        crossAction={()=>this.flavorInfoDismiss()} setFavoritesAction={(flavorData, isFavorite)=>this.setFavoritesFromDetails(flavorData, isFavorite)}
-      />
+        <FlavourInfoView isInfoMode={this.state.isInfoMode} flavorData={flavorDetail}
+          crossAction={() => this.flavorInfoDismiss()} setFavoritesAction={(flavorData, isFavorite) => this.setFavoritesFromDetails(flavorData, isFavorite)}
+        />
 
       </Container>
     );

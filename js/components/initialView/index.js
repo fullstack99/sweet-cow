@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Image, Dimensions, Alert, ActivityIndicator, StyleSheet,Animated,Easing, AsyncStorage} from 'react-native';
+import { Image, Dimensions, Alert, ActivityIndicator, StyleSheet, Animated, Easing, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux';
 import { actions } from 'react-native-navigation-redux-helpers';
 import { Container, Content, Button, View, Text } from 'native-base';
@@ -11,7 +11,7 @@ import { setUser } from '../../actions/user';
 import * as firebase from "firebase";
 import FirDatabase from "../../database/";
 import Loading from '../base/loading/'
-import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType} from 'react-native-fcm';
+import FCM, { FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType } from 'react-native-fcm';
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     width: deviceWidth,
     height: deviceHeight,
     resizeMode: 'stretch',
-    marginLeft:3
+    marginLeft: 3
   },
   activityIndicator: {
     alignItems: 'center',
@@ -73,7 +73,7 @@ class InitialView extends Component {
   }
 
 
-  getFcmToken(){
+  getFcmToken() {
     FCM.setBadgeNumber(0);
     FCM.requestPermissions(); // for iOS
     FCM.getFCMToken().then(token => {
@@ -101,25 +101,25 @@ class InitialView extends Component {
   }
 
   //To save the deviceToken
-  async saveDeviceToken (deviceToken){
-    if (deviceToken !== undefined && deviceToken !== null){
-    try {
-      // console.warn('savedevicetoken')
+  async saveDeviceToken(deviceToken) {
+    if (deviceToken !== undefined && deviceToken !== null) {
+      try {
+        // console.warn('savedevicetoken')
 
-      await AsyncStorage.setItem('@deviceToken:key', deviceToken );
-    } catch (error) {
-      console.warn(`error ${error}`);
+        await AsyncStorage.setItem('@deviceToken:key', deviceToken);
+      } catch (error) {
+        console.warn(`error ${error}`);
+      }
     }
   }
-  }
 
-  async getDeviceToken (){
+  async getDeviceToken() {
 
     try {
       const deviceToken = await AsyncStorage.getItem('@deviceToken:key');
 
-      if (deviceToken !== undefined && deviceToken !== null){
-        this.setState({deviceToken: deviceToken})
+      if (deviceToken !== undefined && deviceToken !== null) {
+        this.setState({ deviceToken: deviceToken })
         return deviceToken;
       }
       return "";
@@ -133,7 +133,6 @@ class InitialView extends Component {
   getInitialView() {
 
     this.fireBaseListener = firebase.auth().onAuthStateChanged((user) => {
-
       let initialView = 'mapView'// user ? "mapView" : "home";
 
       this.setState({
@@ -142,7 +141,7 @@ class InitialView extends Component {
       })
 
       this.fireBaseListener()
-       if(user){
+      if (user) {
         this.listenUserData = FirDatabase.listenUserData(user.uid, (userDataVal) => {
 
           let token = this.state.deviceToken;
@@ -152,21 +151,21 @@ class InitialView extends Component {
           this.setState({
             isLoading: false
           })
-          if(userDataVal.email == undefined){
+          if (userDataVal.email == undefined) {
 
           }
-          else{
+          else {
 
             this.setUser(userDataVal)
             console.warn(userDataVal.locationId);
-            if(userDataVal.locationId === -1 || userDataVal.locationId === undefined){
+            if (userDataVal.locationId === -1 || userDataVal.locationId === undefined) {
               percentageLimit = 100
             }
             this.replaceRouteToMap(initialView, userDataVal.locationId)
           }
         });
       }
-      else{
+      else {
         this.replaceRouteToMap(initialView, -1)
       }
 
@@ -181,13 +180,13 @@ class InitialView extends Component {
     // this.refreshTokenListener.remove();
   }
 
-  componentDidMount () {
+  componentDidMount() {
     // this.getFcmToken()
     this.spin()
     this.startPercentageIncrease()
   }
 
-  spin () {
+  spin() {
     this.spinValue.setValue(0)
     Animated.timing(
       this.spinValue,
@@ -200,21 +199,21 @@ class InitialView extends Component {
   }
 
 
-startPercentageIncrease(){
-  this.timer = setInterval(() => {
-    this.increasePecentage()
-  }, 200);
-}
-
-increasePecentage(){
-  var percentage = this.state.pecentage
-  percentage+= Math.floor(Math.random() * ((percentageLimit/10) - 1)) + 1
-
-  // console.warn(percentage)
-   if(percentage <= percentageLimit){
-    this.setState({pecentage: percentage})
+  startPercentageIncrease() {
+    this.timer = setInterval(() => {
+      this.increasePecentage()
+    }, 200);
   }
-}
+
+  increasePecentage() {
+    var percentage = this.state.pecentage
+    percentage += Math.floor(Math.random() * ((percentageLimit / 10) - 1)) + 1
+
+    // console.warn(percentage)
+    if (percentage <= percentageLimit) {
+      this.setState({ pecentage: percentage })
+    }
+  }
 
   replaceRoute(route) {
     setTimeout(() => {
@@ -224,7 +223,7 @@ increasePecentage(){
 
   replaceRouteToMap(route, locationId) {
     // setTimeout(() => {
-      this.props.replaceAt('default', { key: route, locationId:locationId }, this.props.navigation.key);
+    this.props.replaceAt('default', { key: route, locationId: locationId }, this.props.navigation.key);
     // }, 100);
   }
 
@@ -232,8 +231,8 @@ increasePecentage(){
     this.props.setUser(user);
   }
 
-  pushRoute(route){
-    this.props.pushRoute({ key: route  }, this.props.navigation.key);
+  pushRoute(route) {
+    this.props.pushRoute({ key: route }, this.props.navigation.key);
   }
 
   render() {
@@ -246,44 +245,47 @@ increasePecentage(){
       outputRange: ['0deg', '360deg']
     })
 
-    return(
+    return (
       <Container>
-      <Content bounces={false}>
+        <Content bounces={false}>
 
-      <Image source={background} style={styles.backgroundImage}>
+          <Image source={background} style={styles.backgroundImage}>
 
-      <Animated.Image
-      style={{
-        marginTop: deviceHeight*0.7,
-        alignSelf:'center',
-        resizeMode: 'contain',
-        width: 60,
-        height: 60,
-        transform: [{rotate: spin}] }}
-        source={loading_Circle}
-        >
-        </Animated.Image>
-        <Text style = {{marginTop: -38, fontSize:10,
-        alignSelf:'center', color:'white'}}> {percentageFormatted} </Text>
-        </Image>
+            <Animated.Image
+              style={{
+                marginTop: deviceHeight * 0.7,
+                alignSelf: 'center',
+                resizeMode: 'contain',
+                width: 60,
+                height: 60,
+                transform: [{ rotate: spin }]
+              }}
+              source={loading_Circle}
+            >
+            </Animated.Image>
+            <Text style={{
+              marginTop: -38, fontSize: 10,
+              alignSelf: 'center', color: 'white'
+            }}> {percentageFormatted} </Text>
+          </Image>
 
         </Content>
-        </Container>
-      );
+      </Container>
+    );
 
-    }
   }
+}
 
-  function bindActions(dispatch) {
-    return {
-      replaceAt: (routeKey, route, key) => dispatch(replaceAt(routeKey, route, key)),
-      pushRoute: (route, key) => dispatch(pushRoute(route, key)),
-      setUser: user => dispatch(setUser(user)),
-    };
-  }
+function bindActions(dispatch) {
+  return {
+    replaceAt: (routeKey, route, key) => dispatch(replaceAt(routeKey, route, key)),
+    pushRoute: (route, key) => dispatch(pushRoute(route, key)),
+    setUser: user => dispatch(setUser(user)),
+  };
+}
 
-  const mapStateToProps = state => ({
-    navigation: state.cardNavigation,
-  });
+const mapStateToProps = state => ({
+  navigation: state.cardNavigation,
+});
 
-  export default connect(mapStateToProps, bindActions)(InitialView);
+export default connect(mapStateToProps, bindActions)(InitialView);

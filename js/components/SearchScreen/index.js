@@ -12,8 +12,6 @@ import TextField from '../base/textField/'
 import FirDatabase from "../../database/";
 import FlavourInfoView from '../ShopDetails/FlavourDetail'
 
-
-
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
@@ -99,9 +97,9 @@ class SearchScreen extends Component {
     if (this.props.user) {
       console.warn(isFavorite);
       let shopId = "unavailable"
-      if(flavorDetail.shopId  && flavorDetail.shopId !== null){
-      shopId = flavorDetail.shopId; 
-    }
+      if (flavorDetail.shopId && flavorDetail.shopId !== null) {
+        shopId = flavorDetail.shopId;
+      }
       let favId = this.getFavoriteKey(flavorData.flavor, shopId)
       console.warn(favId)
       let element = { flavorName: flavorData.flavor, shopId: shopId, isFavorite: isFavorite, key: favId }
@@ -312,7 +310,7 @@ class SearchScreen extends Component {
           searchResultArray.push(element)
         }
       })
-  }
+    }
 
 
     // if(searchResultArray.length === 0){

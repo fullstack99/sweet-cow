@@ -159,21 +159,21 @@ class ShopDetails extends Component {
     }
     let flavorElement = { flavorData: flavorData, isFavorite: isFavorite, shopId: shop.id }
 
-   
-      return (
-        <View style={{ backgroundColor: 'white', marginLeft: 10, marginBottom: 10, height: 50, flexDirection: 'row', justifyContent: "space-between" }}>
-          <TouchableOpacity style={{ marginBottom: 2, alignSelf: 'center', marginLeft: 10, marginRight: 5, width: deviceWidth / 15, height: deviceWidth / 15 }} onPress={onPress}>
-            <Image source={favoriteImage} style={{ resizeMode: 'contain' }} />
-          </TouchableOpacity>
-          <TouchableOpacity style={{ justifyContent: 'center' }} onPress={() => this.openFlavorInfo(flavorElement)}>
-            <Text style={{ marginLeft: 10, width: deviceWidth * 0.6, color: flavorColor, alignSelf: 'center', textAlign: 'center', fontSize: 17, fontFamily: "Typeka Mix" }}> {toTitleCase(flavorData.flavor)}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={{ alignSelf: 'center', marginLeft: 10, marginBottom: 7, marginRight: 20, width: deviceWidth / 15, height: deviceWidth / 15 }} onPress={() => this.openFlavorInfo(flavorElement)}>
-            <Image source={next_page_icon_brown} style={{ resizeMode: 'contain' }} />
-          </TouchableOpacity>
-        </View>
-      )
-    
+
+    return (
+      <View style={{ backgroundColor: 'white', marginLeft: 10, marginBottom: 10, height: 50, flexDirection: 'row', justifyContent: "space-between" }}>
+        <TouchableOpacity style={{ marginBottom: 2, alignSelf: 'center', marginLeft: 10, marginRight: 5, width: deviceWidth / 15, height: deviceWidth / 15 }} onPress={onPress}>
+          <Image source={favoriteImage} style={{ resizeMode: 'contain' }} />
+        </TouchableOpacity>
+        <TouchableOpacity style={{ justifyContent: 'center' }} onPress={() => this.openFlavorInfo(flavorElement)}>
+          <Text style={{ marginLeft: 10, width: deviceWidth * 0.6, color: flavorColor, alignSelf: 'center', textAlign: 'center', fontSize: 17, fontFamily: "Typeka Mix" }}> {toTitleCase(flavorData.flavor)}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{ alignSelf: 'center', marginLeft: 10, marginBottom: 7, marginRight: 20, width: deviceWidth / 15, height: deviceWidth / 15 }} onPress={() => this.openFlavorInfo(flavorElement)}>
+          <Image source={next_page_icon_brown} style={{ resizeMode: 'contain' }} />
+        </TouchableOpacity>
+      </View>
+    )
+
     // else {
     //   return (
     //     <View style={{ backgroundColor: 'white', marginLeft: 10, marginBottom: 10, flexDirection: 'row', justifyContent: "space-between", height: 70 }} >
@@ -313,9 +313,9 @@ class ShopDetails extends Component {
     if (this.props.user) {
       console.warn(isFavorite);
       let shopId = "unavailable"
-    if(flavorDetail.shopId  && flavorDetail.shopId !== null){
-      shopId = flavorDetail.shopId; 
-    }
+      if (flavorDetail.shopId && flavorDetail.shopId !== null) {
+        shopId = flavorDetail.shopId;
+      }
       let favId = this.getFavoriteKey(flavorData.flavor, shopId)
       console.warn(favId)
       let element = { flavorName: flavorData.flavor, shopId: shopId, isFavorite: isFavorite, key: favId }

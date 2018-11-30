@@ -44,23 +44,20 @@ class AppNavigator extends Component {
 
 
 
-  constructor(props){
+  constructor(props) {
     super(props)
 
     firebase.initializeApp({
       apiKey: "AIzaSyC8D1CA3tzwOocmUnhkusTM_fDBFslc07A",
-      authDomain: "sweet-cow-df10d.firebaseapp.com",
-      databaseURL: "https://sweet-cow-df10d.firebaseio.com",
-      storageBucket: "sweet-cow-df10d.appspot.com"
-  // apiKey: "AIzaSyDYCgxzOJfLEQG3HWxivN3V8bqURRf4apc",
-  //  authDomain: "sweet-cow-f5290.firebaseapp.com",
-  //  databaseURL: "https://sweet-cow-f5290.firebaseio.com",
-  //  storageBucket: "sweet-cow-f5290.appspot.com",
+      authDomain: "sweet-cow-df10d.firebaseapp.com",
+      databaseURL: "https://sweet-cow-df10d.firebaseio.com",
+      storageBucket: "sweet-cow-df10d.appspot.com"
+      // apiKey: "AIzaSyDYCgxzOJfLEQG3HWxivN3V8bqURRf4apc",
+      //  authDomain: "sweet-cow-f5290.firebaseapp.com",
+      //  databaseURL: "https://sweet-cow-f5290.firebaseio.com",
+      //  storageBucket: "sweet-cow-f5290.appspot.com",
 
     });
-
-
-
   }
 
 
@@ -102,79 +99,71 @@ class AppNavigator extends Component {
   }
 
   _renderScene(props) { // eslint-disable-line class-methods-use-this
-
-    // console.warn(props.scene.route.key)
-// return <MyFavorite/>
+    console.log(props.scene.route.key)
+    // return <MyFavorite/>
     switch (props.scene.route.key) {
       case "login":
-          return <Login/>
+        return <Login />
       case "signup":
-          return <SignUp />
+        return <SignUp />
       case "mapView":
-          return <MapView locationId={props.scene.route.locationId}/>
+        return <MapView locationId={props.scene.route.locationId} />
       case "home":
         return <HomeScreen />
       case "shopDetail":
-        return <ShopDetails data={props.scene.route.data}/>
+        return <ShopDetails data={props.scene.route.data} />
       case "myProfile":
-        return <MyProfile/>
+        return <MyProfile />
       case "flavorInfo":
-          return <FlavorInfo/>
+        return <FlavorInfo />
       case "myFavorite":
-          return <MyFavorite/>
+        return <MyFavorite />
       default:
-          return <InitialView />
+        return <InitialView />
 
     }
   }
 
   render() {
-
-
-
-console.warn("1");
-      return (
-        <Drawer
-          ref={(ref) => { this._drawer = ref; }}
-          type="overlay"
-          tweenDuration={150}
-          content={<SideBar />}
-          tapToClose
-          acceptPan={false}
-          onClose={() => this.closeDrawer()}
-          openDrawerOffset={0.2}
-          panCloseMask={0.2}
-          styles={{
-            drawer: {
-              shadowColor: '#000000',
-              shadowOpacity: 0.8,
-              shadowRadius: 3,
+    return (
+      <Drawer
+        ref={(ref) => { this._drawer = ref; }}
+        type="overlay"
+        tweenDuration={150}
+        content={<SideBar />}
+        tapToClose
+        acceptPan={false}
+        onClose={() => this.closeDrawer()}
+        openDrawerOffset={0.2}
+        panCloseMask={0.2}
+        styles={{
+          drawer: {
+            shadowColor: '#000000',
+            shadowOpacity: 0.8,
+            shadowRadius: 3,
+          },
+        }}
+        tweenHandler={(ratio) => {  //eslint-disable-line
+          return {
+            drawer: { shadowRadius: ratio < 0.2 ? ratio * 5 * 5 : 5 },
+            main: {
+              opacity: (2 - ratio) / 2,
             },
-          }}
-          tweenHandler={(ratio) => {  //eslint-disable-line
-            return {
-              drawer: { shadowRadius: ratio < 0.2 ? ratio * 5 * 5 : 5 },
-              main: {
-                opacity: (2 - ratio) / 2,
-              },
-            };
-          }}
-          negotiatePan
-        >
-          <StatusBar
-            backgroundColor={statusBarColor}
-            barStyle="default"
-          />
-          <NavigationCardStack
-            navigationState={this.props.navigation}
-            renderOverlay={this._renderOverlay}
-            renderScene={this._renderScene}
-          />
-        </Drawer>
-      );
-
-
-
+          };
+        }}
+        negotiatePan
+      >
+        <StatusBar
+          backgroundColor={statusBarColor}
+          barStyle="default"
+        />
+        <NavigationCardStack
+          navigationState={this.props.navigation}
+          renderOverlay={this._renderOverlay}
+          renderScene={this._renderScene}
+        />
+      </Drawer>
+    );
   }
 }
 

@@ -54,24 +54,24 @@ class SignUp extends Component {
 
     this.getDeviceToken()
 
-        // this.getFcmToken()
+    // this.getFcmToken()
   }
 
   // getFcmToken(){
-    // FCM.requestPermissions(); // for iOS
-    //     FCM.getFCMToken().then(token => {
-    //
-    //       this.setState({token: token})
-    //         console.log(token)
-    //         console.warn(token)
-    //         // store fcm token in your server
-    //     });
-    //     this.refreshTokenListener = FCM.on(FCMEvent.RefreshToken, (token) => {
-    //       this.setState({token: token})
-    //         console.log(token)
-    //         console.warn(token)
-    //         // fcm token may not be available on first load, catch it here
-    //     });
+  // FCM.requestPermissions(); // for iOS
+  //     FCM.getFCMToken().then(token => {
+  //
+  //       this.setState({token: token})
+  //         console.log(token)
+  //         console.warn(token)
+  //         // store fcm token in your server
+  //     });
+  //     this.refreshTokenListener = FCM.on(FCMEvent.RefreshToken, (token) => {
+  //       this.setState({token: token})
+  //         console.log(token)
+  //         console.warn(token)
+  //         // fcm token may not be available on first load, catch it here
+  //     });
   // }
 
 
@@ -84,54 +84,54 @@ class SignUp extends Component {
   }
 
   popRoute() {
-  this.props.popRoute(this.props.navigation.key);
+    this.props.popRoute(this.props.navigation.key);
   }
 
-  onNameChangeText(name){
-    this.setState({name})
+  onNameChangeText(name) {
+    this.setState({ name })
   }
 
-  onEmailChangeText(email){
-    this.setState({email})
+  onEmailChangeText(email) {
+    this.setState({ email })
   }
 
-  onPasswordChangeText(password){
-      this.setState({password})
+  onPasswordChangeText(password) {
+    this.setState({ password })
   }
 
-  signupButtonPress(){
+  signupButtonPress() {
 
-    if(this.state.name == ""){
+    if (this.state.name == "") {
       Alert.alert(
         'Error',
         'Please enter name.',
       )
     }
-    else if(this.state.email == ""){
+    else if (this.state.email == "") {
       Alert.alert(
         'Error',
         'Please enter email address.',
       )
     }
-    else if(this.state.password == ""){
+    else if (this.state.password == "") {
       Alert.alert(
         'Error',
         'Please enter password.',
       )
     }
-    else{
-      this.setState({isLoading: true})
+    else {
+      this.setState({ isLoading: true })
       this.signup()
     }
   }
 
 
-  async getDeviceToken (){
+  async getDeviceToken() {
 
     try {
       const deviceToken = await AsyncStorage.getItem('@deviceToken:key');
-      if (deviceToken !== undefined && deviceToken !== null){
-          this.setState({deviceToken: deviceToken})
+      if (deviceToken !== undefined && deviceToken !== null) {
+        this.setState({ deviceToken: deviceToken })
         return deviceToken;
       }
       return "";
@@ -145,206 +145,205 @@ class SignUp extends Component {
   async signup() {
 
     try {
-        await firebase.auth()
-            .createUserWithEmailAndPassword(this.state.email, this.state.password).then((userData) =>
-      {
+      await firebase.auth()
+        .createUserWithEmailAndPassword(this.state.email, this.state.password).then((userData) => {
 
 
 
-        try{
-          this.getDeviceToken();
-          let token = this.state.deviceToken;
-          FirDatabase.setUserData(userData.uid, this.state.email, this.state.name, token)
-          setTimeout(() => {
-            let userdataval = {uid:userData.uid, email:this.state.email, name: this.state.name, locationId:null, favorites:[]}
-            this.setUser(userdataval)
+          try {
+            this.getDeviceToken();
+            let token = this.state.deviceToken;
+            FirDatabase.setUserData(userData.uid, this.state.email, this.state.name, token)
+            setTimeout(() => {
+              let userdataval = { uid: userData.uid, email: this.state.email, name: this.state.name, locationId: null, favorites: [] }
+              this.setUser(userdataval)
               this.popRoute()
-              this.setState({isLoading: false})
-          }, 150);
+              this.setState({ isLoading: false })
+            }, 150);
 
-        }
-        catch(error){
+          }
+          catch (error) {
 
-          Alert.alert(
-            'Error',
-            `${error.toString()}`,
-          )
-          this.setState({isLoading: false})
-        }
-      })
+            Alert.alert(
+              'Error',
+              `${error.toString()}`,
+            )
+            this.setState({ isLoading: false })
+          }
+        })
 
-        // Navigate to the Home page, the user is auto logged in
+      // Navigate to the Home page, the user is auto logged in
 
     } catch (error) {
-        console.log(error.toString())
+      console.log(error.toString())
 
-        Alert.alert(
-          'Error',
-          `${error.toString()}`,
-        )
-        this.setState({isLoading: false})
+      Alert.alert(
+        'Error',
+        `${error.toString()}`,
+      )
+      this.setState({ isLoading: false })
     }
 
   }
 
 
-    async loginWithFacebook(){
-      // Attempt a login using the Facebook login dialog,
-  // asking for default permissions.
-  this.setState({isLoading: true})
+  async loginWithFacebook() {
+    // Attempt a login using the Facebook login dialog,
+    // asking for default permissions.
+    this.setState({ isLoading: true })
 
-  await LoginManager.logInWithReadPermissions(['public_profile']).then((result) => {
+    await LoginManager.logInWithReadPermissions(['public_profile']).then((result) => {
       if (result.isCancelled) {
-        this.setState({isLoading: false})
+        this.setState({ isLoading: false })
         alert('Login was cancelled');
 
       } else {
 
-          // console.warn(result.toString());
-          // console.log(result)
-          AccessToken.getCurrentAccessToken().then(
-                    (data) => {
-                      // alert(data.accessToken.toString())
-                      const { accessToken } = data
-                      fetch('https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' + accessToken)
-                      .then((response) => response.json())
-                      .then((json) => {
-                        // Some user object has been set up somewhere, build that user here
+        // console.warn(result.toString());
+        // console.log(result)
+        AccessToken.getCurrentAccessToken().then(
+          (data) => {
+            // alert(data.accessToken.toString())
+            const { accessToken } = data
+            fetch('https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' + accessToken)
+              .then((response) => response.json())
+              .then((json) => {
+                // Some user object has been set up somewhere, build that user here
 
-                        var name = ""
-                        var emailId = ""
-                        if(json.name){
-                          name = json.name
-                        }
-                        if(json.email){
-                          email = json.email
-                        }
+                var name = ""
+                var emailId = ""
+                if (json.name) {
+                  name = json.name
+                }
+                if (json.email) {
+                  email = json.email
+                }
 
-                        const auth = firebase.auth();
-                        const provider = firebase.auth.FacebookAuthProvider;
+                const auth = firebase.auth();
+                const provider = firebase.auth.FacebookAuthProvider;
 
-                        const credential = provider.credential(data.accessToken);
-                        auth.signInWithCredential(credential).then((userData) => {
-                          console.warn(`test ${data}`)
+                const credential = provider.credential(data.accessToken);
+                auth.signInWithCredential(credential).then((userData) => {
+                  console.warn(`test ${data}`)
 
-                          try{
-                            this.getDeviceToken();
-                            let token = this.state.deviceToken
-                            FirDatabase.updateUserData(userData.uid, emailId, name, token)
-                            setTimeout(() => {
-                              // let userdataval = {uid:userData.uid, email:emailId, name: name, locationId:null, favorites:[]}
-                              // this.setUser(userdataval)
-                              //   this.replaceRoute("mapView")
-                              //   this.setState({isLoading: false})
-                              this.getLoginData(userData.uid)
-                            }, 150);
+                  try {
+                    this.getDeviceToken();
+                    let token = this.state.deviceToken
+                    FirDatabase.updateUserData(userData.uid, emailId, name, token)
+                    setTimeout(() => {
+                      // let userdataval = {uid:userData.uid, email:emailId, name: name, locationId:null, favorites:[]}
+                      // this.setUser(userdataval)
+                      //   this.replaceRoute("mapView")
+                      //   this.setState({isLoading: false})
+                      this.getLoginData(userData.uid)
+                    }, 150);
 
-                          }
-                          catch(error){
+                  }
+                  catch (error) {
 
-                            this.setState({isLoading: false})
-                            Alert.alert(
-                              'Error',
-                              `${error.toString()}`,
-                            )
-                            //
-                          }
+                    this.setState({ isLoading: false })
+                    Alert.alert(
+                      'Error',
+                      `${error.toString()}`,
+                    )
+                    //
+                  }
 
-                        })
+                })
 
-                      })
-                      .catch((error) => {
-                        console.warn(`error ${error.toString()}`)
-                        this.setState({isLoading: false})
-                        Alert.alert(
-                          'Error',
-                          `${error.toString()}`,
-                        )
-                        // reject('ERROR GETTING DATA FROM FACEBOOK')
-                      })
-                    }
-                  )
-      }
-    },
-    (error) => {
-      this.setState({isLoading: false})
-      alert('Login failed with error: ' + error);
-    }
-  );
-    }
-
-
-    getLoginData(uid){
-      try{
-        // Listen for UserData Changes
-          this.listenUserData = FirDatabase.listenUserData(uid, (userDataVal) => {
-              console.warn(userDataVal)
-              // console.warn(userDataVal.name)
-              if(userDataVal.email == undefined){
+              })
+              .catch((error) => {
+                console.warn(`error ${error.toString()}`)
+                this.setState({ isLoading: false })
                 Alert.alert(
                   'Error',
-                  '',
+                  `${error.toString()}`,
                 )
-              }
-              else{
-                this.setUser(userDataVal)
-                this.setState({isLoading: false})
-                this.popRoute()
-              }
-          });
-
-      }
-      catch(error){
-        console.warn(`setError: ${error.toString()}`);
-        this.setState({isLoading: false})
-        Alert.alert(
-          'Error',
-          `${error.toString()}`,
+                // reject('ERROR GETTING DATA FROM FACEBOOK')
+              })
+          }
         )
-
       }
+    },
+      (error) => {
+        this.setState({ isLoading: false })
+        alert('Login failed with error: ' + error);
+      }
+    );
+  }
+
+
+  getLoginData(uid) {
+    try {
+      // Listen for UserData Changes
+      this.listenUserData = FirDatabase.listenUserData(uid, (userDataVal) => {
+        console.warn(userDataVal)
+        // console.warn(userDataVal.name)
+        if (userDataVal.email == undefined) {
+          Alert.alert(
+            'Error',
+            '',
+          )
+        }
+        else {
+          this.setUser(userDataVal)
+          this.setState({ isLoading: false })
+          this.popRoute()
+        }
+      });
+
     }
+    catch (error) {
+      console.warn(`setError: ${error.toString()}`);
+      this.setState({ isLoading: false })
+      Alert.alert(
+        'Error',
+        `${error.toString()}`,
+      )
+
+    }
+  }
 
 
   render() {
-    let deviceHeightDiff = deviceHeight/568.0
-    if(deviceHeightDiff > 1){
+    let deviceHeightDiff = deviceHeight / 568.0
+    if (deviceHeightDiff > 1) {
       deviceHeightDiff += 0.25
     }
     return (
       <Container>
-        <Content bounces={false} style={{flex: 1, flexDirection: 'column', backgroundColor: 'white'}}>
-        <Image source={background} style={{flex: 1, width: deviceWidth, height: deviceHeight, resizeMode: 'stretch', marginLeft:3}}>
-          <Image source={logoCow} style={{width: deviceWidth/2.2, height: deviceHeight/6.2, alignSelf:'center', marginTop: 30*deviceHeightDiff, resizeMode: 'contain'}}/>
-          <Image source={logo_title} style={{width: deviceWidth/2.2, height: deviceHeight/8.0, alignSelf:'center', marginTop: -10, resizeMode: 'contain'}}/>
-          <View style={{marginTop: 10*deviceHeightDiff}}>
-          <TextField width={deviceWidth * 0.85} labelName="NAME:"  iconImage={user_icon} onChangeText={(text)=>this.onNameChangeText(text)}/>
-          </View>
-          <View style={{marginTop: 10*deviceHeightDiff}}>
-          <TextField width={deviceWidth * 0.85} labelName="EMAIL:" iconImage={email_icon} onChangeText={(text)=>this.onEmailChangeText(text)}/>
-          </View>
-          <View style={{marginTop: 10*deviceHeightDiff}}>
-          <TextField width={deviceWidth * 0.85} labelName="PASSWORD:" iconImage={password_icon} isSecureEntry={true} onChangeText={(text)=>this.onPasswordChangeText(text)}/>
-          </View>
-          <View style={{marginTop: 12*deviceHeightDiff}}>
-          <CustomButton width={deviceWidth * 0.85} text="SIGN UP" backgroundColor="#5B82B8" onPress={()=>this.signupButtonPress()}/>
-          </View>
+        <Content bounces={false} style={{ flex: 1, flexDirection: 'column', backgroundColor: 'white' }}>
+          <Image source={background} style={{ flex: 1, width: deviceWidth, height: deviceHeight, resizeMode: 'stretch', marginLeft: 3 }}>
+            <Image source={logoCow} style={{ width: deviceWidth / 2.2, height: deviceHeight / 6.2, alignSelf: 'center', marginTop: 30 * deviceHeightDiff, resizeMode: 'contain' }} />
+            <Image source={logo_title} style={{ width: deviceWidth / 2.2, height: deviceHeight / 8.0, alignSelf: 'center', marginTop: -10, resizeMode: 'contain' }} />
+            <View style={{ marginTop: 10 * deviceHeightDiff }}>
+              <TextField width={deviceWidth * 0.85} labelName="NAME:" iconImage={user_icon} onChangeText={(text) => this.onNameChangeText(text)} />
+            </View>
+            <View style={{ marginTop: 10 * deviceHeightDiff }}>
+              <TextField width={deviceWidth * 0.85} labelName="EMAIL:" iconImage={email_icon} onChangeText={(text) => this.onEmailChangeText(text)} />
+            </View>
+            <View style={{ marginTop: 10 * deviceHeightDiff }}>
+              <TextField width={deviceWidth * 0.85} labelName="PASSWORD:" iconImage={password_icon} isSecureEntry={true} onChangeText={(text) => this.onPasswordChangeText(text)} />
+            </View>
+            <View style={{ marginTop: 12 * deviceHeightDiff }}>
+              <CustomButton width={deviceWidth * 0.85} text="SIGN UP" backgroundColor="#5B82B8" onPress={() => this.signupButtonPress()} />
+            </View>
 
-          <View style={{justifyContent:'center', flexDirection:'row',marginTop: 12*deviceHeightDiff, backgroundColor:'rgba(0,0,0,0)'}}>
-          <Text style={{marginTop:-6, fontFamily:'ProximaNova-Regular', color: "rgba(27,13,99,1)", alignSelf:'center'}}>. . . </Text>
-          <Text style={{fontFamily:'ProximaNova-Regular', color: "rgba(27,13,99,1)", alignSelf:'center'}}>OR CONNECT WITH</Text>
-          <Text style={{marginTop:-6, fontFamily:'ProximaNova-Regular', color: "rgba(27,13,99,1)", alignSelf:'center'}}> . . .</Text>
-          </View>
-          <View style={{marginTop: 12*deviceHeightDiff}}>
-          <CustomButton width={deviceWidth * 0.85} text="FACEBOOK" backgroundColor="#422575" onPress={()=>this.loginWithFacebook()}/>
-          </View>
-          <View style={{marginTop: 10*deviceHeightDiff, flex: 1, flexDirection: 'row',backgroundColor:'rgba(0,0,0,0)', justifyContent:'center'}}>
-          <Text> Already have an account? </Text>
-          <HyperlinkButton width={deviceWidth * 0.25} text="Login" textColor="rgba(27,13,99,1)" fontSize={15} onPress={()=>this.replaceRoute("login")}/>
-          </View>
-        </Image>
+            <View style={{ justifyContent: 'center', flexDirection: 'row', marginTop: 12 * deviceHeightDiff, backgroundColor: 'rgba(0,0,0,0)' }}>
+              <Text style={{ marginTop: -6, fontFamily: 'ProximaNova-Regular', color: "rgba(27,13,99,1)", alignSelf: 'center' }}>. . . </Text>
+              <Text style={{ fontFamily: 'ProximaNova-Regular', color: "rgba(27,13,99,1)", alignSelf: 'center' }}>OR CONNECT WITH</Text>
+              <Text style={{ marginTop: -6, fontFamily: 'ProximaNova-Regular', color: "rgba(27,13,99,1)", alignSelf: 'center' }}> . . .</Text>
+            </View>
+            <View style={{ marginTop: 12 * deviceHeightDiff }}>
+              <CustomButton width={deviceWidth * 0.85} text="FACEBOOK" backgroundColor="#422575" onPress={() => this.loginWithFacebook()} />
+            </View>
+            <View style={{ marginTop: 10 * deviceHeightDiff, flex: 1, flexDirection: 'row', backgroundColor: 'rgba(0,0,0,0)', justifyContent: 'center' }}>
+              <Text> Already have an account? </Text>
+              <HyperlinkButton width={deviceWidth * 0.25} text="Login" textColor="rgba(27,13,99,1)" fontSize={15} onPress={() => this.replaceRoute("login")} />
+            </View>
+          </Image>
 
-        <Loading isLoading={this.state.isLoading}/>
+          <Loading isLoading={this.state.isLoading} />
         </Content>
       </Container>
     );

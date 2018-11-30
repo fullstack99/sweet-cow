@@ -5,61 +5,57 @@ import { Item, Icon, Input } from 'native-base';
 const deviceWidth = Dimensions.get('window').width;
 
 
-export default class Pulse extends Component{
-
+export default class Pulse extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-    alpha: 1,
-    radius:0
-  };
-}
+      alpha: 1,
+      radius: 0
+    };
+  }
 
-
-  componentDidMount(){
+  componentDidMount() {
     this.startFaddingCircle()
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     clearInterval(this.timer)
   }
 
-  startFaddingCircle(){
+  startFaddingCircle() {
     this.timer = setInterval(() => {
       this.fadingCircleRadius()
     }, 100);
   }
 
-  fadingCircleRadius(){
-    var  radius = this.state.radius
+  fadingCircleRadius() {
+    var radius = this.state.radius
     radius += 5
-    var  alpha = this.state.alpha
+    var alpha = this.state.alpha
     alpha -= 0.05
-    if(radius >= 100){
+    if (radius >= 100) {
       radius = 0
       alpha = 1
     }
-    this.setState({radius: radius, alpha:alpha})
+    this.setState({ radius: radius, alpha: alpha })
 
 
   }
 
-
-
-  render(){
+  render() {
 
     var alpha = this.state.alpha
     var radius = this.state.radius
-    let color = 'rgba(37, 0, 97,' + alpha +')'
-    var offset = (100 - radius)/2
+    let color = 'rgba(37, 0, 97,' + alpha + ')'
+    var offset = (100 - radius) / 2
 
-    return(
-      <View accessible={false} pointerEvents="none" style={{width: 100, height: 100, justifyContent:'center'}}>
-      <View accessible={false} style={{backgroundColor:color, height:radius,width:radius, borderRadius:radius/2, justifyContent:'center', alignSelf: "center" }}>
-      <View accessible={false} style={{height:10 , width: 10, backgroundColor:'rgba(37, 0, 97,1)', borderRadius:5, alignSelf: 'center'}}>
-      </View>
-      </View>
+    return (
+      <View accessible={false} pointerEvents="none" style={{ width: 100, height: 100, justifyContent: 'center' }}>
+        <View accessible={false} style={{ backgroundColor: color, height: radius, width: radius, borderRadius: radius / 2, justifyContent: 'center', alignSelf: "center" }}>
+          <View accessible={false} style={{ height: 10, width: 10, backgroundColor: 'rgba(37, 0, 97,1)', borderRadius: 5, alignSelf: 'center' }}>
+          </View>
+        </View>
       </View>
 
     );

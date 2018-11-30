@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <deployment version="4112" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -15,6 +16,20 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fbC-f3-jKy">
+                    <rect key="frame" x="0.0" y="0.0" width="480" height="240"/>
+                    <color key="backgroundColor" red="0.72671514749526978" green="0.81318771839141846" blue="0.95501881837844849" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="240" id="Bjw-t5-Bw3"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TG9-G8-NyK">
+                    <rect key="frame" x="0.0" y="240" width="480" height="240"/>
+                    <color key="backgroundColor" red="0.40302670001983643" green="0.52794671058654785" blue="0.72230976819992065" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="240" id="JPj-cd-Mav"/>
+                    </constraints>
+                </view>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sweet-cow-loading-screen" translatesAutoresizingMaskIntoConstraints="NO" id="IIK-es-acn">
                     <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
                 </imageView>
@@ -22,16 +37,23 @@
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="IIK-es-acn" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="8MQ-Sd-hD8"/>
-                <constraint firstItem="IIK-es-acn" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="ETP-aM-LUC"/>
-                <constraint firstAttribute="bottom" secondItem="IIK-es-acn" secondAttribute="bottom" id="qjd-Yc-FAr"/>
+                <constraint firstItem="TG9-G8-NyK" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" id="93W-0F-otc"/>
+                <constraint firstItem="fbC-f3-jKy" firstAttribute="leading" secondItem="Q2N-Hk-9WZ" secondAttribute="leading" id="ByT-ea-VC0"/>
+                <constraint firstItem="IIK-es-acn" firstAttribute="top" secondItem="Q2N-Hk-9WZ" secondAttribute="top" constant="-20" id="ETP-aM-LUC"/>
+                <constraint firstItem="TG9-G8-NyK" firstAttribute="trailing" secondItem="Q2N-Hk-9WZ" secondAttribute="trailing" id="OP8-U0-qNJ"/>
+                <constraint firstItem="fbC-f3-jKy" firstAttribute="trailing" secondItem="Q2N-Hk-9WZ" secondAttribute="trailing" id="TaH-Ak-UVa"/>
+                <constraint firstItem="TG9-G8-NyK" firstAttribute="leading" secondItem="Q2N-Hk-9WZ" secondAttribute="leading" id="VJD-d4-EqG"/>
+                <constraint firstItem="fbC-f3-jKy" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="imR-6S-q9P"/>
+                <constraint firstItem="Q2N-Hk-9WZ" firstAttribute="bottom" secondItem="IIK-es-acn" secondAttribute="bottom" id="qjd-Yc-FAr"/>
                 <constraint firstAttribute="trailing" secondItem="IIK-es-acn" secondAttribute="trailing" id="v5d-Q8-R4I"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="Q2N-Hk-9WZ"/>
             <point key="canvasLocation" x="548" y="455"/>
         </view>
     </objects>
     <resources>
-        <image name="sweet-cow-loading-screen" width="736" height="1184"/>
+        <image name="sweet-cow-loading-screen" width="1242" height="2208"/>
     </resources>
 </document>

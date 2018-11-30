@@ -295,9 +295,6 @@ class MapView extends Component {
     });
   }
 
-
-
-
   async getCurrentLocationIfPermission() {
     this.setState({ isLoading: true })
 
@@ -328,10 +325,6 @@ class MapView extends Component {
       this.getLocationList()
       alert(JSON.stringify(err))
     }
-
-
-
-
   }
 
 
@@ -366,7 +359,7 @@ class MapView extends Component {
     fetch('http://sweetcowicecream.com/api.v2.2.php')
       .then((response) => response.json())
       .then((responseJson) => {
-        
+
         let shopsArray = []
         let searchShopArray = []
         let appInfoArray = []
@@ -377,7 +370,7 @@ class MapView extends Component {
                 // console.warn(shop.storeId);
                 // let shopElement = { 'location': shop.storeId, 'address': shop.shortaddress, 'flavors': shop.store_data, 'hours': null, 'id': shop.storeId, 'phone': shop.phone1, 'state': shop.state, 'zip_code': shop.postalCode, 'dayhourseconds': shop.dayhourseconds, 'dayhours': shop.dayhours, 'city': shop.city }
                 // searchShopArray.push(shopElement)
-  
+
               } else {
                 let shopElement = { 'location': shop.storeId, 'address': shop.shortaddress, 'flavors': shop.store_data, 'hours': null, 'id': shop.storeId, 'phone': shop.phone1, 'state': shop.state, 'zip_code': shop.postalCode, 'dayhourseconds': shop.dayhourseconds, 'dayhours': shop.dayhours, 'city': shop.city }
                 shopsArray.push(shopElement)
@@ -388,15 +381,15 @@ class MapView extends Component {
               appInfoArray.push(shopElement)
               console.warn(shop.app_info_content.home_initial_image);
               searchShopArray = shop.flavors
-  
+
             }
-  
+
           })
         } else{
           this.setState({ isLoading: false })
           return null
         }
-      
+
         this.setState({ isLoading: true, shops: shopsArray })
         this.props.setSearchData(searchShopArray);
         this.props.setAppInfoData(appInfoArray);

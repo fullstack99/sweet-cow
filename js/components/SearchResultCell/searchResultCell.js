@@ -3,8 +3,6 @@ import { Text, Dimensions, Image, TouchableOpacity } from 'react-native';
 import { Container, Content, Button, View, ListItem } from 'native-base';
 import { toTitleCase } from '../../utils/';
 
-
-
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
@@ -23,9 +21,9 @@ export default class SearchResultCell extends Component {
 
   getAvailableFlavours(fulladdress, distanceFormatted) {
     return (
-      <TouchableOpacity style={{ flexDirection: 'row',  width: deviceWidth * 0.63 }} onPress={() => this.props.onPress(fulladdress)}>
+      <TouchableOpacity style={{ flexDirection: 'row', width: deviceWidth * 0.63 }} onPress={() => this.props.onPress(fulladdress)}>
         <Image source={miles_icon} style={{ marginTop: 3, width: deviceWidth / 22, height: deviceWidth / 22, resizeMode: 'contain' }} />
-        <Text style={{ marginTop: 2, marginBottom: 10, alignSelf: 'center',  fontSize: 15, textDecorationLine: 'underline', fontFamily: 'ProximaNova-Regular', color: 'rgba(37, 0, 97, 1)' }}>  {distanceFormatted}</Text>
+        <Text style={{ marginTop: 2, marginBottom: 10, alignSelf: 'center', fontSize: 15, textDecorationLine: 'underline', fontFamily: 'ProximaNova-Regular', color: 'rgba(37, 0, 97, 1)' }}>  {distanceFormatted}</Text>
       </TouchableOpacity>
     )
   }
@@ -33,9 +31,9 @@ export default class SearchResultCell extends Component {
   getUnavailableFlavors(fulladdress, distanceFormatted) {
     return (
       <View style={{}}>
-        <Text style={{  fontSize: 15, marginTop:5, fontFamily: 'ProximaNova-Regular', color: 'rgba(37, 0, 97, 1)' }}>  Flavor currently unavailable</Text>
-        </View>
-      
+        <Text style={{ fontSize: 15, marginTop: 5, fontFamily: 'ProximaNova-Regular', color: 'rgba(37, 0, 97, 1)' }}>  Flavor currently unavailable</Text>
+      </View>
+
     )
   }
 
@@ -57,10 +55,10 @@ export default class SearchResultCell extends Component {
 
     let fulladdress = shop.address + '+' + shop.location + ',+' + shop.state + '+' + shop.zip_code
 
-let shopID = 'unavailable'
-if(shop && shop.id){
-  shopID = shop.id
-}
+    let shopID = 'unavailable'
+    if (shop && shop.id) {
+      shopID = shop.id
+    }
 
     let element = { flavorName: this.props.flavorData.flavor, shopId: shopID, isFavorite: this.props.isFavorite, key: this.props.favKey }
 
@@ -83,7 +81,6 @@ if(shop && shop.id){
     } else {
       secondRow = this.getUnavailableFlavors()
     }
-
 
     return (
 

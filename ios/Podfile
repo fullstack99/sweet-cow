@@ -21,6 +21,8 @@ target 'SweetCow' do
   ]
 
   pod 'GoogleMaps'  # <~~ remove this line if you do not want to support GoogleMaps on iOS
+  pod 'Firebase', '4.3.0'
+  pod 'Firebase/Core'
   pod 'Firebase/Messaging'
  # pod 'KarmiesSDK'
 

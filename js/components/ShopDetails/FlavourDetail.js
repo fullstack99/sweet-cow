@@ -5,8 +5,6 @@ import FlavorInfo from '../FlavorInfo/'
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
-
-
 const styles = StyleSheet.create({
   overlayView: {
     flex: 1,
@@ -27,7 +25,7 @@ const styles = StyleSheet.create({
 
 });
 
-export default class FlavourDetail extends Component{
+export default class FlavourDetail extends Component {
 
   static propTypes = {
     isInfoMode: React.PropTypes.bool
@@ -39,16 +37,16 @@ export default class FlavourDetail extends Component{
     isInfoMode: false
   };
 
-  render(){
+  render() {
 
-    if(this.props.isInfoMode == true){
-      return(
+    if (this.props.isInfoMode == true) {
+      return (
         <View style={styles.overlayView}>
-          <FlavorInfo flavorData={this.props.flavorData} crossAction={this.props.crossAction} setFavoritesAction={(flavorData,isFavorite)=>this.props.setFavoritesAction(flavorData, isFavorite)}/>
+          <FlavorInfo flavorData={this.props.flavorData} crossAction={this.props.crossAction} setFavoritesAction={(flavorData, isFavorite) => this.props.setFavoritesAction(flavorData, isFavorite)} />
         </View>
       )
     }
-    else{
+    else {
       return null
     }
 

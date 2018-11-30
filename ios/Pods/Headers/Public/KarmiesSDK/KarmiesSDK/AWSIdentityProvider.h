@@ -1,1 +1,0 @@
-../../../../KarmiesSDK/KarmiesSDK.framework/Headers/AWSIdentityProvider.h

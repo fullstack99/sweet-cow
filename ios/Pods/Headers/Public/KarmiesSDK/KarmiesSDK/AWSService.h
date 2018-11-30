@@ -1,1 +1,0 @@
-../../../../KarmiesSDK/KarmiesSDK.framework/Headers/AWSService.h

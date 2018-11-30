@@ -13,8 +13,6 @@ import { setUser } from '../../actions/user';
 import SearchResults from "../SearchScreen/SearchResults"
 import { toTitleCase } from '../../utils/';
 
-
-
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
@@ -32,8 +30,8 @@ const home_icon = require('../../../images/home-icon.png');
 
 const {
   replaceAt,
-    popRoute,
-    pushRoute,
+  popRoute,
+  pushRoute,
 } = actions;
 
 class MyProfile extends Component {
@@ -59,18 +57,18 @@ class MyProfile extends Component {
   }
 
   componentDidMount() {
-    this.setState({homeLocationId: this.props.user.locationId})
+    this.setState({ homeLocationId: this.props.user.locationId })
   }
 
-  logoutButtonPressed(){
-    this.setState({isLoading: true})
+  logoutButtonPressed() {
+    this.setState({ isLoading: true })
     this.logout()
   }
 
   async logout() {
     try {
       await firebase.auth().signOut();
-      this.setState({isLoading: false})
+      this.setState({ isLoading: false })
       this.replaceRoute("mapView")
 
     } catch (error) {
@@ -96,83 +94,83 @@ class MyProfile extends Component {
 
   }
 
-  pushRoute(route){
+  pushRoute(route) {
     this.props.pushRoute({ key: route }, this.props.navigation.key);
   }
 
   popRoute() {
-  this.props.popRoute(this.props.navigation.key);
+    this.props.popRoute(this.props.navigation.key);
   }
 
-  logoClicked(){
+  logoClicked() {
     this.mapButtonClicked()
   }
 
-  loginButtonPressed(){
+  loginButtonPressed() {
     this.loginConfimation()
   }
 
-  openMyFavorites(){
+  openMyFavorites() {
 
-    if(this.props.user){
-    let routes = this.props.navigation.routes
-    let tempRoute = []
-    routes.map((route)=>{
-      if(route.key === "mapView"){
-        tempRoute.push(route)
+    if (this.props.user) {
+      let routes = this.props.navigation.routes
+      let tempRoute = []
+      routes.map((route) => {
+        if (route.key === "mapView") {
+          tempRoute.push(route)
+        }
+      })
+
+      var isContainFavourite = false
+
+      routes.map((route) => {
+        if (route.key === "myFavorite") {
+          tempRoute.push(route)
+          isContainFavourite = true
+        }
+      })
+
+
+      console.warn(this.props.navigation.key);
+
+      if (isContainFavourite === true) {
+        tempRoute.push(routes[routes.length - 1])
+        routes = []
+        routes = tempRoute
+        this.props.navigation.routes = routes
+        this.popRoute()
       }
-    })
-
-    var isContainFavourite = false
-
-    routes.map((route)=>{
-      if(route.key === "myFavorite"){
-        tempRoute.push(route)
-        isContainFavourite = true
+      else {
+        this.props.pushRoute({ key: 'myFavorite' }, this.props.navigation.key);
       }
-    })
-
-
-    console.warn(this.props.navigation.key);
-
-    if(isContainFavourite === true){
-      tempRoute.push(routes[routes.length - 1])
-      routes = []
-      routes = tempRoute
-      this.props.navigation.routes = routes
-      this.popRoute()
+    } else {
+      this.loginConfimation()
     }
-    else{
-    this.props.pushRoute({ key: 'myFavorite'}, this.props.navigation.key);
-  }
-}else{
-  this.loginConfimation()
-}
   }
 
-  loginConfimation(){
+  loginConfimation() {
     Alert.alert(
-  'Confirm',
-  'This action requires login, do you want to login or create an account?',
-  [
-  {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-  {text: 'Yes', onPress: () => this.goToLogin()},
-  ],
-  { cancelable: false }
-  )
+      'Confirm',
+      'This action requires login, do you want to login or create an account?',
+      [
+        { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+        { text: 'Yes', onPress: () => this.goToLogin() },
+      ],
+      { cancelable: false }
+    )
   }
 
 
-  goToLogin(){
-    this.props.pushRoute({ key: 'home'}, this.props.navigation.key);
+  goToLogin() {
+    this.props.pushRoute({ key: 'home' }, this.props.navigation.key);
   }
 
-  mapButtonClicked (){
+  mapButtonClicked() {
     let routes = this.props.navigation.routes
 
     let tempRoute = []
-    routes.map((route)=>{
-      if(route.key === "mapView"){
+    routes.map((route) => {
+      if (route.key === "mapView") {
         tempRoute.push(route)
       }
     })
@@ -184,24 +182,24 @@ class MyProfile extends Component {
     this.popRoute()
   }
 
-  onEmailChangeText(email){
-      this.setState({email})
+  onEmailChangeText(email) {
+    this.setState({ email })
   }
 
-  onNameChangeText(name){
-      this.setState({name})
+  onNameChangeText(name) {
+    this.setState({ name })
   }
 
-  async resetPassword(){
+  async resetPassword() {
     try {
       await firebase.auth().sendPasswordResetEmail(this.props.user.email).then(() => {
-        this.setState({isLoading: false})
+        this.setState({ isLoading: false })
         Alert.alert(
           'Success',
           'Reset link sent to your email.'
         )
       }), (error) => {
-        this.setState({isLoading: false})
+        this.setState({ isLoading: false })
         Alert.alert(
           'Error',
           `${error.toString()}`,
@@ -209,8 +207,8 @@ class MyProfile extends Component {
       }
 
     }
-    catch(error){
-      this.setState({isLoading: false})
+    catch (error) {
+      this.setState({ isLoading: false })
       Alert.alert(
         'Error',
         `${error.toString()}`,
@@ -218,224 +216,224 @@ class MyProfile extends Component {
     }
   }
 
-  uiForFaceBookLogin(){
-    return(
-      <View style={{marginBottom:2, marginTop: 20,  backgroundColor: 'rgba(86,107,155,1)', height: deviceHeight*0.076, width:deviceWidth * 0.85, justifyContent:'center', alignSelf:'center'}}>
-          <Text style={{ alignSelf:'center', fontSize: 18, fontFamily: 'ProximaNova-Regular', color: 'white'}}> Logged In with Facebook </Text>
+  uiForFaceBookLogin() {
+    return (
+      <View style={{ marginBottom: 2, marginTop: 20, backgroundColor: 'rgba(86,107,155,1)', height: deviceHeight * 0.076, width: deviceWidth * 0.85, justifyContent: 'center', alignSelf: 'center' }}>
+        <Text style={{ alignSelf: 'center', fontSize: 18, fontFamily: 'ProximaNova-Regular', color: 'white' }}> Logged In with Facebook </Text>
       </View>
     )
   }
 
-  uiForEmailLogin(){
-    return(<View>
-          <View style={{marginLeft: deviceWidth*0.075, flexDirection:'row', marginTop: 20}}>
-            <Image source={email_icon} style={{ width: 20,height:20, resizeMode: 'contain'}}/>
-            <Text style={{marginLeft:10 , marginTop: 4, fontSize: 20, color: 'rgba(29, 16, 96, 1)', fontFamily:"Trade Gothic LT Std"}}> EMAIL: </Text>
-        </View>
-        <TextField width={deviceWidth * 0.85} labelName={this.props.user.email} isEditable={false} onChangeText={(text)=>this.onEmailChangeText(text)}/>
+  uiForEmailLogin() {
+    return (<View>
+      <View style={{ marginLeft: deviceWidth * 0.075, flexDirection: 'row', marginTop: 20 }}>
+        <Image source={email_icon} style={{ width: 20, height: 20, resizeMode: 'contain' }} />
+        <Text style={{ marginLeft: 10, marginTop: 4, fontSize: 20, color: 'rgba(29, 16, 96, 1)', fontFamily: "Trade Gothic LT Std" }}> EMAIL: </Text>
+      </View>
+      <TextField width={deviceWidth * 0.85} labelName={this.props.user.email} isEditable={false} onChangeText={(text) => this.onEmailChangeText(text)} />
 
-        <View style={{marginLeft: deviceWidth*0.075, flexDirection:'row', marginTop: 20}}>
-            <Image source={password_icon} style={{ width: 20,height:20, resizeMode: 'contain'}}/>
-            <Text style={{marginLeft:10 , marginTop: 4, fontSize: 20, color: 'rgba(29, 16, 96, 1)', fontFamily:"Trade Gothic LT Std"}}> PASSWORD: </Text>
-        </View>
+      <View style={{ marginLeft: deviceWidth * 0.075, flexDirection: 'row', marginTop: 20 }}>
+        <Image source={password_icon} style={{ width: 20, height: 20, resizeMode: 'contain' }} />
+        <Text style={{ marginLeft: 10, marginTop: 4, fontSize: 20, color: 'rgba(29, 16, 96, 1)', fontFamily: "Trade Gothic LT Std" }}> PASSWORD: </Text>
+      </View>
 
 
-        <View style={{backgroundColor: 'rgba(255,255,255,0.95)',
+      <View style={{
+        backgroundColor: 'rgba(255,255,255,0.95)',
         borderWidth: 2,
         borderColor: '#6b8ac3',
         height: 50,
         alignSelf: 'center',
-        flexDirection: 'row', width: deviceWidth * 0.85}}>
+        flexDirection: 'row', width: deviceWidth * 0.85
+      }}>
 
         <TextInput placeholder="*******" placeholderTextColor='#1f1360'
-          style={{flex: 1, marginLeft: 20,marginTop:8, color: '#1f1360', fontSize: 20}}
-          onChangeText={(text)=>this.onEmailChangeText(text)}
+          style={{ flex: 1, marginLeft: 20, marginTop: 8, color: '#1f1360', fontSize: 20 }}
+          onChangeText={(text) => this.onEmailChangeText(text)}
           secureTextEntry={true}
           editable={false}
           underlineColorAndroid='rgba(0,0,0,0)'
           autoCorrect={false}
         />
-        </View>
+      </View>
 
-        <View style={{marginLeft: deviceWidth*0.075, marginTop: 10, alignSelf:'flex-start'}}>
-            <HyperlinkButton width={deviceWidth * 0.15} text="Reset Password" textColor="#422575" fontSize={15} onPress={()=>this.resetPassword()}/>
-        </View>
-  </View>
-  )
-}
-
-resetHomeLocationButtonPressed(){
-  var locationId = -1
-  try{
-    FirDatabase.setHomeLocation(this.props.user.uid, locationId)
-    this.setState({homeLocationId: locationId})
-    let user = this.props.user
-    user.locationId = locationId
-    this.setUser(user)
-
-  }
-  catch(error){
-
-    this.setState({isLoading: false})
-    Alert.alert(
-      'Error',
-      `${error.toString()}`,
+      <View style={{ marginLeft: deviceWidth * 0.075, marginTop: 10, alignSelf: 'flex-start' }}>
+        <HyperlinkButton width={deviceWidth * 0.15} text="Reset Password" textColor="#422575" fontSize={15} onPress={() => this.resetPassword()} />
+      </View>
+    </View>
     )
   }
-}
 
-resetHomeLocation(){
-  return(
-    <HyperlinkButton width={deviceWidth * 0.15} text="Reset" textColor="white" fontSize={15} onPress={()=>this.resetHomeLocationButtonPressed()}/>
-  )
-}
+  resetHomeLocationButtonPressed() {
+    var locationId = -1
+    try {
+      FirDatabase.setHomeLocation(this.props.user.uid, locationId)
+      this.setState({ homeLocationId: locationId })
+      let user = this.props.user
+      user.locationId = locationId
+      this.setUser(user)
 
-onSearchButtonClicked() {
-  if(this.state.isSearchMode == true){
-    this.setState({isSearchMode: false})
-  }else{
-    this.setState({isSearchMode: true})
+    }
+    catch (error) {
+
+      this.setState({ isLoading: false })
+      Alert.alert(
+        'Error',
+        `${error.toString()}`,
+      )
+    }
   }
-}
 
-searchDismiss() {
-  this.setState({isSearchMode: false})
-}
+  resetHomeLocation() {
+    return (
+      <HyperlinkButton width={deviceWidth * 0.15} text="Reset" textColor="white" fontSize={15} onPress={() => this.resetHomeLocationButtonPressed()} />
+    )
+  }
+
+  onSearchButtonClicked() {
+    if (this.state.isSearchMode == true) {
+      this.setState({ isSearchMode: false })
+    } else {
+      this.setState({ isSearchMode: true })
+    }
+  }
+
+  searchDismiss() {
+    this.setState({ isSearchMode: false })
+  }
 
 
-setUser(user) {
-  this.props.setUser(user);
-}
+  setUser(user) {
+    this.props.setUser(user);
+  }
 
   render() {
-let borderwidth = 6
+    let borderwidth = 6
 
-    if(this.props.user){
+    if (this.props.user) {
 
 
       let emailOrFacebookView = this.uiForEmailLogin()
-      if(this.props.user.email === ''){
+      if (this.props.user.email === '') {
         emailOrFacebookView = this.uiForFaceBookLogin()
       }
       let homeLocationText = 'No Home Location Set'
       let homeLocationName = ''
       let resetButton = null
-      if(this.state.homeLocationId !== -1 || this.state.homeLocationId !== undefined){
-          this.props.distanceArray.map((obj)=>{
-            if(obj.coordinatesObj.shop !== null && obj.coordinatesObj.shop.id === this.state.homeLocationId){
-              homeLocationText = 'HOME LOCATION:'
-              homeLocationName = toTitleCase(obj.coordinatesObj.shop.location)
-              resetButton = this.resetHomeLocation()
-            }
-          })
+      if (this.state.homeLocationId !== -1 || this.state.homeLocationId !== undefined) {
+        this.props.distanceArray.map((obj) => {
+          if (obj.coordinatesObj.shop !== null && obj.coordinatesObj.shop.id === this.state.homeLocationId) {
+            homeLocationText = 'HOME LOCATION:'
+            homeLocationName = toTitleCase(obj.coordinatesObj.shop.location)
+            resetButton = this.resetHomeLocation()
+          }
+        })
 
       }
 
       return (
         <Container>
 
-        <View style={{width: deviceWidth, height: deviceHeight * 0.14, flexDirection:'row'}}>
-          <TouchableOpacity onPress={()=>this.logoClicked()}>
-            <Image source={logoCow} style={{marginLeft: 10, width: deviceWidth/2.2, height: deviceHeight/6.2, alignSelf:'flex-start', marginTop: 0, resizeMode: 'contain'}}/>
-          </TouchableOpacity>
-            <TouchableOpacity onPress={()=>this.mapButtonClicked()}>
-                <Image source={map_icon} style={{marginLeft: 25, marginTop: 25, width: deviceWidth/12, height: deviceHeight/12, resizeMode: 'contain'}}/>
+          <View style={{ width: deviceWidth, height: deviceHeight * 0.14, flexDirection: 'row' }}>
+            <TouchableOpacity onPress={() => this.logoClicked()}>
+              <Image source={logoCow} style={{ marginLeft: 10, width: deviceWidth / 2.2, height: deviceHeight / 6.2, alignSelf: 'flex-start', marginTop: 0, resizeMode: 'contain' }} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.mapButtonClicked()}>
+              <Image source={map_icon} style={{ marginLeft: 25, marginTop: 25, width: deviceWidth / 12, height: deviceHeight / 12, resizeMode: 'contain' }} />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={()=>this.onSearchButtonClicked()}>
-                <Image source={search_icon} style={{marginLeft: 8, marginTop: 25, width: deviceWidth/12, height: deviceHeight/12, resizeMode: 'contain'}}/>
+            <TouchableOpacity onPress={() => this.onSearchButtonClicked()}>
+              <Image source={search_icon} style={{ marginLeft: 8, marginTop: 25, width: deviceWidth / 12, height: deviceHeight / 12, resizeMode: 'contain' }} />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={()=>this.openMyFavorites()}>
-                <Image source={favorite_icon} style={{marginLeft: 8, marginTop: 25, width: deviceWidth/12, height: deviceHeight/12, resizeMode: 'contain'}}/>
+            <TouchableOpacity onPress={() => this.openMyFavorites()}>
+              <Image source={favorite_icon} style={{ marginLeft: 8, marginTop: 25, width: deviceWidth / 12, height: deviceHeight / 12, resizeMode: 'contain' }} />
             </TouchableOpacity>
 
             <TouchableOpacity>
-                <Image source={user_icon} style={{marginLeft: 8, marginTop: 25, width: deviceWidth/12, height: deviceHeight/12, resizeMode: 'contain'}}/>
+              <Image source={user_icon} style={{ marginLeft: 8, marginTop: 25, width: deviceWidth / 12, height: deviceHeight / 12, resizeMode: 'contain' }} />
             </TouchableOpacity>
-        </View>
+          </View>
 
-        <View style={{marginLeft:borderwidth/2, marginTop:-borderwidth, backgroundColor:'rgba(29, 16, 96, 1)', width: deviceWidth, height:borderwidth}}>
-        </View>
+          <View style={{ marginLeft: borderwidth / 2, marginTop: -borderwidth, backgroundColor: 'rgba(29, 16, 96, 1)', width: deviceWidth, height: borderwidth }}>
+          </View>
 
 
-            <View style={{flexDirection:'column', justifyContent: 'center'}}>
-                <Text style={{alignSelf:'center', marginTop: 20, fontSize: 35, color: 'rgba(29, 16, 96, 1)', fontFamily:"Trade Gothic LT Std"}}> MY INFO </Text>
+          <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+            <Text style={{ alignSelf: 'center', marginTop: 20, fontSize: 35, color: 'rgba(29, 16, 96, 1)', fontFamily: "Trade Gothic LT Std" }}> MY INFO </Text>
+          </View>
+
+          <View style={{ marginLeft: deviceWidth * 0.075, flexDirection: 'row', marginTop: 20 }}>
+            <Image source={user_icon_textfield} style={{ width: 20, height: 20, resizeMode: 'contain' }} />
+            <Text style={{ marginLeft: 10, marginTop: 4, fontSize: 20, color: 'rgba(29, 16, 96, 1)', fontFamily: "Trade Gothic LT Std" }}> NAME: </Text>
+          </View>
+          <TextField width={deviceWidth * 0.85} labelName={this.props.user.name} isEditable={false} onChangeText={(text) => this.onNameChangeText(text)} />
+
+          {emailOrFacebookView}
+
+          <View style={{ width: deviceWidth * 0.95, marginBottom: 2, marginTop: 20, backgroundColor: 'rgba(92,133,192,1)', height: deviceHeight * 0.076, flexDirection: 'row', justifyContent: 'center', alignSelf: 'center' }}>
+            <Image source={home_icon} style={{ marginLeft: 15, marginRight: 5, width: deviceWidth / 15, height: deviceHeight / 15, resizeMode: 'contain' }} />
+            <Text style={{ marginLeft: 2, alignSelf: 'center', fontSize: 15, fontFamily: 'ProximaNova-Semibold', color: 'white' }}> {homeLocationText} </Text>
+            <Text style={{ marginRight: 20, marginLeft: 1, alignSelf: 'center', fontSize: 15, fontFamily: 'ProximaNova-Regular', color: 'white' }}>{homeLocationName}</Text>
+            <View style={{ marginRight: 15, alignSelf: 'center' }}>
+              {resetButton}
             </View>
+          </View>
 
-            <View style={{marginLeft: deviceWidth*0.075, flexDirection:'row', marginTop: 20}}>
-                <Image source={user_icon_textfield} style={{ width: 20,height:20, resizeMode: 'contain'}}/>
-                <Text style={{marginLeft:10 , marginTop: 4, fontSize: 20, color: 'rgba(29, 16, 96, 1)', fontFamily:"Trade Gothic LT Std"}}> NAME: </Text>
-            </View>
-            <TextField width={deviceWidth * 0.85} labelName={this.props.user.name} isEditable={false} onChangeText={(text)=>this.onNameChangeText(text)}/>
-
-            {emailOrFacebookView}
-
-            <View style={{width:deviceWidth*0.95, marginBottom:2, marginTop: 20,  backgroundColor: 'rgba(92,133,192,1)', height: deviceHeight*0.076, flexDirection:'row', justifyContent:'center', alignSelf:'center'}}>
-                <Image source={home_icon} style={{ marginLeft: 15, marginRight: 5, width: deviceWidth/15, height: deviceHeight/15, resizeMode: 'contain'}}/>
-                <Text style={{marginLeft: 2, alignSelf:'center', fontSize: 15, fontFamily: 'ProximaNova-Semibold', color: 'white'}}> {homeLocationText} </Text>
-                <Text style={{marginRight: 20,marginLeft:1, alignSelf:'center', fontSize: 15, fontFamily: 'ProximaNova-Regular', color: 'white'}}>{homeLocationName}</Text>
-                <View style={{marginRight: 15, alignSelf:'center'}}>
-                {resetButton}
-                </View>
-            </View>
-
-            <View style={{marginTop: 10, alignSelf:'center'}}>
-                <HyperlinkButton width={deviceWidth * 0.15} text="Sign Out" textColor="#422575" fontSize={20} onPress={()=>this.logoutButtonPressed()}/>
-            </View>
-        <Loading isLoading={this.state.isLoading}/>
-        <SearchResults isSearchMode={this.state.isSearchMode} distanceArray={this.props.distanceArray} lastPosition={this.props.lastPosition}
-         crossAction={()=>this.searchDismiss()}
-        />
+          <View style={{ marginTop: 10, alignSelf: 'center' }}>
+            <HyperlinkButton width={deviceWidth * 0.15} text="Sign Out" textColor="#422575" fontSize={20} onPress={() => this.logoutButtonPressed()} />
+          </View>
+          <Loading isLoading={this.state.isLoading} />
+          <SearchResults isSearchMode={this.state.isSearchMode} distanceArray={this.props.distanceArray} lastPosition={this.props.lastPosition}
+            crossAction={() => this.searchDismiss()}
+          />
         </Container>
       );
-    }else{
+    } else {
       return (
         <Container>
 
-        <View style={{width: deviceWidth, height: deviceHeight * 0.14, flexDirection:'row'}}>
-          <TouchableOpacity onPress={()=>this.logoClicked()}>
-            <Image source={logoCow} style={{marginLeft: 10, width: deviceWidth/2.2, height: deviceHeight/6.2, alignSelf:'flex-start', marginTop: 0, resizeMode: 'contain'}}/>
-          </TouchableOpacity>
-            <TouchableOpacity onPress={()=>this.mapButtonClicked()}>
-                <Image source={map_icon} style={{marginLeft: 25, marginTop: 25, width: deviceWidth/12, height: deviceHeight/12, resizeMode: 'contain'}}/>
+          <View style={{ width: deviceWidth, height: deviceHeight * 0.14, flexDirection: 'row' }}>
+            <TouchableOpacity onPress={() => this.logoClicked()}>
+              <Image source={logoCow} style={{ marginLeft: 10, width: deviceWidth / 2.2, height: deviceHeight / 6.2, alignSelf: 'flex-start', marginTop: 0, resizeMode: 'contain' }} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.mapButtonClicked()}>
+              <Image source={map_icon} style={{ marginLeft: 25, marginTop: 25, width: deviceWidth / 12, height: deviceHeight / 12, resizeMode: 'contain' }} />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={()=>this.onSearchButtonClicked()}>
-                <Image source={search_icon} style={{marginLeft: 8, marginTop: 25, width: deviceWidth/12, height: deviceHeight/12, resizeMode: 'contain'}}/>
+            <TouchableOpacity onPress={() => this.onSearchButtonClicked()}>
+              <Image source={search_icon} style={{ marginLeft: 8, marginTop: 25, width: deviceWidth / 12, height: deviceHeight / 12, resizeMode: 'contain' }} />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={()=>this.openMyFavorites()}>
-                <Image source={favorite_icon} style={{marginLeft: 8, marginTop: 25, width: deviceWidth/12, height: deviceHeight/12, resizeMode: 'contain'}}/>
+            <TouchableOpacity onPress={() => this.openMyFavorites()}>
+              <Image source={favorite_icon} style={{ marginLeft: 8, marginTop: 25, width: deviceWidth / 12, height: deviceHeight / 12, resizeMode: 'contain' }} />
             </TouchableOpacity>
 
             <TouchableOpacity>
-                <Image source={user_icon} style={{marginLeft: 8, marginTop: 25, width: deviceWidth/12, height: deviceHeight/12, resizeMode: 'contain'}}/>
+              <Image source={user_icon} style={{ marginLeft: 8, marginTop: 25, width: deviceWidth / 12, height: deviceHeight / 12, resizeMode: 'contain' }} />
             </TouchableOpacity>
-        </View>
+          </View>
 
-        <View style={{marginLeft:borderwidth/2, marginTop:-borderwidth, backgroundColor:'rgba(29, 16, 96, 1)', width: deviceWidth, height:borderwidth}}>
-        </View>
+          <View style={{ marginLeft: borderwidth / 2, marginTop: -borderwidth, backgroundColor: 'rgba(29, 16, 96, 1)', width: deviceWidth, height: borderwidth }}>
+          </View>
 
 
-            <View style={{flexDirection:'column', justifyContent: 'center'}}>
-                <Text style={{alignSelf:'center', marginTop: 20, fontSize: 35, color: 'rgba(29, 16, 96, 1)', fontFamily:"Trade Gothic LT Std"}}> MY INFO </Text>
-            </View>
+          <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+            <Text style={{ alignSelf: 'center', marginTop: 20, fontSize: 35, color: 'rgba(29, 16, 96, 1)', fontFamily: "Trade Gothic LT Std" }}> MY INFO </Text>
+          </View>
 
-            <TouchableOpacity style={{width:deviceWidth*0.9, marginBottom:2, marginTop: 20,  backgroundColor: 'rgba(92,133,192,1)', height: deviceHeight*0.076, flexDirection:'row', justifyContent:'center', alignSelf:'center'}} onPress={()=>this.loginButtonPressed()}>
-                <Text style={{ alignSelf:'center', fontSize: 20, fontFamily: 'ProximaNova-Semibold', color: 'white'}}> Login </Text>
+          <TouchableOpacity style={{ width: deviceWidth * 0.9, marginBottom: 2, marginTop: 20, backgroundColor: 'rgba(92,133,192,1)', height: deviceHeight * 0.076, flexDirection: 'row', justifyContent: 'center', alignSelf: 'center' }} onPress={() => this.loginButtonPressed()}>
+            <Text style={{ alignSelf: 'center', fontSize: 20, fontFamily: 'ProximaNova-Semibold', color: 'white' }}> Login </Text>
 
-            </TouchableOpacity>
+          </TouchableOpacity>
 
-        <Loading isLoading={this.state.isLoading}/>
-        <SearchResults isSearchMode={this.state.isSearchMode} distanceArray={this.props.distanceArray} lastPosition={this.props.lastPosition}
-         crossAction={()=>this.searchDismiss()}
-        />
+          <Loading isLoading={this.state.isLoading} />
+          <SearchResults isSearchMode={this.state.isSearchMode} distanceArray={this.props.distanceArray} lastPosition={this.props.lastPosition}
+            crossAction={() => this.searchDismiss()}
+          />
         </Container>
       );
     }
-
-
   }
 }
 

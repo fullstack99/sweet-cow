@@ -38,19 +38,19 @@ const styles = StyleSheet.create({
     width: deviceWidth,
     height: deviceHeight,
     resizeMode: 'stretch',
-    marginLeft:3
+    marginLeft: 3
   },
   logoCow: {
-    width: deviceWidth/2.2,
-    height: deviceHeight/6.2,
-    alignSelf:'center',
-    marginTop: deviceHeight/568.0 > 1 ? 30*(deviceHeight/568.0 + 0.25) : 30*(deviceHeight/568.0),
+    width: deviceWidth / 2.2,
+    height: deviceHeight / 6.2,
+    alignSelf: 'center',
+    marginTop: deviceHeight / 568.0 > 1 ? 30 * (deviceHeight / 568.0 + 0.25) : 30 * (deviceHeight / 568.0),
     resizeMode: 'contain'
   },
   logoTitle: {
-    width: deviceWidth/1.7,
-    height: deviceHeight/6,
-    alignSelf:'center',
+    width: deviceWidth / 1.7,
+    height: deviceHeight / 6,
+    alignSelf: 'center',
     marginTop: 0,
     resizeMode: 'contain'
   },
@@ -98,51 +98,110 @@ class Login extends Component {
     this.props.replaceAt('login', { key: route }, this.props.navigation.key);
   }
 
-  onEmailChangeText(email){
-    this.setState({email})
+  onEmailChangeText(email) {
+    this.setState({ email })
   }
 
-  onPasswordChangeText(password){
-      this.setState({password})
+  onPasswordChangeText(password) {
+    this.setState({ password })
   }
 
-  loginButtonPress(){
-    if(this.state.email == ""){
+  loginButtonPress() {
+    if (this.state.email == "") {
       Alert.alert(
         'Error',
         'Please enter email address.',
       )
     }
-    else if(this.state.password == ""){
+    else if (this.state.password == "") {
       Alert.alert(
         'Error',
         'Please enter password.',
       )
     }
-    else{
-      this.setState({isLoading: true})
+    else {
+      this.setState({ isLoading: true })
       this.login()
     }
   }
 
 
-async resetPassword(){
+  async resetPassword() {
 
-  if(this.state.email === ""){
-    return;
+    if (this.state.email === "") {
+      return;
+    }
+
+    this.setState({ isLoading: true })
+
+    try {
+      await firebase.auth().sendPasswordResetEmail(this.state.email).then(() => {
+        this.setState({ isLoading: false })
+        Alert.alert(
+          'Success',
+          'Reset link sent to your email.'
+        )
+      }), (error) => {
+        this.setState({ isLoading: false })
+        Alert.alert(
+          'Error',
+          `${error.toString()}`,
+        )
+      }
+
+    }
+    catch (error) {
+      this.setState({ isLoading: false })
+      Alert.alert(
+        'Error',
+        `${error.toString()}`,
+      )
+    }
   }
 
-  this.setState({isLoading: true})
 
-  try {
-    await firebase.auth().sendPasswordResetEmail(this.state.email).then(() => {
-      this.setState({isLoading: false})
-      Alert.alert(
-        'Success',
-        'Reset link sent to your email.'
-      )
-    }), (error) => {
-      this.setState({isLoading: false})
+
+  async login() {
+    try {
+      await firebase.auth()
+        .signInWithEmailAndPassword(this.state.email, this.state.password).then((userData) => {
+
+          try {
+            // Listen for UserData Changes
+            this.listenUserData = FirDatabase.listenUserData(userData.uid, (userDataVal) => {
+              // console.warn(userDataVal.email)
+              // console.warn(userDataVal.name)
+              if (userDataVal.email == undefined || userDataVal.email == "") {
+                Alert.alert(
+                  'Error',
+                  '',
+                )
+              }
+              else {
+                this.setUser(userDataVal)
+                this.setState({ isLoading: false })
+                this.popRoute()
+              }
+            });
+
+          }
+          catch (error) {
+            console.warn(`setError: ${error.toString()}`);
+            this.setState({ isLoading: false })
+            Alert.alert(
+              'Error',
+              `${error.toString()}`,
+            )
+
+          }
+        })
+
+      // Navigate to the Home page
+
+    } catch (error) {
+      console.log(error.toString())
+      console.warn(error.toString());
+      this.setState({ isLoading: false })
       Alert.alert(
         'Error',
         `${error.toString()}`,
@@ -150,78 +209,18 @@ async resetPassword(){
     }
 
   }
-  catch(error){
-    this.setState({isLoading: false})
-    Alert.alert(
-      'Error',
-      `${error.toString()}`,
-    )
-  }
-}
-
-
-
-  async login(){
-    try {
-        await firebase.auth()
-            .signInWithEmailAndPassword(this.state.email, this.state.password).then((userData) =>
-      {
-
-        try{
-          // Listen for UserData Changes
-            this.listenUserData = FirDatabase.listenUserData(userData.uid, (userDataVal) => {
-                // console.warn(userDataVal.email)
-                // console.warn(userDataVal.name)
-                if(userDataVal.email == undefined || userDataVal.email == ""){
-                  Alert.alert(
-                    'Error',
-                    '',
-                  )
-                }
-                else{
-                  this.setUser(userDataVal)
-                  this.setState({isLoading: false})
-                  this.popRoute()
-                }
-            });
-
-        }
-        catch(error){
-          console.warn(`setError: ${error.toString()}`);
-          this.setState({isLoading: false})
-          Alert.alert(
-            'Error',
-            `${error.toString()}`,
-          )
-
-        }
-      })
-
-        // Navigate to the Home page
-
-    } catch (error) {
-        console.log(error.toString())
-        console.warn(error.toString());
-        this.setState({isLoading: false})
-        Alert.alert(
-          'Error',
-          `${error.toString()}`,
-        )
-    }
-
-  }
 
   popRoute() {
-  this.props.popRoute(this.props.navigation.key);
+    this.props.popRoute(this.props.navigation.key);
   }
 
 
-  async getDeviceToken (){
+  async getDeviceToken() {
 
     try {
       const deviceToken = await AsyncStorage.getItem('@deviceToken:key');
-      if (deviceToken !== null){
-        this.setState({deviceToken: deviceToken})
+      if (deviceToken !== null) {
+        this.setState({ deviceToken: deviceToken })
         return deviceToken;
       }
       return "";
@@ -232,113 +231,113 @@ async resetPassword(){
     }
   }
 
-  async loginWithFacebook(){
+  async loginWithFacebook() {
     // Attempt a login using the Facebook login dialog,
-// asking for default permissions.
-this.setState({isLoading: true})
+    // asking for default permissions.
+    this.setState({ isLoading: true })
 
-await LoginManager.logInWithReadPermissions(['public_profile']).then((result) => {
-    if (result.isCancelled) {
-      this.setState({isLoading: false})
-      alert('Login was cancelled');
+    await LoginManager.logInWithReadPermissions(['public_profile']).then((result) => {
+      if (result.isCancelled) {
+        this.setState({ isLoading: false })
+        alert('Login was cancelled');
 
-    } else {
+      } else {
 
         // console.warn(result.toString());
         // console.log(result)
         AccessToken.getCurrentAccessToken().then(
-                  (data) => {
-                    // alert(data.accessToken.toString())
-                    const { accessToken } = data
-                    fetch('https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' + accessToken)
-                    .then((response) => response.json())
-                    .then((json) => {
-                      // Some user object has been set up somewhere, build that user here
+          (data) => {
+            // alert(data.accessToken.toString())
+            const { accessToken } = data
+            fetch('https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' + accessToken)
+              .then((response) => response.json())
+              .then((json) => {
+                // Some user object has been set up somewhere, build that user here
 
-                      var name = ""
-                      var emailId = ""
-                      if(json.name){
-                        name = json.name
-                      }
-                      if(json.email){
-                        email = json.email
-                      }
+                var name = ""
+                var emailId = ""
+                if (json.name) {
+                  name = json.name
+                }
+                if (json.email) {
+                  email = json.email
+                }
 
-                      const auth = firebase.auth();
-                      const provider = firebase.auth.FacebookAuthProvider;
+                const auth = firebase.auth();
+                const provider = firebase.auth.FacebookAuthProvider;
 
-                      const credential = provider.credential(data.accessToken);
-                      auth.signInWithCredential(credential).then((userData) => {
-                        console.warn(`test ${data}`)
+                const credential = provider.credential(data.accessToken);
+                auth.signInWithCredential(credential).then((userData) => {
+                  console.warn(`test ${data}`)
 
-                        try{
-                          this.getDeviceToken();
-                          let token = this.state.deviceToken
-                          FirDatabase.updateUserData(userData.uid, emailId, name, token)
-                          setTimeout(() => {
-                              // this.replaceRoute("mapView")
-                              // this.setState({isLoading: false})
-                              console.warn("here")
-                              this.getLoginData(userData.uid)
-                          }, 150);
+                  try {
+                    this.getDeviceToken();
+                    let token = this.state.deviceToken
+                    FirDatabase.updateUserData(userData.uid, emailId, name, token)
+                    setTimeout(() => {
+                      // this.replaceRoute("mapView")
+                      // this.setState({isLoading: false})
+                      console.warn("here")
+                      this.getLoginData(userData.uid)
+                    }, 150);
 
-                        }
-                        catch(error){
-
-                          this.setState({isLoading: false})
-                          Alert.alert(
-                            'Error',
-                            `${error.toString()}`,
-                          )
-                          //
-                        }
-
-                      })
-
-                    })
-                    .catch((error) => {
-                      console.warn(`error ${error.toString()}`)
-                      this.setState({isLoading: false})
-                      Alert.alert(
-                        'Error',
-                        `${error.toString()}`,
-                      )
-                      // reject('ERROR GETTING DATA FROM FACEBOOK')
-                    })
                   }
+                  catch (error) {
+
+                    this.setState({ isLoading: false })
+                    Alert.alert(
+                      'Error',
+                      `${error.toString()}`,
+                    )
+                    //
+                  }
+
+                })
+
+              })
+              .catch((error) => {
+                console.warn(`error ${error.toString()}`)
+                this.setState({ isLoading: false })
+                Alert.alert(
+                  'Error',
+                  `${error.toString()}`,
                 )
-    }
-  },
-  (error) => {
-    this.setState({isLoading: false})
-    alert('' + error.toString());
-  }
-);
+                // reject('ERROR GETTING DATA FROM FACEBOOK')
+              })
+          }
+        )
+      }
+    },
+      (error) => {
+        this.setState({ isLoading: false })
+        alert('' + error.toString());
+      }
+    );
   }
 
-  getLoginData(uid){
-    try{
+  getLoginData(uid) {
+    try {
       // Listen for UserData Changes
-        this.listenUserData = FirDatabase.listenUserData(uid, (userDataVal) => {
-            console.warn(userDataVal)
-            // console.warn(userDataVal.name)
-            if(userDataVal.email == undefined){
-              Alert.alert(
-                'Error',
-                '',
-              )
-            }
-            else{
-              this.setUser(userDataVal)
-              this.setState({isLoading: false})
-              this.popRoute()
-            }
-        });
+      this.listenUserData = FirDatabase.listenUserData(uid, (userDataVal) => {
+        console.warn(userDataVal)
+        // console.warn(userDataVal.name)
+        if (userDataVal.email == undefined) {
+          Alert.alert(
+            'Error',
+            '',
+          )
+        }
+        else {
+          this.setUser(userDataVal)
+          this.setState({ isLoading: false })
+          this.popRoute()
+        }
+      });
 
     }
-    catch(error){
+    catch (error) {
       console.warn(`setError: ${error.toString()}`);
-      this.setState({isLoading: false})
+      this.setState({ isLoading: false })
       Alert.alert(
         'Error',
         `${error.toString()}`,
@@ -349,29 +348,29 @@ await LoginManager.logInWithReadPermissions(['public_profile']).then((result) =>
 
   initUser(token) {
     fetch('https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' + token)
-    .then((response) => response.json())
-    .then((json) => {
-      // Some user object has been set up somewhere, build that user here
-      alert(json.toString())
-      // user.name = json.name
-      // user.id = json.id
-      // user.user_friends = json.friends
-      // user.email = json.email
-      // user.username = json.name
-      // user.loading = false
-      // user.loggedIn = true
-      // user.avatar = setAvatar(json.id)
-    })
-    .catch(() => {
-      reject('ERROR GETTING DATA FROM FACEBOOK')
-    })
+      .then((response) => response.json())
+      .then((json) => {
+        // Some user object has been set up somewhere, build that user here
+        alert(json.toString())
+        // user.name = json.name
+        // user.id = json.id
+        // user.user_friends = json.friends
+        // user.email = json.email
+        // user.username = json.name
+        // user.loading = false
+        // user.loggedIn = true
+        // user.avatar = setAvatar(json.id)
+      })
+      .catch(() => {
+        reject('ERROR GETTING DATA FROM FACEBOOK')
+      })
   }
 
 
   render() {
     let DontText = "Don't have an account?"
-    let deviceHeightDiff = deviceHeight/568.0
-    if(deviceHeightDiff > 1){
+    let deviceHeightDiff = deviceHeight / 568.0
+    if (deviceHeightDiff > 1) {
       deviceHeightDiff += 0.25
     }
 
@@ -379,39 +378,39 @@ await LoginManager.logInWithReadPermissions(['public_profile']).then((result) =>
     return (
       <Container>
         <Content bounces={false}>
-        <Image source={background} style={styles.backgroundImage}>
-          <Image source={logoCow} style={styles.logoCow}/>
-          <Image source={logo_title} style={{width: deviceWidth/2.2, height: deviceHeight/8.0, alignSelf:'center', marginTop: -10, resizeMode: 'contain'}}/>
-          <View style={{marginTop: 10*deviceHeightDiff}}>
-          <TextField text={this.state.email} width={deviceWidth * 0.85} labelName="EMAIL:" iconImage={email_icon} onChangeText={(text)=>this.onEmailChangeText(text)}/>
-          </View>
-          <View style={{marginTop: 10*deviceHeightDiff}}>
-          <TextField width={deviceWidth * 0.85} labelName="PASSWORD:" iconImage={password_icon} isSecureEntry={true} onChangeText={(text)=>this.onPasswordChangeText(text)}/>
-          </View>
-          <View style={{marginTop: 1*deviceHeightDiff,flexDirection:'row', alignSelf: 'center', justifyContent:'flex-end', width: deviceWidth * 0.85}}>
-          <View style={{alignSelf: 'flex-end'}}>
-          <HyperlinkButton width={deviceWidth * 0.15} text="Forgot Password?" textColor="#422575" fontSize={15} onPress={()=>this.resetPassword()}/>
-          </View>
-          </View>
-          <View style={{marginTop: 12*deviceHeightDiff}}>
-          <CustomButton width={deviceWidth * 0.85} text="LOGIN" backgroundColor="#5B82B8" onPress={()=>this.loginButtonPress()}/>
-          </View>
+          <Image source={background} style={styles.backgroundImage}>
+            <Image source={logoCow} style={styles.logoCow} />
+            <Image source={logo_title} style={{ width: deviceWidth / 2.2, height: deviceHeight / 8.0, alignSelf: 'center', marginTop: -10, resizeMode: 'contain' }} />
+            <View style={{ marginTop: 10 * deviceHeightDiff }}>
+              <TextField text={this.state.email} width={deviceWidth * 0.85} labelName="EMAIL:" iconImage={email_icon} onChangeText={(text) => this.onEmailChangeText(text)} />
+            </View>
+            <View style={{ marginTop: 10 * deviceHeightDiff }}>
+              <TextField width={deviceWidth * 0.85} labelName="PASSWORD:" iconImage={password_icon} isSecureEntry={true} onChangeText={(text) => this.onPasswordChangeText(text)} />
+            </View>
+            <View style={{ marginTop: 1 * deviceHeightDiff, flexDirection: 'row', alignSelf: 'center', justifyContent: 'flex-end', width: deviceWidth * 0.85 }}>
+              <View style={{ alignSelf: 'flex-end' }}>
+                <HyperlinkButton width={deviceWidth * 0.15} text="Forgot Password?" textColor="#422575" fontSize={15} onPress={() => this.resetPassword()} />
+              </View>
+            </View>
+            <View style={{ marginTop: 12 * deviceHeightDiff }}>
+              <CustomButton width={deviceWidth * 0.85} text="LOGIN" backgroundColor="#5B82B8" onPress={() => this.loginButtonPress()} />
+            </View>
 
-          <View style={{justifyContent:'center', flexDirection:'row',marginTop: 12*deviceHeightDiff, backgroundColor:'rgba(0,0,0,0)'}}>
-          <Text style={{marginTop:-6, fontFamily:'ProximaNova-Regular', color: "rgba(27,13,99,1)", alignSelf:'center'}}>. . . </Text>
-          <Text style={{fontFamily:'ProximaNova-Regular', color: "rgba(27,13,99,1)", alignSelf:'center'}}>OR LOGIN WITH</Text>
-          <Text style={{marginTop:-6, fontFamily:'ProximaNova-Regular', color: "rgba(27,13,99,1)", alignSelf:'center'}}> . . .</Text>
-          </View>
-          <View style={{marginTop: 12*deviceHeightDiff}}>
-          <CustomButton width={deviceWidth * 0.85} text="FACEBOOK" backgroundColor="#422575" onPress={()=>this.loginWithFacebook()}/>
-          </View>
-          <View style={{marginTop: 40*deviceHeightDiff, flex: 1, flexDirection: 'row',backgroundColor:'rgba(0,0,0,0)', justifyContent:'center'}}>
-          <Text> {DontText} </Text>
-          <HyperlinkButton width={deviceWidth * 0.25} text="Sign Up" textColor="rgba(27,13,99,1)" fontSize={15} onPress={()=>this.replaceRoute("signup")}/>
-          </View>
-        </Image>
+            <View style={{ justifyContent: 'center', flexDirection: 'row', marginTop: 12 * deviceHeightDiff, backgroundColor: 'rgba(0,0,0,0)' }}>
+              <Text style={{ marginTop: -6, fontFamily: 'ProximaNova-Regular', color: "rgba(27,13,99,1)", alignSelf: 'center' }}>. . . </Text>
+              <Text style={{ fontFamily: 'ProximaNova-Regular', color: "rgba(27,13,99,1)", alignSelf: 'center' }}>OR LOGIN WITH</Text>
+              <Text style={{ marginTop: -6, fontFamily: 'ProximaNova-Regular', color: "rgba(27,13,99,1)", alignSelf: 'center' }}> . . .</Text>
+            </View>
+            <View style={{ marginTop: 12 * deviceHeightDiff }}>
+              <CustomButton width={deviceWidth * 0.85} text="FACEBOOK" backgroundColor="#422575" onPress={() => this.loginWithFacebook()} />
+            </View>
+            <View style={{ marginTop: 40 * deviceHeightDiff, flex: 1, flexDirection: 'row', backgroundColor: 'rgba(0,0,0,0)', justifyContent: 'center' }}>
+              <Text> {DontText} </Text>
+              <HyperlinkButton width={deviceWidth * 0.25} text="Sign Up" textColor="rgba(27,13,99,1)" fontSize={15} onPress={() => this.replaceRoute("signup")} />
+            </View>
+          </Image>
 
-        <Loading isLoading={this.state.isLoading} />
+          <Loading isLoading={this.state.isLoading} />
         </Content>
       </Container>
     );

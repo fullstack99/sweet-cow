@@ -6,7 +6,7 @@ import { actions } from 'react-native-navigation-redux-helpers';
 import { Container, Content, Button, View, Text } from 'native-base';
 import TextField from '../base/textField/'
 import CustomButton from '../base/button/'
-import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType} from 'react-native-fcm';
+import FCM, { FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType } from 'react-native-fcm';
 
 import { setUser } from '../../actions/user';
 
@@ -28,19 +28,19 @@ const styles = StyleSheet.create({
     width: deviceWidth,
     height: deviceHeight,
     resizeMode: 'cover',
-    marginLeft:3
+    marginLeft: 3
   },
   logoCow: {
-    width: deviceWidth/2,
-    height: deviceHeight/4,
-    alignSelf:'center',
+    width: deviceWidth / 2,
+    height: deviceHeight / 4,
+    alignSelf: 'center',
     marginTop: 50,
     resizeMode: 'contain'
   },
   logoTitle: {
-    width: deviceWidth/1.7,
-    height: deviceHeight/6,
-    alignSelf:'center',
+    width: deviceWidth / 1.7,
+    height: deviceHeight / 6,
+    alignSelf: 'center',
     marginTop: 0,
     resizeMode: 'contain'
   },
@@ -70,11 +70,11 @@ class HomeScreen extends Component {
     this.refreshTokenListener.remove();
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.getFcmToken()
   }
 
-  getFcmToken(){
+  getFcmToken() {
     FCM.setBadgeNumber(0);
     FCM.requestPermissions(); // for iOS
     FCM.getFCMToken().then(token => {
@@ -91,16 +91,16 @@ class HomeScreen extends Component {
   }
 
   //To save the deviceToken
-  async saveDeviceToken (deviceToken){
-    if (deviceToken !== undefined && deviceToken !== null){
-    try {
-      // console.warn('savedevicetoken')
+  async saveDeviceToken(deviceToken) {
+    if (deviceToken !== undefined && deviceToken !== null) {
+      try {
+        // console.warn('savedevicetoken')
 
-      await AsyncStorage.setItem('@deviceToken:key', deviceToken );
-    } catch (error) {
-      console.warn(`error ${error}`);
+        await AsyncStorage.setItem('@deviceToken:key', deviceToken);
+      } catch (error) {
+        console.warn(`error ${error}`);
+      }
     }
-  }
   }
 
 
@@ -112,26 +112,26 @@ class HomeScreen extends Component {
 
     // console.warn(this.props.appInfoData[0].homeImageUrl);
 
-let imageUrl = ''
-if(this.props.appInfoData && this.props.appInfoData[0].homeImageUrl && this.props.appInfoData[0].homeImageUrl !== null){
-  imageUrl = {uri : this.props.appInfoData[0].homeImageUrl}
-}
+    let imageUrl = ''
+    if (this.props.appInfoData && this.props.appInfoData[0].homeImageUrl && this.props.appInfoData[0].homeImageUrl !== null) {
+      imageUrl = { uri: this.props.appInfoData[0].homeImageUrl }
+    }
 
 
     return (
       <Container>
         <Content bounces={false}>
 
-        <Image source={imageUrl} style={styles.backgroundImage}>
-          <Image source={logoCow} style={styles.logoCow}/>
-          <Image source={logo_title} style={styles.logoTitle}/>
-          <View style={{marginTop: deviceHeight * 0.045}}>
-          <CustomButton width={deviceWidth * 0.6} text="SIGN UP" backgroundColor="#5B82B8" onPress={()=>this.replaceRoute("signup")}/>
-          </View>
-          <View style={{marginTop: 20}}>
-          <CustomButton width={deviceWidth * 0.6} text="LOGIN" backgroundColor="#5B82B8" onPress={()=>this.replaceRoute("login")}/>
-          </View>
-        </Image>
+          <Image source={imageUrl} style={styles.backgroundImage}>
+            <Image source={logoCow} style={styles.logoCow} />
+            <Image source={logo_title} style={styles.logoTitle} />
+            <View style={{ marginTop: deviceHeight * 0.045 }}>
+              <CustomButton width={deviceWidth * 0.6} text="SIGN UP" backgroundColor="#5B82B8" onPress={() => this.replaceRoute("signup")} />
+            </View>
+            <View style={{ marginTop: 20 }}>
+              <CustomButton width={deviceWidth * 0.6} text="LOGIN" backgroundColor="#5B82B8" onPress={() => this.replaceRoute("login")} />
+            </View>
+          </Image>
 
         </Content>
       </Container>

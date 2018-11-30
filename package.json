@@ -18,6 +18,7 @@
     "react-native-facebook-login": "1.4.0",
     "react-native-fbsdk": "0.5.1",
     "react-native-fcm": "6.2.0",
+    "react-native-firestack": "^2.3.9",
     "react-native-maps": "0.13",
     "react-native-navigation-redux-helpers": "0.5.0",
     "react-native-spinkit": "1.0.2",

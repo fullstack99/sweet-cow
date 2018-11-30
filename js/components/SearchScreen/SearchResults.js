@@ -5,8 +5,6 @@ import SearchScreen from './index'
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
-
-
 const styles = StyleSheet.create({
   overlayView: {
     flex: 1,
@@ -27,28 +25,27 @@ const styles = StyleSheet.create({
 
 });
 
-export default class SearchResults extends Component{
+export default class SearchResults extends Component {
 
   static propTypes = {
     isSearchMode: React.PropTypes.bool
   }
-
 
   // Specifies the default values for props:
   static defaultProps = {
     isSearchMode: false
   };
 
-  render(){
+  render() {
 
-    if(this.props.isSearchMode == true){
-      return(
+    if (this.props.isSearchMode == true) {
+      return (
         <View style={styles.overlayView}>
-          <SearchScreen distanceArray={this.props.distanceArray} lastPosition={this.props.lastPosition} crossAction={this.props.crossAction}/>
+          <SearchScreen distanceArray={this.props.distanceArray} lastPosition={this.props.lastPosition} crossAction={this.props.crossAction} />
         </View>
       )
     }
-    else{
+    else {
       return null
     }
 
