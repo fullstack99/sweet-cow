@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     width: deviceWidth,
     height: deviceHeight,
     resizeMode: 'cover',
+    marginLeft: 3
   },
   activityIndicator: {
     alignItems: 'center',
