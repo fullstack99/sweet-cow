@@ -3,8 +3,6 @@ import { View, Text, TextInput, Dimensions, TouchableOpacity, ActivityIndicator,
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
-
-
 const styles = StyleSheet.create({
   overlayView: {
     flex: 1,
@@ -13,13 +11,13 @@ const styles = StyleSheet.create({
     top: 0,
     opacity: 1.0,
     width: deviceWidth,
-    height: deviceHeight
+    height: deviceHeight,
+    backgroundColor: 'rgba(100, 100, 100, 0.6)',
   },
   backgroundImage: {
     width: deviceWidth,
     height: deviceHeight,
-    resizeMode: 'contain',
-    zIndex: 99
+    resizeMode: 'cover',
   },
   activityIndicator: {
     alignItems: 'center',
@@ -61,9 +59,9 @@ export default class Loading extends Component {
     this.spinValue = new Animated.Value(0)
     this.state = {
       pecentage: 60,
-      backgroundColor: '#ffffff',
-      backgroundColorBottom: '#ffffff',
-      backgroundColorText: '#ffffff'
+      backgroundColor: '#B9CFF4',
+      backgroundColorBottom: '#6787B8',
+      backgroundColorText: '#708EC0'
     };
   }
 
@@ -97,13 +95,13 @@ export default class Loading extends Component {
   componentDidMount() {
     this.spin()
     this.startPercentageIncrease()
-    setTimeout(() => {
-      this.setState({
-        backgroundColor: '#B9CFF4',
-        backgroundColorBottom: '#6787B8',
-        backgroundColorText: '#708EC0'
-      })
-    }, 100)
+    // setTimeout(() => {
+    //   this.setState({
+    //     backgroundColor: '#B9CFF4',
+    //     backgroundColorBottom: '#6787B8',
+    //     backgroundColorText: '#708EC0'
+    //   })
+    // }, 100)
   }
 
   componentWillUnmount() {
@@ -120,7 +118,7 @@ export default class Loading extends Component {
 
     if (this.props.isLoading == true) {
       return (
-        <View style={[styles.overlayView, { backgroundColor : this.state.backgroundColor}]}>
+        <View style={styles.overlayView}>
           <Image source={background} style={styles.backgroundImage}>
             <Animated.Image
               style={{
@@ -137,10 +135,10 @@ export default class Loading extends Component {
             <Text style={{
               marginTop: -38, fontSize: 10,
               alignSelf: 'center', color: 'white',
-              backgroundColor: this.state.backgroundColorText
+              backgroundColor: 'transparent'
             }}> {percentageFormatted}</Text>
           </Image>
-          <View style={[styles.overlayViewBottom, { backgroundColor : this.state.backgroundColorBottom}]}/>
+          {/* <View style={[styles.overlayViewBottom, { backgroundColor : this.state.backgroundColorBottom}]}/> */}
         </View>
       )
     }

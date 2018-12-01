@@ -39,8 +39,6 @@ export default class Pulse extends Component {
       alpha = 1
     }
     this.setState({ radius: radius, alpha: alpha })
-
-
   }
 
   render() {

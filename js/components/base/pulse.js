@@ -30,7 +30,7 @@ class Pulse extends Component {
   }
 
 
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -46,14 +46,14 @@ class Pulse extends Component {
 
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.setState({
       started: true
     });
 
     let a = 0;
-    while(a < this.state.numPulses){
-      setTimeout(()=>{
+    while (a < this.state.numPulses) {
+      setTimeout(() => {
         this._createPulse(a);
       }, a * this.state.duration);
       a++;
@@ -64,7 +64,7 @@ class Pulse extends Component {
     }, this.state.speed);
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     clearInterval(this.timer);
   }
   // <View style={{width: 200, height: 200, backgroundColor: 'green'}}></View>
@@ -72,16 +72,16 @@ class Pulse extends Component {
   // style={[styles.pulse, {backgroundColor: this.state.color, width: pulse.diameter,
   // height: pulse.diameter, opacity: pulse.opacity, borderRadius: pulse.diameter / 2,
   // left: pulse.left, top: pulse.centerOffset, left: pulse.centerOffset} ]}></View>;
-  render(){
-    if(this.state.started){
+  render() {
+    if (this.state.started) {
       return (
-        <View style={[styles.container, {top: this.state.top}]}>
-          <View style={[styles.pulseContainer, {width: this.state.maxDiameter, height: this.state.maxDiameter}]}>
+        <View style={[styles.container, { top: this.state.top }]}>
+          <View style={[styles.pulseContainer, { width: this.state.maxDiameter, height: this.state.maxDiameter }]}>
             {this.state.pulses.map((pulse) => {
 
               return <View
-              style={[styles.pulse,
-                {width: pulse.diameter + 100, height: pulse.diameter + 100, opacity: pulse.opacity, backgroundColor: this.state.color}]}></View>
+                style={[styles.pulse,
+                { width: pulse.diameter + 100, height: pulse.diameter + 100, opacity: pulse.opacity, backgroundColor: this.state.color }]}></View>
             })}
           </View>
         </View>
@@ -94,7 +94,7 @@ class Pulse extends Component {
     }
   }
 
-  _createPulse(pKey){
+  _createPulse(pKey) {
 
     let pulses = this.state.pulses;
 
@@ -112,13 +112,13 @@ class Pulse extends Component {
 
   }
 
-  _updatePulse(){
+  _updatePulse() {
 
     let pulses = this.state.pulses.map((p, i) => {
       let maxDiameter = this.state.maxDiameter;
       let newDiameter = (p.diameter > maxDiameter ? 0 : p.diameter + 2);
-      let centerOffset = ( maxDiameter - newDiameter ) / 2;
-      let opacity = Math.abs( ( newDiameter / this.state.maxDiameter ) - 1 );
+      let centerOffset = (maxDiameter - newDiameter) / 2;
+      let opacity = Math.abs((newDiameter / this.state.maxDiameter) - 1);
 
       let pulse = {
         pulseKey: i + 1,

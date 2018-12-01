@@ -29,12 +29,21 @@ const loading_Circle = require('../../../images/loading_circle.png');
 let percentageLimit = 60
 
 const styles = StyleSheet.create({
+  overlayView: {
+    flex: 1,
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    opacity: 1.0,
+    width: deviceWidth,
+    height: deviceHeight,
+    backgroundColor: 'rgba(100, 100, 100, 0.6)',
+  },
   backgroundImage: {
     flex: 1,
     width: deviceWidth,
     height: deviceHeight,
-    resizeMode: 'stretch',
-    marginLeft: 3
+    resizeMode: 'cover',
   },
   activityIndicator: {
     alignItems: 'center',
@@ -133,6 +142,7 @@ class InitialView extends Component {
   getInitialView() {
 
     this.fireBaseListener = firebase.auth().onAuthStateChanged((user) => {
+
       let initialView = 'mapView'// user ? "mapView" : "home";
 
       this.setState({
@@ -216,9 +226,10 @@ class InitialView extends Component {
   }
 
   replaceRoute(route) {
+    // this.props.replaceAt('default', { key: route }, this.props.navigation.key);
     setTimeout(() => {
       this.props.replaceAt('default', { key: route }, this.props.navigation.key);
-    }, 500);
+    }, 1000);
   }
 
   replaceRouteToMap(route, locationId) {
@@ -248,7 +259,7 @@ class InitialView extends Component {
     return (
       <Container>
         <Content bounces={false}>
-
+        {/* <View style={styles.overlayView}> */}
           <Image source={background} style={styles.backgroundImage}>
 
             <Animated.Image
@@ -265,10 +276,11 @@ class InitialView extends Component {
             </Animated.Image>
             <Text style={{
               marginTop: -38, fontSize: 10,
-              alignSelf: 'center', color: 'white'
+              alignSelf: 'center', color: 'white',
+              backgroundColor: 'transparent'
             }}> {percentageFormatted} </Text>
           </Image>
-
+        {/* </View> */}
         </Content>
       </Container>
     );

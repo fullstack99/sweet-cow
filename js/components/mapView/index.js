@@ -363,7 +363,7 @@ class MapView extends Component {
         let shopsArray = []
         let searchShopArray = []
         let appInfoArray = []
-        if(responseJson && responseJson !== undefined){
+        if (responseJson && responseJson !== undefined) {
           responseJson.map((shop) => {
             if (shop.storeId !== undefined) {
               if (shop.storeId.toUpperCase().includes('APP - Do Not Touch'.toUpperCase())) {
@@ -385,7 +385,7 @@ class MapView extends Component {
             }
 
           })
-        } else{
+        } else {
           this.setState({ isLoading: false })
           return null
         }
@@ -783,78 +783,77 @@ class MapView extends Component {
 
     return (
       <Container style={{ marginLeft: 3 }}>
+        {
+          this.state.isInitialView ? initialView
+            : <View>
+                <View style={{}}>
+                  <View style={{ width: deviceWidth, height: deviceHeight * 0.13, flexDirection: 'row' }}>
+                    <TouchableOpacity onPress={() => this.logoClicked()}>
+                      <Image source={logoCow} style={{ marginLeft: 10, width: deviceWidth / 2.2, height: deviceHeight / 6.2, alignSelf: 'flex-start', marginTop: 0, resizeMode: 'contain' }} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => this.centerMapAtMyLocation()}>
+                      <View>
+                        <Image source={map_icon} style={{ marginLeft: 25, marginTop: 25, width: deviceWidth / 12, height: deviceHeight / 12, resizeMode: 'contain' }} />
+                      </View>
+                    </TouchableOpacity>
 
-        <View style={{}}>
-          <View style={{ width: deviceWidth, height: deviceHeight * 0.13, flexDirection: 'row' }}>
-            <TouchableOpacity onPress={() => this.logoClicked()}>
-              <Image source={logoCow} style={{ marginLeft: 10, width: deviceWidth / 2.2, height: deviceHeight / 6.2, alignSelf: 'flex-start', marginTop: 0, resizeMode: 'contain' }} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.centerMapAtMyLocation()}>
-              <View>
-                <Image source={map_icon} style={{ marginLeft: 25, marginTop: 25, width: deviceWidth / 12, height: deviceHeight / 12, resizeMode: 'contain' }} />
+                    <TouchableOpacity onPress={() => this.onSearchButtonClicked()}>
+                      <View>
+                        <Image source={search_icon} style={{ marginLeft: 8, marginTop: 25, width: deviceWidth / 12, height: deviceHeight / 12, resizeMode: 'contain' }} />
+                      </View>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => this.openMyFavorites()}>
+                      <View>
+                        <Image source={favorite_icon} style={{ marginLeft: 8, marginTop: 25, width: deviceWidth / 12, height: deviceHeight / 12, resizeMode: 'contain' }} />
+                      </View>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => this.openMyProfile()}>
+                      <View>
+                        <Image source={user_icon} style={{ marginLeft: 8, marginTop: 25, width: deviceWidth / 12, height: deviceHeight / 12, resizeMode: 'contain' }} />
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+
+                  <View style={{ width: deviceWidth, height: deviceHeight * 0.42, borderColor: 'rgba(37, 0, 97, 1)', borderWidth: borderwidth }}>
+                    <Text style={{ alignSelf: 'center', marginTop: 50 }}> Map view here </Text>
+                    <Map
+                      provider={this.props.provider}
+                      ref={ref => { this.map = ref; }}
+                      region={this.state.region}
+                      style={styles.map}
+                      onRegionChange={this._onRegionChange}
+                    >
+                      {markers}
+                    </Map>
+                  </View>
+                </View>
+
+                <View style={{ marginTop: borderwidth, width: deviceWidth, height: ((deviceHeight * 0.45)) }}>
+
+                  <View>
+                    <Text style={{ alignSelf: 'center', marginTop: 10, fontSize: 25, color: 'rgba(37, 0, 97, 1)', fontFamily: "Trade Gothic LT Std" }}> SHOPS AROUND ME </Text>
+                  </View>
+
+
+                  <ScrollView ref={ref => { this.scrollview = ref; }}
+                    onScroll={() => {
+                      console.warn("onScroll")
+                    }}
+                    automaticallyAdjustContentInsets={false}
+                    vertical={true} style={{ marginBottom: 10 }}
+                  >
+                    {locList}
+                  </ScrollView>
+                </View>
+
+                <Loading isLoading={this.state.isLoading} />
+                <SearchResults isSearchMode={this.state.isSearchMode} distanceArray={this.state.distanceArray} lastPosition={this.state.lastPosition}
+                  crossAction={() => this.searchDismiss()}
+                />
               </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => this.onSearchButtonClicked()}>
-              <View>
-                <Image source={search_icon} style={{ marginLeft: 8, marginTop: 25, width: deviceWidth / 12, height: deviceHeight / 12, resizeMode: 'contain' }} />
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => this.openMyFavorites()}>
-              <View>
-                <Image source={favorite_icon} style={{ marginLeft: 8, marginTop: 25, width: deviceWidth / 12, height: deviceHeight / 12, resizeMode: 'contain' }} />
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => this.openMyProfile()}>
-              <View>
-                <Image source={user_icon} style={{ marginLeft: 8, marginTop: 25, width: deviceWidth / 12, height: deviceHeight / 12, resizeMode: 'contain' }} />
-              </View>
-            </TouchableOpacity>
-          </View>
-
-
-
-          <View style={{ width: deviceWidth, height: deviceHeight * 0.42, borderColor: 'rgba(37, 0, 97, 1)', borderWidth: borderwidth }}>
-            <Text style={{ alignSelf: 'center', marginTop: 50 }}> Map view here </Text>
-            <Map
-              provider={this.props.provider}
-              ref={ref => { this.map = ref; }}
-              region={this.state.region}
-              style={styles.map}
-              onRegionChange={this._onRegionChange}
-            >
-              {markers}
-            </Map>
-          </View>
-        </View>
-
-        <View style={{ marginTop: borderwidth, width: deviceWidth, height: ((deviceHeight * 0.45)) }}>
-
-          <View>
-            <Text style={{ alignSelf: 'center', marginTop: 10, fontSize: 25, color: 'rgba(37, 0, 97, 1)', fontFamily: "Trade Gothic LT Std" }}> SHOPS AROUND ME </Text>
-          </View>
-
-
-          <ScrollView ref={ref => { this.scrollview = ref; }}
-            onScroll={() => {
-              console.warn("onScroll")
-            }}
-            automaticallyAdjustContentInsets={false}
-            vertical={true} style={{ marginBottom: 10 }}
-          >
-            {locList}
-          </ScrollView>
-        </View>
-
-        <Loading isLoading={this.state.isLoading} />
-        <SearchResults isSearchMode={this.state.isSearchMode} distanceArray={this.state.distanceArray} lastPosition={this.state.lastPosition}
-          crossAction={() => this.searchDismiss()}
-        />
-
-        {initialView}
-
+        }
       </Container>
 
     );

@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput, Dimensions, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
+
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
-
-
 
 const styles = StyleSheet.create({
   overlayView: {
@@ -25,7 +24,7 @@ const styles = StyleSheet.create({
 
 });
 
-export default class Loading extends Component{
+export default class Loading extends Component {
 
   static propTypes = {
     isLoading: React.PropTypes.bool
@@ -37,22 +36,22 @@ export default class Loading extends Component{
     isLoading: false
   };
 
-  render(){
+  render() {
 
-    if(this.props.isLoading == true){
-      return(
+    if (this.props.isLoading == true) {
+      return (
         <View style={styles.overlayView}>
-        <ActivityIndicator
-        animating={true}
-        style={styles.activityIndicator}
-        size="large"
-        color= "#fff"
-        />
+          <ActivityIndicator
+            animating={true}
+            style={styles.activityIndicator}
+            size="large"
+            color="#fff"
+          />
         </View>
       )
     }
-    else{
-      return <View/>
+    else {
+      return <View />
     }
 
   }

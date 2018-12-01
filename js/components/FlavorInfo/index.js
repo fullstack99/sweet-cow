@@ -9,8 +9,6 @@ import FirDatabase from "../../database/";
 import Loading from '../base/loading/'
 import { toTitleCase } from '../../utils/';
 
-
-
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
@@ -28,7 +26,6 @@ let isFavorite = false
 let showAllergens = false
 
 const {
-
   pushRoute,
 } = actions;
 
@@ -40,7 +37,6 @@ class FlavorInfo extends Component {
       pushRoute: React.PropTypes.func,
     }),
   }
-
 
   constructor(props) {
     super(props);
@@ -57,8 +53,6 @@ class FlavorInfo extends Component {
   checkFavorite(flavorName, shopId) {
     if (this.props.user) {
       let isFavorite = false
-
-
       let favorites = this.props.user.favorites
 
       favorites.map((favorite) => {
@@ -70,8 +64,6 @@ class FlavorInfo extends Component {
     } else {
       return false
     }
-
-
   }
 
   componentDidMount() {
@@ -123,8 +115,6 @@ class FlavorInfo extends Component {
     } else {
       this.loginConfimation()
     }
-
-
   }
 
   loginConfimation() {
@@ -220,7 +210,6 @@ class FlavorInfo extends Component {
 
     }
 
-
     console.warn(this.props.flavorData);
     return (
       <Container>
@@ -262,18 +251,14 @@ class FlavorInfo extends Component {
                 <Text style={{ marginTop: 2, fontSize: 16, fontFamily: 'ProximaNova-Regular', color: 'rgba(11, 126, 192, 1)' }}>{colon}</Text>
                 <Text style={{ marginLeft: 5, alignSelf: 'center', fontSize: 13, color: 'rgba(11, 126, 192, 1)', fontFamily: 'ProximaNova-Regular' }}>{allergensText}</Text>
               </View>
-
-
             </View>
           </Content>
-
         </View>
         <Loading isLoading={this.state.isLoading} />
       </Container>
     );
   }
 }
-
 
 function bindActions(dispatch) {
   return {

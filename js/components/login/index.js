@@ -29,9 +29,6 @@ const email_icon = require('../../../images/email-icon.png');
 const user_icon = require('../../../images/user-icon_textfield.png');
 const password_icon = require('../../../images/lock-icon.png');
 
-
-
-
 const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
@@ -158,8 +155,6 @@ class Login extends Component {
       )
     }
   }
-
-
 
   async login() {
     try {

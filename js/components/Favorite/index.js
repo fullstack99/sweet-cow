@@ -6,8 +6,6 @@ import { actions } from 'react-native-navigation-redux-helpers';
 import { Container, Content, Button, View, Text } from 'native-base';
 import { setUser } from '../../actions/user';
 
-
-
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
@@ -19,11 +17,10 @@ const allergies_Icon = require('../../../images/Allergies_Icon.png');
 const favorite_Icon = require('../../../images/Favorite_Icon.png');
 
 
-
 const {
   replaceAt,
-    popRoute,
-    pushRoute,
+  popRoute,
+  pushRoute,
 } = actions;
 
 class MyFavorite extends Component {
@@ -48,19 +45,17 @@ class MyFavorite extends Component {
 
   }
 
-
-  pushRoute(route){
+  pushRoute(route) {
     this.props.pushRoute({ key: route }, this.props.navigation.key);
   }
 
   popRoute() {
-  this.props.popRoute(this.props.navigation.key);
+    this.props.popRoute(this.props.navigation.key);
   }
-
 
   render() {
 
-let borderwidth = 6
+    let borderwidth = 6
     return (
 
     );
